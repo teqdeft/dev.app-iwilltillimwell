@@ -57,6 +57,13 @@ $permissions = get_permissions();
             <span class="menu-title">Transaction History</span>
          </a>
       </li>
+
+      <li class="nav-item">
+         <a class="nav-link" href="{{ url('admin/imwell-app') }}">
+            <i class="fas fa-building menu-icon"></i>
+            <span class="menu-title">ImWell App Setup</span>
+         </a>
+      </li>
 	  
 	  
       <li class="nav-item hr-list-box1">
