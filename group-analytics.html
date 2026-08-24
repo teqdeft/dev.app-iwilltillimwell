@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Company Design System Variables */
+        :root {
+            --primary-purple: #604478;
+            --light-purple: #876E98;
+            --purple-variant: #604377;
+            --bright-purple: #7C61B1;
+            --accent-purple: #8638D7;
+            --dark-text: #212529;
+            --medium-dark: #303030;
+            --very-dark: #1A1A1A;
+        }
+        
+        /* Custom styles for enhanced components */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 68, 120, 0.1);
+            box-shadow: 0 8px 32px rgba(96, 68, 120, 0.1);
+        }
+        
+        .company-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(96, 68, 120, 0.08);
+            border: 1px solid rgba(96, 68, 120, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .company-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(96, 68, 120, 0.15);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f5f3ff 100%);
+            border: 1px solid rgba(96, 68, 120, 0.1);
+        }
+        
+        .primary-gradient {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--bright-purple) 100%);
+        }
+        
+        .accent-gradient {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--bright-purple) 100%);
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8f9ff;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--light-purple);
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-purple);
+        }
+        
+        /* Company Button Styles */
+        .btn-primary {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--bright-purple);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(96, 68, 120, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--light-purple);
+            color: white;
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 500;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-purple);
+        }
+        
+        /* Input Focus States */
+        .form-input:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(96, 68, 120, 0.1);
+            outline: none;
+        }
+        
+        /* Status Badge Styles */
+        .status-enrolled {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .status-unenrolled {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Table Hover Effects */
+        .table-row:hover {
+            background: linear-gradient(135deg, rgba(96, 68, 120, 0.02) 0%, rgba(134, 110, 152, 0.02) 100%);
+        }
+        
+        /* Typography Classes */
+        .heading-primary {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .heading-secondary {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 600;
+            color: var(--primary-purple);
+        }
+        
+        .body-text {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--dark-text);
+        }
+        
+        .text-muted {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--medium-dark);
+        }
+        
+        /* Security indicator for healthcare compliance */
+        .security-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            z-index: 1000;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'heading': ['Raleway', 'sans-serif'],
+                        'body': ['Open Sans', 'sans-serif'],
+                        'sans': ['Open Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#faf9fc',
+                            100: '#f5f3ff',
+                            500: '#604478',
+                            600: '#604377',
+                            700: '#4a2c5a',
+                            800: '#3d1d4a',
+                            900: '#2a0f33',
+                        },
+                        purple: {
+                            light: '#876E98',
+                            bright: '#7C61B1',
+                            accent: '#8638D7',
+                        },
+                        text: {
+                            primary: '#212529',
+                            secondary: '#303030',
+                            dark: '#1A1A1A',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-indigo-50 min-h-screen font-body">
+    <!-- Security Indicator for Healthcare Compliance -->
+    <div class="security-indicator">
+        <i class="fas fa-shield-alt mr-2"></i>Healthcare Compliant
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-black bg-opacity-50 animate-fade-in"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="company-card max-w-md w-full animate-fade-in">
+                <div class="p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-lg"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="heading-secondary text-lg">Confirm Action</h3>
+                            <p class="text-muted text-sm" id="confirmMessage">Are you sure you want to proceed?</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeConfirmModal()" 
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-body">
+                            Cancel
+                        </button>
+                        <button id="confirmButton" 
+                                class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors font-heading font-semibold">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Form Drawer -->
+    <div id="memberDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="fixed inset-0 bg-black bg-opacity-50" onclick="closeMemberDrawer()"></div>
+        <div class="relative w-full h-full bg-white shadow-2xl border-l border-primary-100 flex flex-col">
+            <!-- Fixed Header -->
+            <div class="flex items-center justify-between p-6 border-b border-primary-100 primary-gradient flex-shrink-0">
+                <h2 class="heading-primary text-lg text-white" id="drawerTitle">Add New Member</h2>
+                <button onclick="closeMemberDrawer()" class="text-white hover:text-purple-100 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <div class="p-6 space-y-5">
+                    <!-- Metadata Section (Read-only) -->
+                    <div id="metadataSection" class="hidden bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <h4 class="text-sm font-semibold text-text-primary mb-3 font-heading">Record Information</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-muted font-body">Date Added:</span>
+                                <div id="dateAdded" class="font-medium text-text-primary font-body">--</div>
+                            </div>
+                            <div>
+                                <span class="text-muted font-body">Last Updated:</span>
+                                <div id="lastUpdated" class="font-medium text-text-primary font-body">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="memberForm" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">First Name *</label>
+                                <input type="text" name="firstName" required 
+                                       class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Last Name *</label>
+                                <input type="text" name="lastName" required 
+                                       class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Date of Birth *</label>
+                            <input type="date" name="dob" required 
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Gender</label>
+                            <select name="gender" 
+                                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Email Address *</label>
+                            <input type="email" name="email" required 
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Phone Number *</label>
+                            <input type="tel" name="phone" required 
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Address *</label>
+                            <textarea name="address" required rows="2"
+                                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all resize-none"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Address Line 2</label>
+                            <input type="text" name="address2" placeholder="Apt, Suite, Unit, Building, Floor, etc."
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">City *</label>
+                                <input type="text" name="city" required 
+                                       class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">State *</label>
+                                <input type="text" name="state" required 
+                                       class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">ZIP Code *</label>
+                            <input type="text" name="zip" required 
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                        </div>
+                        
+                        <!-- Simple Timezone Dropdown -->
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Time Zone *</label>
+                            <select name="timezone" required
+                                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                                <option value="Eastern Standard Time">Eastern Standard Time</option>
+                                <option value="Central Standard Time">Central Standard Time</option>
+                                <option value="Mountain Standard Time">Mountain Standard Time</option>
+                                <option value="Pacific Standard Time">Pacific Standard Time</option>
+                                <option value="Alaska Standard Time">Alaska Standard Time</option>
+                                <option value="Hawaii Standard Time">Hawaii Standard Time</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-text-primary mb-2 font-heading">Status</label>
+                            <select name="status" 
+                                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body transition-all">
+                                <option value="Enrolled" selected>Enrolled</option>
+                                <option value="Unenrolled">Unenrolled</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Hidden Plan Field (All group members have same plan) -->
+                        <input type="hidden" name="plan" value="Standard">
+                        
+                        <!-- Extra spacing at bottom for scroll area -->
+                        <div class="h-8"></div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Fixed Footer -->
+            <div class="border-t border-primary-100 bg-white p-6 flex-shrink-0">
+                <div class="flex space-x-3">
+                    <button onclick="closeMemberDrawer()" 
+                            class="flex-1 px-6 py-3 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-heading">
+                        Cancel
+                    </button>
+                    <button onclick="saveMemberFromDrawer()" 
+                            class="flex-1 px-6 py-3 text-sm font-bold text-white rounded-xl transition-all btn-primary">
+                        Save Member
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="heading-primary text-4xl mb-2">Your Group Dashboard</h1>
+            <p class="text-muted text-lg">Secure healthcare member management platform</p>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary-200 border-t-primary-600"></div>
+            <p class="mt-4 text-muted font-body">Loading dashboard data...</p>
+        </div>
+        
+<!-- Dashboard Content -->
+        <div id="dashboardContent" class="hidden">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Stats Card -->
+                <div class="company-card p-6 metric-card">
+                    <h2 class="heading-secondary text-lg mb-6">Key Member Statistics</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl border border-blue-200">
+                            <div class="text-2xl font-bold text-primary-600 font-heading" id="totalMembers">0</div>
+                            <div class="text-sm text-primary-700 font-semibold font-body">Total Members</div>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl border border-green-200">
+                            <div class="text-2xl font-bold text-green-600 font-heading" id="enrolledMembers">0</div>
+                            <div class="text-sm text-green-700 font-semibold font-body">Enrolled Members</div>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl border border-emerald-200">
+                            <div class="text-2xl font-bold text-emerald-600 font-heading" id="mtdNewEnrollments">0</div>
+                            <div class="text-sm text-emerald-700 font-semibold font-body">New Enrollments MTD</div>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-red-50 to-pink-100 rounded-2xl border border-red-200">
+                            <div class="text-2xl font-bold text-red-600 font-heading" id="mtdDisenrollments">0</div>
+                            <div class="text-sm text-red-700 font-semibold font-body">Disenrollments MTD</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subscription Card -->
+                <div class="company-card primary-gradient text-white p-6">
+                    <h3 class="text-lg font-bold mb-2 font-heading">Current Subscription Plan</h3>
+                    <p class="text-2xl font-bold mb-4 font-heading">Standard</p>
+                    <div class="bg-white bg-opacity-20 rounded-2xl p-4 backdrop-blur-sm border border-white border-opacity-20">
+                        <h4 class="font-bold mb-3 text-center font-heading">Primary Care Licenses 50</h4>
+                        <div id="primaryCareChart" class="h-36 flex items-center justify-center"></div>
+                    </div>
+                </div>
+                
+                <!-- Status Overview -->
+                <div class="company-card p-6">
+                    <h2 class="heading-secondary text-lg mb-4 text-center">Member Status Overview</h2>
+                    <div id="statusChart" class="h-72 flex items-center justify-center"></div>
+                </div>
+            </div>
+            
+            <!-- Data Table with Filters and Pagination -->
+            <div class="company-card overflow-hidden">
+                <!-- Table Header with Add Button -->
+                <div class="flex items-center justify-between p-6 border-b border-primary-100 bg-gradient-to-r from-primary-50 to-purple-50">
+                    <h3 class="heading-secondary text-lg">Member Data</h3>
+                    <button onclick="openMemberDrawer()" 
+                            class="inline-flex items-center px-6 py-3 text-sm font-bold text-white rounded-xl transition-all btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add Member
+                    </button>
+                </div>
+                
+                <!-- Filters and Search -->
+                <div class="px-6 py-4 bg-gray-50 border-b border-primary-100">
+                    <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                        <div class="flex flex-col sm:flex-row gap-3 flex-1">
+                            <!-- Search -->
+                            <div class="relative flex-1 min-w-0">
+                                <input type="text" id="searchInput" placeholder="Search members..." 
+                                       class="w-full px-4 py-2 pl-10 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            
+                            <!-- Status Filter -->
+                            <select id="statusFilter" 
+                                    class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 form-input font-body">
+                                <option value="">All Status</option>
+                                <option value="Enrolled">Enrolled</option>
+                                <option value="Unenrolled">Unenrolled</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Page Size Selector -->
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm text-muted font-body">Show:</label>
+                            <select id="pageSizeSelect" 
+                                    class="px-2 py-1 text-sm border border-gray-200 rounded-lg form-input font-body">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-primary-100">
+                        <thead class="bg-gradient-to-r from-primary-50 to-purple-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Actions</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Birth Date</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Contact</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Location</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-primary-800 uppercase tracking-wider font-heading">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTableBody" class="bg-white divide-y divide-primary-50">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-primary-100">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-muted font-body" id="paginationInfo">
+                            Showing 0 to 0 of 0 results
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="prevPage" onclick="previousPage()" 
+                                    class="px-3 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors font-body disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span id="pageNumbers" class="flex items-center space-x-1">
+                                <!-- Page numbers will be generated here -->
+                            </span>
+                            <button id="nextPage" onclick="nextPage()" 
+                                    class="px-3 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors font-body disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 z-50 hidden">
+        <div class="company-card p-4 max-w-sm">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i id="toastIcon" class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="ml-3">
+                    <p id="toastMessage" class="text-sm font-medium text-text-primary font-body"></p>
+                </div>
+                <div class="ml-auto pl-3">
+                    <button onclick="hideToast()" class="text-gray-400 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let memberData = [];
+        let filteredData = [];
+        let editingMemberId = null;
+        let confirmCallback = null;
+        
+        // Pagination variables
+        let currentPage = 1;
+        let pageSize = 10;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadDashboard();
+        });
+        
+        // Setup event listeners for filters and pagination
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('pageSizeSelect').addEventListener('change', changePageSize);
+        }
+        
+        // Auto-detect timezone based on address fields (make it globally accessible)
+        window.detectTimezoneFromAddress = function() {
+            console.log('detectTimezoneFromAddress called!'); // Debug log
+            
+            const form = document.getElementById('memberForm');
+            if (!form) {
+                console.log('Form not found'); // Debug log
+                return;
+            }
+            
+            const stateInput = form.state.value.trim();
+            const city = form.city.value.trim();
+            
+            console.log('Detecting timezone for:', stateInput, city); // Debug log
+            
+            // If no state entered, show prompt instead of default
+            if (!stateInput) {
+                const timezoneDisplay = document.getElementById('detectedTimezone');
+                const timezoneInput = document.getElementById('timezoneInput');
+                
+                if (timezoneDisplay) {
+                    timezoneDisplay.innerHTML = '<i class="fas fa-clock mr-2"></i>Enter state to detect timezone';
+                }
+                if (timezoneInput) {
+                    timezoneInput.value = '';
+                }
+                return;
+            }
+            
+            // Convert state name to abbreviation if needed
+            const state = getStateAbbreviation(stateInput);
+            console.log('State abbreviation:', state); // Debug log
+            
+            const timezone = getTimezoneByState(state, city);
+            console.log('Detected timezone:', timezone); // Debug log
+            
+            const timezoneDisplay = document.getElementById('detectedTimezone');
+            const timezoneInput = document.getElementById('timezoneInput');
+            
+            if (timezoneDisplay) {
+                timezoneDisplay.innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i>${timezone}`;
+                console.log('Updated timezone display'); // Debug log
+            }
+            if (timezoneInput) {
+                timezoneInput.value = timezone;
+                console.log('Updated timezone input'); // Debug log
+            }
+        }
+        
+        // Create alias for easier access
+        const detectTimezoneFromAddress = window.detectTimezoneFromAddress;
+        
+        // Convert full state names to abbreviations
+        function getStateAbbreviation(input) {
+            const stateInput = input.toUpperCase().trim();
+            
+            // If already an abbreviation, return as-is
+            if (stateInput.length === 2) {
+                return stateInput;
+            }
+            
+            // Full state name to abbreviation mapping
+            const stateNames = {
+                'ALABAMA': 'AL', 'ALASKA': 'AK', 'ARIZONA': 'AZ', 'ARKANSAS': 'AR', 'CALIFORNIA': 'CA',
+                'COLORADO': 'CO', 'CONNECTICUT': 'CT', 'DELAWARE': 'DE', 'FLORIDA': 'FL', 'GEORGIA': 'GA',
+                'HAWAII': 'HI', 'IDAHO': 'ID', 'ILLINOIS': 'IL', 'INDIANA': 'IN', 'IOWA': 'IA',
+                'KANSAS': 'KS', 'KENTUCKY': 'KY', 'LOUISIANA': 'LA', 'MAINE': 'ME', 'MARYLAND': 'MD',
+                'MASSACHUSETTS': 'MA', 'MICHIGAN': 'MI', 'MINNESOTA': 'MN', 'MISSISSIPPI': 'MS', 'MISSOURI': 'MO',
+                'MONTANA': 'MT', 'NEBRASKA': 'NE', 'NEVADA': 'NV', 'NEW HAMPSHIRE': 'NH', 'NEW JERSEY': 'NJ',
+                'NEW MEXICO': 'NM', 'NEW YORK': 'NY', 'NORTH CAROLINA': 'NC', 'NORTH DAKOTA': 'ND', 'OHIO': 'OH',
+                'OKLAHOMA': 'OK', 'OREGON': 'OR', 'PENNSYLVANIA': 'PA', 'RHODE ISLAND': 'RI', 'SOUTH CAROLINA': 'SC',
+                'SOUTH DAKOTA': 'SD', 'TENNESSEE': 'TN', 'TEXAS': 'TX', 'UTAH': 'UT', 'VERMONT': 'VT',
+                'VIRGINIA': 'VA', 'WASHINGTON': 'WA', 'WEST VIRGINIA': 'WV', 'WISCONSIN': 'WI', 'WYOMING': 'WY'
+            };
+            
+            return stateNames[stateInput] || stateInput;
+        }
+        
+        // Map US states to timezones (handles special cases)
+        function getTimezoneByState(state, city = '') {
+            console.log('Getting timezone for state:', state, 'city:', city); // Debug log
+            
+            const stateTimezones = {
+                // Eastern Standard Time
+                'CT': 'Eastern Standard Time', 'DE': 'Eastern Standard Time', 'FL': 'Eastern Standard Time',
+                'GA': 'Eastern Standard Time', 'IN': 'Eastern Standard Time', 'KY': 'Eastern Standard Time',
+                'ME': 'Eastern Standard Time', 'MD': 'Eastern Standard Time', 'MA': 'Eastern Standard Time',
+                'MI': 'Eastern Standard Time', 'NH': 'Eastern Standard Time', 'NJ': 'Eastern Standard Time',
+                'NY': 'Eastern Standard Time', 'NC': 'Eastern Standard Time', 'OH': 'Eastern Standard Time',
+                'PA': 'Eastern Standard Time', 'RI': 'Eastern Standard Time', 'SC': 'Eastern Standard Time',
+                'TN': 'Eastern Standard Time', 'VT': 'Eastern Standard Time', 'VA': 'Eastern Standard Time',
+                'WV': 'Eastern Standard Time',
+                
+                // Central Standard Time
+                'AL': 'Central Standard Time', 'AR': 'Central Standard Time', 'IL': 'Central Standard Time',
+                'IA': 'Central Standard Time', 'KS': 'Central Standard Time', 'LA': 'Central Standard Time',
+                'MN': 'Central Standard Time', 'MS': 'Central Standard Time', 'MO': 'Central Standard Time',
+                'NE': 'Central Standard Time', 'OK': 'Central Standard Time', 'WI': 'Central Standard Time',
+                'TX': 'Central Standard Time',
+                
+                // Mountain Standard Time
+                'CO': 'Mountain Standard Time', 'MT': 'Mountain Standard Time', 'NM': 'Mountain Standard Time',
+                'UT': 'Mountain Standard Time', 'WY': 'Mountain Standard Time',
+                
+                // Pacific Standard Time
+                'CA': 'Pacific Standard Time', 'NV': 'Pacific Standard Time', 'OR': 'Pacific Standard Time',
+                'WA': 'Pacific Standard Time',
+                
+                // Special Cases
+                'AZ': 'Mountain Standard Time', // Arizona doesn't observe DST
+                'HI': 'Hawaii Standard Time',
+                'AK': 'Alaska Standard Time',
+                
+                // Split timezone states (default to most common)
+                'ND': 'Central Standard Time', // Mostly Central, some Mountain
+                'SD': 'Central Standard Time', // Mostly Central, some Mountain
+                'ID': 'Mountain Standard Time', // Mostly Mountain, small part Pacific
+            };
+            
+            // Handle special cases with city names
+            if (state === 'ID' && city.toLowerCase().includes('coeur')) {
+                return 'Pacific Standard Time'; // Coeur d'Alene area
+            }
+            
+            if (state === 'FL' && (city.toLowerCase().includes('pensacola') || city.toLowerCase().includes('panama'))) {
+                return 'Central Standard Time'; // Florida panhandle
+            }
+            
+            if (state === 'IN') {
+                // Indiana is complex - most is Eastern, but northwest and southwest are Central
+                const centralCities = ['gary', 'hammond', 'east chicago', 'evansville', 'terre haute'];
+                if (centralCities.some(centralCity => city.toLowerCase().includes(centralCity))) {
+                    return 'Central Standard Time';
+                }
+                return 'Eastern Standard Time';
+            }
+            
+            const result = stateTimezones[state] || 'Eastern Standard Time';
+            console.log('Timezone result:', result); // Debug log
+            return result;
+        }
+        
+        // Add event listeners to address fields
+        function setupAddressTimezoneDetection() {
+            const form = document.getElementById('memberForm');
+            if (form.state) {
+                form.state.addEventListener('input', detectTimezoneFromAddress);
+                form.state.addEventListener('change', detectTimezoneFromAddress);
+            }
+            if (form.city) {
+                form.city.addEventListener('input', detectTimezoneFromAddress);
+                form.city.addEventListener('change', detectTimezoneFromAddress);
+            }
+        }
+        
+        // Handle window resize for charts
+        window.addEventListener('resize', function() {
+            if (memberData.length > 0) {
+                setTimeout(() => {
+                    drawCharts();
+                }, 100);
+            }
+        });
+        
+        // Load Google Charts
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(function() {
+            // Charts will be drawn when data is loaded
+        });
+        
+        function loadDashboard() {
+            showLoading(true);
+            
+            google.script.run
+                .withSuccessHandler(onDataLoaded)
+                .withFailureHandler(onError)
+                .getMemberData(); // This now returns data WITHOUT UID for security
+        }
+        
+        function onDataLoaded(data) {
+            console.log('Data received:', data);
+            memberData = Array.isArray(data) ? data : [];
+            filteredData = [...memberData];
+            
+            updateMetrics();
+            drawCharts();
+            applyFilters(); // This will render the table with pagination
+            showLoading(false);
+        }
+        
+        function onError(error) {
+            console.error('Error loading data:', error);
+            showToast('Error loading dashboard data', 'error');
+            showLoading(false);
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loadingState').classList.toggle('hidden', !show);
+            document.getElementById('dashboardContent').classList.toggle('hidden', show);
+        }
+        
+        // Filtering and Search Functions
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            filteredData = memberData.filter(member => {
+                const matchesSearch = !searchTerm || 
+                    member['First Name'].toLowerCase().includes(searchTerm) ||
+                    member['Last Name'].toLowerCase().includes(searchTerm) ||
+                    member['Email Address'].toLowerCase().includes(searchTerm) ||
+                    member['Primary Phone #'].toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = !statusFilter || member.Status === statusFilter;
+                
+                return matchesSearch && matchesStatus;
+            });
+            
+            currentPage = 1; // Reset to first page when filtering
+            renderTable();
+            updatePaginationControls();
+        }
+        
+        function changePageSize() {
+            pageSize = parseInt(document.getElementById('pageSizeSelect').value);
+            currentPage = 1; // Reset to first page
+            renderTable();
+            updatePaginationControls();
+        }
+        
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePaginationControls();
+            }
+        }
+        
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePaginationControls();
+            }
+        }
+        
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+            updatePaginationControls();
+        }
+        
+        function updatePaginationControls() {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / pageSize);
+            const startRecord = totalRecords === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+            const endRecord = Math.min(currentPage * pageSize, totalRecords);
+            
+            // Update info text
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${startRecord} to ${endRecord} of ${totalRecords} results`;
+            
+            // Update prev/next buttons
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
+            
+            // Generate page numbers
+            generatePageNumbers(totalPages);
+        }
+        
+        function generatePageNumbers(totalPages) {
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            pageNumbersContainer.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            // Adjust start page if we're near the end
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = `px-3 py-2 text-sm font-medium rounded-lg transition-colors font-body ${
+                    i === currentPage 
+                        ? 'text-white bg-primary-600 hover:bg-primary-700' 
+                        : 'text-gray-700 bg-white hover:bg-gray-50 border border-gray-200'
+                }`;
+                pageButton.onclick = () => goToPage(i);
+                pageNumbersContainer.appendChild(pageButton);
+            }
+        }
+        
+function updateMetrics() {
+    console.log('updateMetrics() called - DEBUG VERSION'); // This should appear in console
+    
+    // Call the backend to get real metrics with MTD data
+    google.script.run
+        .withSuccessHandler(function(metrics) {
+            console.log('SUCCESS: Received metrics from backend:', metrics);
+            
+            // Check if each element exists before trying to update it
+            const totalMembersEl = document.getElementById('totalMembers');
+            const enrolledMembersEl = document.getElementById('enrolledMembers');
+            const mtdNewEnrollmentsEl = document.getElementById('mtdNewEnrollments');
+            const mtdDisenrollmentsEl = document.getElementById('mtdDisenrollments');
+            
+            console.log('Element check:');
+            console.log('totalMembers element:', totalMembersEl);
+            console.log('enrolledMembers element:', enrolledMembersEl);
+            console.log('mtdNewEnrollments element:', mtdNewEnrollmentsEl);
+            console.log('mtdDisenrollments element:', mtdDisenrollmentsEl);
+            
+            // Update only if elements exist
+            if (totalMembersEl) {
+                totalMembersEl.textContent = metrics.totalMembers;
+                console.log('Updated totalMembers to:', metrics.totalMembers);
+            } else {
+                console.error('totalMembers element not found!');
+            }
+            
+            if (enrolledMembersEl) {
+                enrolledMembersEl.textContent = metrics.enrolledMembers;
+                console.log('Updated enrolledMembers to:', metrics.enrolledMembers);
+            } else {
+                console.error('enrolledMembers element not found!');
+            }
+            
+            if (mtdNewEnrollmentsEl) {
+                mtdNewEnrollmentsEl.textContent = metrics.mtdNewEnrollments;
+                console.log('Updated mtdNewEnrollments to:', metrics.mtdNewEnrollments);
+            } else {
+                console.error('mtdNewEnrollments element not found!');
+            }
+            
+            if (mtdDisenrollmentsEl) {
+                mtdDisenrollmentsEl.textContent = metrics.mtdDisenrollments;
+                console.log('Updated mtdDisenrollments to:', metrics.mtdDisenrollments);
+            } else {
+                console.error('mtdDisenrollments element not found!');
+            }
+            
+            console.log('Frontend update completed successfully');
+        })
+        .withFailureHandler(function(error) {
+            console.error('FAILURE: Error getting metrics:', error);
+            
+            // Fallback to basic calculation
+            const total = memberData.length;
+            const enrolled = memberData.filter(m => m.Status === 'Enrolled').length;
+            
+            console.log('Using fallback calculation - total:', total, 'enrolled:', enrolled);
+            
+            // Safe fallback updates
+            const totalMembersEl = document.getElementById('totalMembers');
+            const enrolledMembersEl = document.getElementById('enrolledMembers');
+            const mtdNewEnrollmentsEl = document.getElementById('mtdNewEnrollments');
+            const mtdDisenrollmentsEl = document.getElementById('mtdDisenrollments');
+            
+            if (totalMembersEl) totalMembersEl.textContent = total;
+            if (enrolledMembersEl) enrolledMembersEl.textContent = enrolled;
+            if (mtdNewEnrollmentsEl) mtdNewEnrollmentsEl.textContent = '0';
+            if (mtdDisenrollmentsEl) mtdDisenrollmentsEl.textContent = '0';
+            
+            console.log('Fallback update completed');
+        })
+        .getDashboardMetrics();
+}
+        
+        function drawCharts() {
+            drawStatusChart();
+            drawPrimaryCareChart();
+        }
+        
+        function drawStatusChart() {
+            const statusCounts = memberData.reduce((acc, member) => {
+                const status = member.Status || 'Unknown';
+                acc[status] = (acc[status] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const chartData = [['Status', 'Count']];
+            Object.entries(statusCounts).forEach(([status, count]) => {
+                chartData.push([status, count]);
+            });
+            
+            if (chartData.length > 1) {
+                const data = google.visualization.arrayToDataTable(chartData);
+                const options = {
+                    pieHole: 0.4,
+                    colors: ['#604478', '#876E98', '#7C61B1', '#8638D7'],
+                    legend: { 
+                        position: 'bottom',
+                        alignment: 'center',
+                        textStyle: { 
+                            color: '#212529', 
+                            fontSize: 12,
+                            fontName: 'Open Sans, sans-serif'
+                        }
+                    },
+                    chartArea: { 
+                        width: '85%', 
+                        height: '75%',
+                        top: 20,
+                        left: 'auto',
+                        right: 'auto'
+                    },
+                    backgroundColor: 'transparent',
+                    pieSliceText: 'percentage',
+                    pieSliceTextStyle: {
+                        color: 'white',
+                        fontSize: 14,
+                        fontName: 'Raleway, sans-serif',
+                        bold: true
+                    },
+                    tooltip: {
+                        textStyle: {
+                            fontSize: 13,
+                            fontName: 'Open Sans, sans-serif'
+                        }
+                    }
+                };
+                
+                const chart = new google.visualization.PieChart(document.getElementById('statusChart'));
+                chart.draw(data, options);
+            }
+        }
+        
+        function drawPrimaryCareChart() {
+            const data = google.visualization.arrayToDataTable([
+                ['Type', 'Count'],
+                ['Utilized', 4],
+                ['Remaining', 46]
+            ]);
+            
+            const options = {
+                pieHole: 0.5,
+                colors: ['#10b981', '#f59e0b'],
+                legend: { 
+                    position: 'bottom',
+                    alignment: 'center',
+                    textStyle: { 
+                        color: 'white', 
+                        fontSize: 11,
+                        fontName: 'Open Sans, sans-serif'
+                    }
+                },
+                chartArea: { 
+                    width: '90%', 
+                    height: '70%',
+                    top: 10,
+                    left: 'auto',
+                    right: 'auto'
+                },
+                backgroundColor: 'transparent',
+                pieSliceText: 'value',
+                pieSliceTextStyle: {
+                    color: 'white',
+                    fontSize: 12,
+                    fontName: 'Raleway, sans-serif',
+                    bold: true
+                },
+                tooltip: {
+                    textStyle: {
+                        fontSize: 12,
+                        fontName: 'Open Sans, sans-serif'
+                    }
+                }
+            };
+            
+            const chart = new google.visualization.PieChart(document.getElementById('primaryCareChart'));
+            chart.draw(data, options);
+        }
+        
+        function renderTable() {
+            const tbody = document.getElementById('memberTableBody');
+            tbody.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-muted font-body">No members found</td></tr>';
+                return;
+            }
+            
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            pageData.forEach((member, pageIndex) => {
+                const originalIndex = memberData.indexOf(member); // Get original index for actions
+                const row = document.createElement('tr');
+                row.className = 'table-row transition-all duration-200';
+                
+                const statusClass = member.Status === 'Enrolled' 
+                    ? 'status-enrolled' 
+                    : 'status-unenrolled';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <button onclick="editMember(${originalIndex})" 
+                                    class="inline-flex items-center p-2 text-sm text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg transition-all duration-200">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteConfirm(${originalIndex})" 
+                                    class="inline-flex items-center p-2 text-sm text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-semibold text-text-primary font-heading">${member['First Name']} ${member['Last Name']}</div>
+                        <div class="text-sm text-muted font-body">${member.Gender}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-primary font-body">
+                        ${member['Date of Birth']}
+                        ${member.Age ? `<div class="text-xs text-muted">Age: ${member.Age}</div>` : ''}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-text-primary font-body">${member['Email Address']}</div>
+                        <div class="text-sm text-muted font-body">${member['Primary Phone #']}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-text-primary font-body">${member.City}, ${member.State}</div>
+                        <div class="text-sm text-muted font-body">${member['ZIP Code']}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-3 py-1 text-xs font-bold rounded-full ${statusClass} font-heading">
+                            ${member.Status}
+                        </span>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Modal and Drawer Functions
+        function showDeleteConfirm(index) {
+            const member = memberData[index];
+            document.getElementById('confirmMessage').textContent = 
+                `Are you sure you want to delete ${member['First Name']} ${member['Last Name']}? This action cannot be undone.`;
+            
+            confirmCallback = () => deleteMember(index);
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+        
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+            confirmCallback = null;
+        }
+        
+        function confirmAction() {
+            if (confirmCallback) {
+                confirmCallback();
+                closeConfirmModal();
+            }
+        }
+        
+        // Add event listener for confirm button
+        document.getElementById('confirmButton').addEventListener('click', confirmAction);
+        
+        function openMemberDrawer(memberIndex = null) {
+            editingMemberId = memberIndex;
+            const drawer = document.getElementById('memberDrawer');
+            const title = document.getElementById('drawerTitle');
+            const form = document.getElementById('memberForm');
+            
+            if (memberIndex !== null) {
+                title.textContent = 'Edit Member';
+                const member = memberData[memberIndex];
+                
+                // Populate form with member data
+                form.firstName.value = member['First Name'] || '';
+                form.lastName.value = member['Last Name'] || '';
+                form.dob.value = convertDateForInput(member['Date of Birth']) || '';
+                form.gender.value = member.Gender || 'Male';
+                form.email.value = member['Email Address'] || '';
+                form.phone.value = member['Primary Phone #'] || '';
+                form.address.value = member['Physical Address'] || '';
+                form.city.value = member.City || '';
+                form.state.value = member.State || '';
+                form.zip.value = member['ZIP Code'] || '';
+                form.timezone.value = member['Time Zone'] || 'Eastern Standard Time';
+                form.status.value = member.Status || 'Unenrolled';
+                form.plan.value = member.Plan || 'Basic';
+            } else {
+                title.textContent = 'Add New Member';
+                form.reset();
+                // Set defaults
+                form.gender.value = 'Male';
+                form.timezone.value = 'Eastern Standard Time';
+                form.status.value = 'Enrolled'; // Default to Enrolled
+                form.plan.value = 'Basic';
+            }
+            
+            drawer.classList.remove('translate-x-full');
+        }
+        
+        function closeMemberDrawer() {
+            const drawer = document.getElementById('memberDrawer');
+            drawer.classList.add('translate-x-full');
+            editingMemberId = null;
+        }
+        
+        function convertDateForInput(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+            }
+            return dateStr;
+        }
+        
+        function convertDateFromInput(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[1]}/${parts[2]}/${parts[0]}`;
+            }
+            return dateStr;
+        }
+        
+        function saveMemberFromDrawer() {
+            const form = document.getElementById('memberForm');
+            const formData = new FormData(form);
+            
+            const memberData = {
+                // NOTE: UID is handled automatically by the backend
+                'First Name': formData.get('firstName'),
+                'Last Name': formData.get('lastName'),
+                'Date of Birth': convertDateFromInput(formData.get('dob')),
+                'Gender': formData.get('gender'),
+                'Email Address': formData.get('email'),
+                'Primary Phone #': formData.get('phone'),
+                'Physical Address': formData.get('address'),
+                'Address Line 2': formData.get('address2'),
+                'City': formData.get('city'),
+                'State': formData.get('state'),
+                'ZIP Code': formData.get('zip'),
+                'Company Address': '',
+                'Time Zone': formData.get('timezone'), // Simple dropdown value
+                'Status': formData.get('status'),
+                'Plan': 'Standard' // All group members have Standard plan
+            };
+            
+            // Validate required fields
+            const requiredFields = ['First Name', 'Last Name', 'Date of Birth', 'Email Address', 'Primary Phone #'];
+            const missingFields = requiredFields.filter(field => !memberData[field] || memberData[field].trim() === '');
+            
+            if (missingFields.length > 0) {
+                showToast(`Please fill in all required fields: ${missingFields.join(', ')}`, 'error');
+                return;
+            }
+            
+            // Save to server
+            if (editingMemberId !== null) {
+                // Update existing member (backend uses row index + 2 for header offset)
+                google.script.run
+                    .withSuccessHandler((response) => {
+                        showToast('Member updated successfully!', 'success');
+                        closeMemberDrawer();
+                        loadDashboard();
+                        console.log('Member updated with UID:', response.uid);
+                    })
+                    .withFailureHandler((error) => {
+                        showToast('Error updating member. Please try again.', 'error');
+                        console.error('Update error:', error);
+                    })
+                    .updateMemberRecord(editingMemberId + 2, memberData);
+            } else {
+                // Add new member (backend auto-generates UID)
+                google.script.run
+                    .withSuccessHandler((response) => {
+                        showToast('Member added successfully!', 'success');
+                        closeMemberDrawer();
+                        loadDashboard();
+                        console.log('New member added with UID:', response.uid);
+                    })
+                    .withFailureHandler((error) => {
+                        showToast('Error adding member. Please try again.', 'error');
+                        console.error('Add error:', error);
+                    })
+                    .addMemberRecord(memberData);
+            }
+        }
+        
+        function editMember(index) {
+            openMemberDrawer(index);
+        }
+        
+        function deleteMember(index) {
+            google.script.run
+                .withSuccessHandler((response) => {
+                    showToast('Member deleted successfully!', 'success');
+                    loadDashboard();
+                    console.log('Member deleted, UID was:', response.deletedUID);
+                })
+                .withFailureHandler((error) => {
+                    showToast('Error deleting member. Please try again.', 'error');
+                    console.error('Delete error:', error);
+                })
+                .deleteMemberRecord(index + 2);
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            messageEl.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-500';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle text-red-500';
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 5000);
+        }
+        
+        function hideToast() {
+            document.getElementById('toast').classList.add('hidden');
+        }
+        
+        // Dynamic iframe height functionality
+        function sendHeight() {
+            const height = document.documentElement.scrollHeight;
+            parent.postMessage({ iframeHeight: height }, '*');
+        }
+        
+        // Send height on various events
+        window.addEventListener('load', sendHeight);
+        window.addEventListener('resize', sendHeight);
+        
+        // Send height when content changes (like opening/closing drawers, loading data)
+        function notifyHeightChange() {
+            setTimeout(sendHeight, 100); // Small delay to ensure DOM updates are complete
+        }
+        
+        // Call this whenever content changes significantly
+        const originalOnDataLoaded = onDataLoaded;
+        onDataLoaded = function(data) {
+            originalOnDataLoaded(data);
+            updatePaginationControls();
+            notifyHeightChange();
+        };
+        
+        const originalOpenMemberDrawer = openMemberDrawer;
+        openMemberDrawer = function(memberIndex = null) {
+            originalOpenMemberDrawer(memberIndex);
+            notifyHeightChange();
+        };
+        
+        const originalCloseMemberDrawer = closeMemberDrawer;
+        closeMemberDrawer = function() {
+            originalCloseMemberDrawer();
+            notifyHeightChange();
+        };
+        
+        const originalShowDeleteConfirm = showDeleteConfirm;
+        showDeleteConfirm = function(index) {
+            originalShowDeleteConfirm(index);
+            notifyHeightChange();
+        };
+        
+        const originalCloseConfirmModal = closeConfirmModal;
+        closeConfirmModal = function() {
+            originalCloseConfirmModal();
+            notifyHeightChange();
+        };
+        
+        // Initial height send after a delay (in case content loads slowly)
+        setTimeout(sendHeight, 500);
+    </script>
+</body>
+</html>

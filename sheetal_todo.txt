@@ -1,0 +1,4 @@
+
+
+Created an Admin table in database by command (artisan make:migration create_admin_table) 
+created  an admin folder into resources /view ----

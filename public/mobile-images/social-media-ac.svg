@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15.4" height="17" viewBox="0 0 15.4 17">
+  <g id="connection_icon" data-name="connection icon" transform="translate(0.5 0.5)">
+    <g id="shape">
+      <circle id="Oval" cx="2.4" cy="2.4" r="2.4" transform="translate(9.6 0)" fill="none" stroke="#787878" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <circle id="Oval-2" data-name="Oval" cx="2.4" cy="2.4" r="2.4" transform="translate(0 5.6)" fill="none" stroke="#787878" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <circle id="Oval-3" data-name="Oval" cx="2.4" cy="2.4" r="2.4" transform="translate(9.6 11.2)" fill="none" stroke="#787878" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Shape-2" data-name="Shape" d="M0,0,5.464,3.184" transform="translate(4.472 9.208)" fill="none" stroke="#787878" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Shape-3" data-name="Shape" d="M5.456,0,0,3.184" transform="translate(4.472 3.608)" fill="none" stroke="#787878" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    </g>
+  </g>
+</svg>

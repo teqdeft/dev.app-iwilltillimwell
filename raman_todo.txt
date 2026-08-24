@@ -1,0 +1,96 @@
+task to clear:-
+
+Designing Task:-
+my account page non editable fileds show information on hover same as reference.
+
+Development task:-
+Dependents-
+date format validation.
+send email on new registration above 18. 
+need to check above 18 form.
+Health Records-
+In Medication Allergies module This medication allergy is not valid for me Pending because add allergy api not giving allergy id.
+
+
+Pending Task:-
+- if user not created on telemedicine then should not login with local data base in panel. (bug)
+- need to think about auto increment id for members and dependents.
+- need to add delete confirmation box on delete medical history currently running alert.
+- add loader in all form show loading because of third party curd operations are slow.
+- active left side bar on click of dependent also.
+
+Task to clear from client:-
+API - /medicationAllergies/add/{userId}
+we are not reciving addedAllergyId in this API response only getting success true. we need this AllergyId for Mark Inactive API (/medicationAllergies/markInactive/{allergyId}/{foreignId}).
+
+** Important Design Task
+
+** Important note
+- need to check API implementation on MAC.
+
+
+** Next Phase task:-
+- sure script pharmacy id is required what to do if pharmacy not searched (add custom pharmacy).
+- effective date col where to show for registration process.
+- automatic logout after 1 hour or 10 minutes.
+
+
+User Name	puhispouse@mailinator.com
+Password	AT^la8$nzj
+
+
+composer require laravel/passport
+php artisan migrate
+php artisan passport:install
+composer require spatie/laravel-fractal
+
+ALTER TABLE `users` ADD `email_token` VARCHAR(191) NULL DEFAULT NULL AFTER `user_password`;
+
+
+---Here are the Prod Credentials---.
+Username: MTMIWTIW01@mytelemedicine.com
+Password: lkL}ScO5v}MHLEzZVGm]
+Group Code  MTMIWTIW01
+Plan ID  2167
+
+IP for putty
+50.62.149.199
+
+** Need to Clear task:-
+- map keys for map.
+- medication allergy action not valid now api problem.
+
+- From where user can take subscription again after expire.
+
+---- Promo Code Pending ---
+-- admin --
+- to date should be greater than from date.
+- if percentage selected admin should not add greater than 100% in amount.
+
+Promo Code New Changes to do :-
+- Influencer and promo code module different.
+- organizations new table with (id, name(unique)).
+- on creating influencer save organization if influencer not individual.
+- promo code table remove influencer details and add influencer_id (id of users table).
+- add organization id in users table.
+- promo_code_transactions table where we save influencer payable amount and organizations payable amount.
+
+- send email to influencer on create new account with cardentails. --done
+- we can give edit influencer option to admin.
+- show organization name in for organization promo code create.
+- add organization discount amount and time period option on create promo code if promo code type is organization.
+
+php artisan db:seed --class=PlansSeeder
+
+Group counsling amendments:-
+edit button for counseling.
+design of create counseling.
+start time, end time and date calendar icons are not clickable.
+arrow missing on start time, end time.
+
+Live telemedicine member problems:-
+- userid update issue.
+- loader problem before payment card modal box after sign up.
+- Medication Allergies Action not working.
+
+

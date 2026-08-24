@@ -1,0 +1,520 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        /* 
+		body {
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: normal;
+            font-style: normal;
+        }
+		*/
+        .member-plan-new .choose-plan {
+            position: relative;
+        }
+
+        .member-plan-new .choose-plan .tab-container {
+            width: 100%;
+        }
+
+        .member-plan-new .choose-plan .tab-button {
+            border-bottom: 0;
+            color: #8462A8;
+            background: #ffffff59;
+            font-size: 17px;
+            border-radius: 5px;
+            border: 1px solid #8462A8;
+            padding: 10px 40px;
+            cursor: pointer;
+        }
+
+        .member-plan-new .choose-plan .tab-buttons {
+            display: flex;
+            gap: 2px;
+            padding-bottom: 0px;
+            border-bottom: 1px solid #8462A8;
+            background: #E1E1E1;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .member-plan-new .max-button {
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .member-plan-new .choose-plan .tab-button.active {
+            border-bottom: 0;
+            color: #fff;
+            background: #8462A8;
+            font-size: 17px;
+            border-radius: 5px;
+            border: 1px solid #8462A8;
+            padding: 10px 40px;
+        }
+
+        .member-plan-new .choose-plan .tab-content {
+            display: none;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .member-plan-new .choose-plan .tab-content.active {
+            display: block;
+        }
+
+        .member-plan-new .choose-plan .promo-code {
+            width: max-content;
+            position: absolute;
+            right: 13px;
+            top: 7.5px;
+        }
+
+        .member-plan-new .choose-plan .promo-code .input-form {
+            position: relative;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            justify-content: center;
+            align-items: center;
+        }
+
+		.member-plan-new .choose-plan .promo-code .form-control {
+			height: 48px;
+			font-size: 17px;
+			padding: 12px !important;
+			border-radius: 5px 0 0 5px;
+			border: 1px solid #8462A8;
+			width: 100%;
+		}
+
+        .member-plan-new .choose-plan .promo-code .promo-code-apply-btn {
+            display: block;
+            background: #8462A8;
+            border: 1px solid #8462A8;
+            font-size: 17px;
+            font-weight: 500;
+            padding: 11px 20px;
+            border-radius: 0 5px 5px 0;
+            color: #fff;
+        }
+
+        .member-plan-new .choose-plan .promo-code input:focus-visible {
+            border: 1px solid #8462A8;
+            outline: 0;
+        }
+
+        .member-plan-new {
+            padding: 20px 30px 10px 30px;
+            background: #f6eff5;
+        }
+
+        .member-plan-new .top {
+            position: relative;
+            text-align: center;
+            max-width: 60%;
+            margin: 0 auto;
+            padding-bottom: 30px;
+        }
+
+		.member-plan-new .top .top-title {
+			position: relative;
+			font-size: 25px;
+			max-width: 800px;
+			margin: 0 auto;
+			font-weight: 300;
+			padding-bottom: 10px;
+		}
+
+        .member-plan-new .top .top-title .title {
+            font-size: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        .member-plan-new .top .text {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 23px;
+        }
+
+        /* left side bar */
+        .member-plan-new .left-sidebar {
+            display: grid;
+            grid-template-columns: 620px 1fr;
+            gap: 20px;
+            justify-content: center;
+            align-items: start;
+        }
+
+        /* Sidebar Styling */
+		.member-plan-new .left-sidebar .sidebar {
+			width: 600px;
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			background: transparent;
+			min-height: max-content !important;
+			height: max-content !important;
+			box-shadow: none;
+		}
+
+		.member-plan-new .left-sidebar .left-tab-btn p.plan-type {
+			padding: 0;
+			margin: 0;
+			font-size: 21px !important;
+			font-weight: 600;
+		}
+
+		.member-plan-new .left-sidebar .left-tab-btn p.plan-title {
+			font-size: 16px !important;
+			line-height: 22px !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			margin-top: 10px !important;
+			text-align: left;
+		}
+
+        .member-plan-new .left-sidebar .left-tab-btn {
+            background: #E1E1E1;
+            color: #333333;
+            border: 1px solid #CCCCCC;
+            padding: 20px 30px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-radius: 15px;
+            font-size: 18px;
+            box-shadow: 0 2px 9px #A7ABB2;
+            position: relative;
+        }
+
+        .member-plan-new .left-sidebar .left-tab-btn img {
+            position: absolute;
+            right: 20px;
+            top: 7px;
+        }
+
+        .member-plan-new .left-sidebar .left-tab-btn:hover,
+        .member-plan-new .left-tab-btn.left-active {
+            background: #8462a8;
+            color: #fff;
+        }
+
+        .member-plan-new .left-tab-btn.left-active img {
+            filter: invert(1);
+        }
+
+        .member-plan-new .left-sidebar .left-tab-btn:hover img {
+            filter: invert(1);
+        }
+
+        /* Content Styling */
+        .member-plan-new .left-sidebar .content {
+            flex-grow: 1;
+        }
+
+        .member-plan-new .left-sidebar .left-tab-content {
+            display: none;
+            font-size: 18px;
+            padding: 0px;
+        }
+
+        .member-plan-new .left-sidebar .left-tab-content.left-active {
+            display: block;
+        }
+
+        /* end */
+
+        .member-plan-new .pricing-pln-v4 {
+            position: relative;
+            background: #E1E1E1;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            box-shadow: 0 0px 15px #A7ABB2;
+            overflow: hidden;
+        }
+
+        .member-plan-new .pricing-pln-v4 .top .sub-title {
+            margin-bottom: 0px;
+            padding: 0;
+        }
+
+        .member-plan-new .pricing-pln-v4 .top .title h5 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .member-plan-new .app-main.pln2 .total-paying .pay-securely {
+            position: relative;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .member-plan-new .app-main.pln2 .total-paying .pay-securely .icon img {
+            object-fit: initial;
+        }
+
+        .member-plan-new .app-main.pln2 .total-paying .pay-securely .icon {
+            width: 16px;
+            height: 18px;
+            display: inline-flex;
+            margin-right: 8px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .top {
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding: 30px 10px 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .member-plan-new .addon-features .chek-s1 p.adon {
+            color: #555555;
+            font-size: 12px;
+            line-height: 14px;
+        }
+
+        .member-plan-new .addon-features .chek-s1 p {
+            color: #333333;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .member-plan-new .cutom-checkbox input[type="checkbox"]:checked+.checkbox-container span {
+            background-color: #8462A8;
+            border-color: #8462A8;
+        }
+
+        .member-plan-new .cutom-checkbox .checkbox-container span {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            background: #fff;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .member-plan-new .cutom-checkbox .checkbox-container span:after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 10px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            top: 2px;
+            left: 6px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .member-plan-new .cutom-checkbox input[type="checkbox"]:checked+.checkbox-container span:after {
+            opacity: 1;
+        }
+
+        .member-plan-new .app-main.pln2 .total-paying .pay-securely p {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-size: 16px;
+            line-height: 24px;
+            color: #555555;
+            font-weight: 600;
+        }
+
+        .member-plan-new .pricing-pln-v4 .payment-detail {
+            position: relative;
+            border-bottom: 1px solid #ccc;
+            padding: 16px 16px 12px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .payment-detail .pay-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .auto-renew {
+            position: relative;
+            padding: 8px 16px 7px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .member-plan-new .pricing-pln-v4 .term-v1 {
+            position: relative;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .member-plan-new .pricing-pln-v4 .subtotal-pay {
+            position: relative;
+            padding: 20px 16px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .subtotal-pay .total-row {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .term-v1 .chek-s1 {
+            display: grid;
+            grid-template-columns: 0 1fr;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0;
+            padding: 8px 16px 5px;
+            border-top: 1px solid #ccc;
+        }
+
+        .member-plan-new .pricing-pln-v4 a {
+            color: var(--purple);
+        }
+
+        .member-plan-new .pricing-pln-v4 .auto-renew p {
+            font-size: 17px;
+            line-height: 22px;
+            font-weight: 400;
+            color: #555;
+            margin: 0;
+            padding: 0;
+        }
+
+        .member-plan-new .pricing-pln-v4 .payment-detail p {
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 400;
+            color: #555555;
+            margin: 0;
+            padding: 0;
+        }
+
+        .member-plan-new .pricing-pln-v4 .payment-detail p:last-child {
+            color: #333;
+        }
+
+        .member-plan-new .pricing-pln-v4 .subtotal-pay p {
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 400;
+            color: #555;
+            margin: 0;
+            padding: 0;
+        }
+
+        .member-plan-new .pricing-pln-v4 p {
+            margin: 0;
+        }
+
+        .member-plan-new .pricing-pln-v4 .subtotal-pay .total-row.total-amount p {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .member-plan-new .pricing-pln-v4 .term-v1 .chek-s1 label.checkbox-container {
+			display: flex;
+			justify-content: flex-start;
+			width: 100%;
+			align-items: center;
+		}
+
+        .member-plan-new .pricing-pln-v4  label.checkbox-container.jus-left {
+            justify-content: flex-start !important;
+        }
+
+        .member-plan-new .pricing-pln-v4 label.checkbox-container.jus-left p {
+            font-size: 16px;
+        }
+
+        .member-plan-new .pricing-pln-v4 .term-v1 .chek-s1 input {
+            opacity: 0;
+        }
+
+        /* toggle switch */
+        .member-plan-new .cust-toggle .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 22px;
+        }
+
+        .member-plan-new .cust-toggle .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .member-plan-new .cust-toggle .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .member-plan-new .cust-toggle .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 5px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .member-plan-new .cust-toggle input:checked+.slider {
+            background-color: #8462a8;
+        }
+
+        .member-plan-new .cust-toggle .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 5px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .member-plan-new .cust-toggle input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .member-plan-new .pricing-pln-v4 .term-v1 .chek-s1 .pri-l {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+		.member-plan-new .left-sidebar .content .cta a {
+			position: relative;
+			display: block;
+			margin: 0 auto;
+			width: fit-content;
+			margin-top: 20px;
+			border-bottom: 0;
+			color: #fff;
+			background: #8462A8;
+			font-size: 17px;
+			border-radius: 5px;
+			border: 1px solid #8462A8;
+			padding: 10px 40px;
+		}				.modal-content.step1.modal-medium{			width:80% !important		}		.modal-content.step1.modal-medium .form-control[readonly]{			background:#fff !important		}			

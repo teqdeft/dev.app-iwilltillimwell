@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="72" height="72" viewBox="0 0 72 72">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.178" y1="0.139" x2="0.823" y2="0.85" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#8462a8"/>
+      <stop offset="1" stop-color="#6d568f"/>
+    </linearGradient>
+    <filter id="Oval" x="0" y="0" width="72" height="72" filterUnits="userSpaceOnUse">
+      <feOffset dx="-3" dy="-2" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#a7abb2"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Next-circle" transform="translate(21 20)">
+    <g transform="matrix(1, 0, 0, 1, -21, -20)" filter="url(#Oval)">
+      <circle id="Oval-2" data-name="Oval" cx="18" cy="18" r="18" transform="translate(21 20)" fill="url(#linear-gradient)"/>
+    </g>
+    <g id="Graphics_chevron-down-white" data-name="Graphics/chevron-down-white" transform="translate(13.917 25.083) rotate(-90)">
+      <path id="Path" d="M0,.944.917,0l7.25,7.042L.917,14.084,0,13.14l6.277-6.1Z" transform="translate(14.084) rotate(90)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

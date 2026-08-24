@@ -1,0 +1,111 @@
+
+// start from here
+roles defined :- 'super_admin','admin','user'
+
+-	Development related task(s)	 :- 
+	Send personal record to API needs (response from client) - pending
+	Reset password setup with setup	password on tele medicine API
+	
+
+
+-	Bugfix :- 
+
+-	Design related task(s) :- 
+
+-- Other commands :-
+
+composer install --optimize-autoloader --no-dev
+php artisan config:cache
+php artisan view:cache
+
+production environment
+OS VERSION=Ubuntu 18.04.5 LTS (Bionic Beaver)
+PHP version - 7.3.24
+Maria DB - 10(or above)
+
+local environment
+Os version = "windows 10"
+PHP 7.3.7
+MySql Server version: 10.3.16-MariaDB
+
+
+nohup /usr/bin/php /var/www/html/artisan queue:work --queue=high,low,default --daemon &
+nohup php artisan queue:work --queue=high,low,default --tries=3 --timeout=30 --daemon &
+nohup /usr/bin/php /var/www/html/artisan queue:work --queue=high,low,default --tries=3 --timeout=30 --daemon &
+
+php artisan queue:restart
+
+php artisan storage:link
+
+not working
+nohup php artisan queue:listen --queue=high,low,default --tries=3 --timeout=30 --daemon &
+
+get all process
+ps -aux | less
+
+kill a process by id
+kill -9 23184
+
+commands
+
+php artisan optimize:clear
+
+php artisan make:migration create_users_table --create=users
+
+php artisan make:migration add_votes_to_users_table --table=users
+
+php artisan make:model Estimate -m
+
+php artisan migrate --seed
+
+php artisan migrate:refresh --seed
+
+php artisan make:controller ClientController --resource
+
+php artisan make:controller ClientController --resource --model=Client
+
+php artisan make:policy ClientPolicy
+
+php artisan make:policy ClientPolicy --model=Client
+
+php artisan make:seeder UserSeeder
+
+php artisan migrate:refresh
+
+php artisan db:seed --class=NewAccountingHeadSeeder --force
+
+php artisan make:middleware MiddlewareName
+
+To rollback one step:
+
+php artisan migrate:rollback
+
+To rollback multiple steps:
+
+php artisan migrate:rollback --step=[x]
+
+To drop all tables and reload all migrations:
+
+php artisan migrate:fresh
+
+
+project setup process :-
+
+setup using bitbucket
+
+Stripe setup :-
+
+create product on stripe
+
+then use below controller for creating the plans :-
+
+create stripe plans using subscription controller
+
+
+// deploy on server 
+
+setup env file data
+
+run php artisan migrate
+
+composer require doctrine/dbal

@@ -1,0 +1,73 @@
+@extends('admin.layouts.dashboard')
+@section('content')
+<style>
+  td img{
+    height:60px !important;
+  }
+</style>
+<div class="main-panel main-wrapper-user">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12 grid-margin">
+                <div class="row">
+                    <div class="col-12 col-xl-12 mb-4 mb-xl-0">
+                        <div class="patient-details ">
+                            <div class="media pc-media-box">
+                                <div class="title-heading-icon-box-cus">
+                                    <i class="fas fa-user-tag"></i>
+                                </div>
+                                <div class="media-body theme-title-box">
+                                    <h3 class="font-weight-bold">Media Hub</h3>
+                                    <div class="theme-btn-cont organization-btn-cont">
+                                        <div class="organization_drop_cont"> 
+                                            <select class="form-control" id="cat-filter">
+                                                <option value="">Select category</option>
+                                                <option value="">All</option>
+                                                @if($cat)
+                                                @foreach($cat as $value)
+                                                <option value="{{ $value->name }}">{{ $value->name }}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <a href="javascript:;" class="btn-custom" id="removeSelectedCat" style="display: none;">Clear</a>
+                                        @if( permission_exist('blogs_add',$permissions??'') )
+                                        <a href="{{ route('admin.blog.create') }}" class="btn-custom"><i class="fas fa-user-tag" aria-hidden="true"></i> Create Media Hub</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card card-body">
+                    <div class="all-consultations-box  p-3">
+                        <div>
+                            <div id="all">
+                                <div class="table-responsive pt-3">
+                                    <table class="table table-bordered user-table-box" id="blog-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sno.</th>
+                                                <th>Category</th>
+                                                <th>Title</th>
+                                                <th>Image</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

@@ -1,0 +1,11 @@
+{
+    "name": "pankaj/emoji",
+    "description": "emojiforlaravel",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Pankaj\\Emoji\\": "src/"
+        }
+    },
+    "require": {}
+}

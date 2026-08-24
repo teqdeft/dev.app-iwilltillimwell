@@ -1,0 +1,27 @@
+<svg width="45" height="46" viewBox="0 0 45 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.5" y="0.5" width="44" height="45" rx="22" stroke="#683E95"/>
+<g clip-path="url(#clip0_1846_6)">
+<mask id="mask0_1846_6" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="12" y="13" width="21" height="21">
+<path d="M32.5 13H12V33.5H32.5V13Z" fill="white"/>
+<path d="M22.26 18.8457C22.481 18.8457 22.6604 19.0251 22.6604 19.2461C22.6604 19.4671 22.481 19.6465 22.26 19.6465C22.039 19.6465 21.8596 19.4671 21.8596 19.2461C21.8596 19.0251 22.039 18.8457 22.26 18.8457Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_1846_6)">
+<mask id="mask1_1846_6" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="12" y="13" width="21" height="21">
+<path d="M12 13H32.5V33.5H12V13Z" fill="white"/>
+</mask>
+<g mask="url(#mask1_1846_6)">
+<path d="M22.26 18.8457C22.481 18.8457 22.6604 19.0251 22.6604 19.2461C22.6604 19.4671 22.481 19.6465 22.26 19.6465C22.039 19.6465 21.8596 19.4671 21.8596 19.2461C21.8596 19.0251 22.039 18.8457 22.26 18.8457Z" fill="#683E95"/>
+<path d="M12.4104 19.2461L15.8538 15.2422H28.6663L32.1096 19.2461L22.26 31.2578L12.4104 19.2461Z" stroke="#683E95" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.8538 15.2422L19.0569 19.2461L22.26 15.2422L25.4631 19.2461L28.6663 15.2422" stroke="#683E95" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.0569 19.2461L22.26 31.2578L25.4631 19.2461" stroke="#683E95" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.4104 19.2461H20.6584" stroke="#683E95" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M23.8616 19.2461H32.1096" stroke="#683E95" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_1846_6">
+<rect width="20.5" height="20.5" fill="white" transform="translate(12 13)"/>
+</clipPath>
+</defs>
+</svg>

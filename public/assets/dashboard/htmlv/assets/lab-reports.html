@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Lab Reports</title>
+
+    <style>
+
+        .reports-detail .table-responsive table {
+            width: 100%;
+            border-collapse: collapse;
+            border-color: #dddddd;
+        }
+
+        .reports-detail .table-responsive table th {
+            text-align: left;
+        }
+
+        .reports-detail .table-responsive table td,
+        .reports-detail .table-responsive table th {
+            padding: 5px 10px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+            font-size: 16px !important;
+        }
+
+        .reports-detail .table-responsive table td img {
+            max-width: 24px;
+            margin: 0 auto;
+        }
+
+        .reports-detail .table-title {
+            position: relative;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .chose-p-card .top-card .price sub {
+            bottom: -1px;
+            font-size: 12px;
+            color: #7e7e7e;
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+
+        .primary-v1 {
+            position: relative;
+            border-width: 1px;
+            font-size: 14px;
+            line-height: 18px;
+            padding: 7px 14px;
+            border-radius: 10px;
+            color: #683E95;
+            border: 1px solid #683E95;
+            background: #fff;
+
+        }
+
+        .primary-v1.completed {
+            color: #00963D;
+            border: 1px solid #D8FFE7;
+            background: #E8FFF1;
+        }
+
+        .primary-v1.cancelled {
+            color: #C54C4C;
+            border: 1px solid #FDE5E5;
+            background: #FFEDED;
+        }
+
+        .primary-v1.pending {
+            color: #CE9F2A;
+            border: 1px solid #FDF3DC;
+            background: #FFF8E6;
+        }
+
+        .lab-reports {
+            position: relative;
+            border: 1px solid #EBEBEB;
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 20px;
+        }
+
+    </style>
+    
+</head>
+
+<body>
+
+    <div class="content-wrapper">
+
+        <div class="row">
+            <div class="col-md-12 grid-margin top-header-page">
+                <div class="row">
+                    <div class="col-12 col-xl-6 mb-4 mb-xl-0">
+                        <h3 class="font-weight-bold">Lab Reports</h3>
+                        <h6 class="font-weight-normal mb-0">Home / <span><a href="javascript:void(0);">Lab Reports</a></span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content-box">
+            <div class="record-tabs-box">
+                <div class="inner-record-tab-box">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 ml-auto col-xl-12 mr-auto px-0 reports-detail">
+                                <div class="lab-reports table-responsive card">
+                                    <table>
+                                        <thead>
+
+                                            <tr>
+                                                <th class="text-left">S.No.</th>
+                                                <th>Ordered For</th>
+                                                <th>Date</th>
+                                                <th>Labs</th>
+                                                <th>Status</th>
+                                                <th>Document</th>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="text-left">1.</td>
+                                                <td>Gretha Wilson</td>
+                                                <td>Apr, 04 2025</td>
+                                                <td>TSH, HbA1C, CBC, CMP</td>
+                                                <td> <button class="primary-v1 completed">Completed</button> </td>
+                                                <td> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Lab Result</button> 
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left">2.</td>
+                                                <td>Gretha Wilson</td>
+                                                <td>Apr, 04 2025</td>
+                                                <td>TSH, HbA1C, CBC, CMP</td>
+                                                <td> <button class="primary-v1 cancelled">Cancelled</button> </td>
+                                                <td> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Lab Result</button> 
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left">3.</td>
+                                                <td>Gretha Wilson</td>
+                                                <td>Apr, 04 2025</td>
+                                                <td>TSH, HbA1C, CBC, CMP</td>
+                                                <td> <button class="primary-v1 pending">Pending</button> </td>
+                                                <td> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Lab Result</button> 
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left">4.</td>
+                                                <td>Gretha Wilson</td>
+                                                <td>Apr, 04 2025</td>
+                                                <td>TSH, HbA1C, CBC, CMP</td>
+                                                <td> <button class="primary-v1 completed">Completed</button> </td>
+                                                <td> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Request Document</button> 
+                                                    <button class="primary-v1 btn">Lab Result</button> 
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
