@@ -3,6 +3,16 @@
 <style>
     body { background: #EEEFF4 !important; }
 </style>
+
+@if(org_current())
+    {{-- Organisation members never see services their admin switched off,
+         so locked cards are hidden rather than greyed out. Scoped to org
+         members only - every other user keeps the existing behaviour. --}}
+    <style>
+        .dash-menu-card.service-disabled,
+        .service-disabled { display: none !important; }
+    </style>
+@endif
 
     <section class="user-detail-hi">
 		<div class="cust-container-md">
