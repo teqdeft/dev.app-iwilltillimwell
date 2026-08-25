@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\ImwellApp\Exports\MemberSampleExport;
 use Modules\ImwellApp\Mail\OrgActivationMail;
 use Modules\ImwellApp\Models\ImwellOrg;
 use Modules\ImwellApp\Models\ImwellOrgActivation;
@@ -54,14 +55,21 @@ class OrgImportController extends Controller
         return view('ImwellApp::admin.members', compact('org', 'members'));
     }
 
-    /** Downloadable sample sheet - headers plus one example row. */
-    public function sampleCsv()
+    /**
+     * Downloadable sample sheet - headers plus one example row.
+     * ?format=xlsx returns Excel, anything else returns CSV.
+     */
+    public function sampleCsv(Request $request)
     {
         $rows = [
             self::COLUMNS,
             ['Jane', 'Doe', 'jane.doe@example.com', '5551234567', '1990-04-21', 'Female',
              '12 Main St', 'Apt 4', 'Austin', 'TX', '73301'],
         ];
+
+        if ($request->get('format') === 'xlsx') {
+            return Excel::download(new MemberSampleExport($rows), 'imwell-members-sample.xlsx');
+        }
 
         $handle = fopen('php://temp', 'r+');
 

@@ -28,7 +28,9 @@ class OrgSetupController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('ImwellApp::admin.index', compact('orgs', 'search'));
+        $features = Features::all();
+
+        return view('ImwellApp::admin.index', compact('orgs', 'search', 'features'));
     }
 
     public function create()
