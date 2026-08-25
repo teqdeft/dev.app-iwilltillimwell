@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\ImwellApp\Support\Features;
+use Modules\ImwellApp\Support\OrgAccess;
 
 /**
  * Restricts ImWell organisation members to the features their admin enabled.
@@ -42,6 +43,17 @@ class EnforceOrgAccess
             return redirect('/')->withErrors([
                 'email' => 'Your organization account is no longer active.',
             ]);
+        }
+
+        // Keep the member in the "organization pays for me" state regardless of
+        // which login they used, and refresh it when the admin changes the
+        // organization's features. Cheap: the session fingerprint short-circuits
+        // this on every request after the first.
+        $fingerprint = OrgAccess::fingerprint($user, $org);
+
+        if ($request->session()->get('imwell_access_sync') !== $fingerprint) {
+            OrgAccess::sync($user, $org);
+            $request->session()->put('imwell_access_sync', $fingerprint);
         }
 
         $feature = Features::forRequest($request);

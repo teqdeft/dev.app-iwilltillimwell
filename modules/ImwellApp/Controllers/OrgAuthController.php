@@ -4,7 +4,6 @@ namespace Modules\ImwellApp\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\UserMeta;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Modules\ImwellApp\Models\ImwellOrg;
 use Modules\ImwellApp\Models\ImwellOrgActivation;
+use Modules\ImwellApp\Support\OrgAccess;
 
 /**
  * Organisation-branded authentication.
@@ -122,8 +122,9 @@ class OrgAuthController extends Controller
         $user->save();
 
         // Org members are paid for by their organization - open the real app
-        // for them so they are never sent through checkout.
-        $this->grantAppAccess($user);
+        // for them so they are never sent through checkout. EnforceOrgAccess
+        // keeps this in step afterwards, whichever login they use next.
+        OrgAccess::sync($user, $org);
 
         $activation->used_at = now();
         $activation->save();
@@ -136,38 +137,6 @@ class OrgAuthController extends Controller
             ->with('success', 'Your account is active. Welcome to ' . $org->name . '.');
     }
 
-    /**
-     * Puts an organisation member into the same state a fully paid-up,
-     * fully onboarded subscriber is in, so the existing middleware chain lets
-     * them into the real application without a payment step.
-     *
-     * Set here rather than at import time so a member who never activates is
-     * never counted as an active subscriber.
-     *
-     *  payment_status = 1  -> passes VerifyUserByPayment / UserDashboardPaymentStatus
-     *  step_position  = 4  -> registration wizard complete
-     *  doctor_step    = 5  -> health-record wizard complete (see helpers.php:1370),
-     *                         otherwise UserDashboardPaymentStatus loops them
-     *                         through personal-record / medications / ...
-     *  expiry_date         -> far future; the organization owns the subscription
-     *  UserMeta consent    -> satisfies the counseling-consent check that would
-     *                         otherwise redirect to share/user/medical-consent
-     */
-    protected function grantAppAccess(User $user)
-    {
-        $user->payment_status = 1;
-        $user->step_position  = 4;
-        $user->doctor_step    = 5;
-        $user->expiry_date    = date('Y-m-d', strtotime('+50 years'));
-        $user->save();
-
-        UserMeta::firstOrCreate([
-            'prefix'     => 'iwilltilimwell',
-            'user_id'    => $user->id,
-            'meta_key'   => 'counseling-type',
-            'meta_value' => 'counseling-consent',
-        ]);
-    }
 
     public function logout(Request $request, $slug)
     {
