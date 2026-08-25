@@ -36,6 +36,7 @@
 
 
         <!-- Get Care -->
+        @if(org_can('medical_care') || org_can('counseling') || org_can('pets'))
         <li class="menu-item has-sub get-care-now">
           <a href="#">
             <span class="icon">
@@ -56,6 +57,7 @@
 
           <!-- LEVEL 2 -->
           <div class="submenu w350">
+        @if(org_can('medical_care'))
             <div class="category medical">
               <p>
                 <span class="icon">
@@ -94,6 +96,8 @@
               </li>
 
             </ul>
+        @if(org_can('counseling'))
+        @endif
             <div class="category mental">
               <p>
                 <span class="icon">
@@ -147,6 +151,8 @@
               </li>
 
             </ul>
+        @if(org_can('pets'))
+        @endif
             <div class="category pet">
               <p>
                 <span class="icon">
@@ -169,11 +175,14 @@
               </li>
 
             </ul>
+        @endif
           </div>
 
         </li>
+        @endif
 
         <!-- My Health -->
+        @if(org_can('health_record') || org_can('care_coordination') || org_can('journal') || org_can('mood_tracking') || org_can('cbt') || org_can('safety_plan') || org_can('affirmations') || org_can('pets'))
         <li class="menu-item has-sub">
 
           <a href="#">
@@ -195,6 +204,7 @@
           <!-- LEVEL 2 -->
           <div class="submenu">
 
+        @if(org_can('health_record') || org_can('care_coordination'))
             <div class="category medical">
               <p>
                 <span class="icon">
@@ -250,6 +260,8 @@
               </li>
 
             </ul>
+        @if(org_can('journal') || org_can('mood_tracking') || org_can('cbt') || org_can('safety_plan') || org_can('affirmations'))
+        @endif
             <div class="category mental">
               <p>
                 <span class="icon">
@@ -331,7 +343,9 @@
 
 
             </ul>
+        @endif
 
+        @if(org_can('pets'))
             <div class="category pet">
               <p>
                 <span class="icon">
@@ -359,12 +373,15 @@
               </li>
 
             </ul>
+        @endif
 
           </div>
 
         </li>
+        @endif
 
         <!-- Prescription -->
+        @if(org_can('medical_care'))
         <li class="menu-item has-sub">
 
           <a href="#">
@@ -422,8 +439,10 @@
           </ul>
 
         </li>
+        @endif
 
         <!-- Messages -->
+        @if(org_can('message_specialist'))
         <li class="menu-item">
           <a href="{{url('message-a-specialist')}}">
             <span class="icon">
@@ -436,6 +455,7 @@
             <span class="test">Message a Specialist</span>
           </a>
         </li>
+        @endif
 
         <!-- my account -->
         <!-- <li class="menu-item has-sub">

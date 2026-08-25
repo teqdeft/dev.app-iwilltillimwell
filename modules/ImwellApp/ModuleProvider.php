@@ -19,6 +19,10 @@ class ModuleProvider extends ModuleServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/features.php', 'imwellapp');
 
+        // org_can() / org_logo() for the shared sidebar. Loaded here so
+        // composer.json autoload does not need changing.
+        require_once __DIR__ . '/Support/helpers.php';
+
         $this->app->register(RouterServiceProvider::class);
     }
 }

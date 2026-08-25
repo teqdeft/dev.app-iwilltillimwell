@@ -30,5 +30,9 @@ class RouterServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('imwell_org_member', Middleware\EnsureOrgMember::class);
         $router->aliasMiddleware('imwell_org_feature', Middleware\EnsureOrgFeature::class);
+
+        // Applies to the whole real application, but is a no-op for anyone who
+        // is not an ImWell org member - see EnforceOrgAccess.
+        $router->pushMiddlewareToGroup('web', Middleware\EnforceOrgAccess::class);
     }
 }
