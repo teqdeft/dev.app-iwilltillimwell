@@ -11,7 +11,23 @@
 <nav class="sidebar sidebar-offcanvas {{ Auth::user()->payment_status == 0 ? 'all_service_lock' : '' }}" id="sidebar">
 
 	<div class="sidebar_brand_logo">
-		<a class="navbar-brand brand-logo" href="{{$dashboard_url}}"><img src="{{ asset(env('APP_LOGO_WEB')) }}"  alt="logo"/></a>
+		@if(org_current())
+			{{-- Organisation members see their own brand, not the iWILL logo. --}}
+			<a class="navbar-brand brand-logo org-brand" href="{{$dashboard_url}}">
+				@if(org_logo())
+					<img src="{{ org_logo() }}" alt="{{ org_current()->name }}"/>
+				@endif
+				<span class="org-brand-name">{{ org_current()->name }}</span>
+			</a>
+			<style>
+				.sidebar_brand_logo .org-brand{display:flex;align-items:center;gap:10px;min-width:0}
+				.sidebar_brand_logo .org-brand img{max-height:44px;max-width:130px;width:auto;object-fit:contain}
+				.sidebar_brand_logo .org-brand-name{font-size:15px;font-weight:600;line-height:1.25;
+					color:#22252e;white-space:normal;overflow:hidden}
+			</style>
+		@else
+			<a class="navbar-brand brand-logo" href="{{$dashboard_url}}"><img src="{{ asset(env('APP_LOGO_WEB')) }}"  alt="logo"/></a>
+		@endif
 	</div>
 
 
