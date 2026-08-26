@@ -74,7 +74,7 @@ class OrgSetupController extends Controller
 
             return redirect()
                 ->route('imwell.admin.edit', $org->id)
-                ->with('success', 'Organization created. Member URL: ' . $org->url());
+                ->with('success', 'Organization created. Member URL: ' . $org->landingUrl());
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -113,7 +113,7 @@ class OrgSetupController extends Controller
 
             return redirect()
                 ->route('imwell.admin.edit', $org->id)
-                ->with('success', 'Organization updated. Member URL: ' . $org->fresh()->url());
+                ->with('success', 'Organization updated. Member URL: ' . $org->fresh()->landingUrl());
         } catch (\Exception $e) {
             DB::rollBack();
 

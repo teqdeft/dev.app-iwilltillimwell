@@ -302,7 +302,10 @@ class OrgImportController extends Controller
 
     protected function sendActivation(ImwellOrg $org, User $user, ImwellOrgActivation $activation)
     {
-        $url = url('/org/' . $org->slug . '/activate/' . $activation->token);
+        // Points at the imwell.app showcase site when IMWELL_SHOWCASE_URL is
+        // set, so the member activates there and lands on their organization's
+        // landing page instead of the main application.
+        $url = $org->activationUrl($activation->token);
 
         try {
             Mail::to($user->email)->send(new OrgActivationMail($org, $user->name, $url));

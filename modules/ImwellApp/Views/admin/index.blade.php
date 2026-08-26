@@ -70,7 +70,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a target="_blank" href="{{ $org->url() }}">{{ $org->slug }}</a>
+                                                    <a target="_blank" href="{{ $org->landingUrl() }}">{{ $org->slug }}</a>
                                                 </td>
                                                 <td>{{ $org->status ? 'Active' : 'Inactive' }}</td>
                                                 <td>

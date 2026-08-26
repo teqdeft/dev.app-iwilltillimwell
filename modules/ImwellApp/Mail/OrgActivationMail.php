@@ -24,7 +24,10 @@ class OrgActivationMail extends Mailable
         $this->org           = $org;
         $this->memberName    = $memberName;
         $this->activationUrl = $activationUrl;
-        $this->orgUrl        = $org->url();
+        // Showcase landing page when imwell.app is configured, otherwise the
+        // main application - so the email never sends members to a different
+        // site than the activation link does.
+        $this->orgUrl        = $org->landingUrl();
     }
 
     public function build()

@@ -198,7 +198,7 @@
                         <a href="{{ route('imwell.admin.import.form', $org->id) }}" class="btn btn-info">
                             <i class="fas fa-file-upload"></i> Import Users
                         </a>
-                        <a href="{{ $org->url() }}" target="_blank" class="btn btn-light">
+                        <a href="{{ $org->landingUrl() }}" target="_blank" class="btn btn-light">
                             <i class="fas fa-external-link-alt"></i> Open member URL
                         </a>
                     @endif

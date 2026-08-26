@@ -76,8 +76,37 @@ class ImwellOrg extends Model
         return $this->logo ? asset($this->logo) : null;
     }
 
+    /** This organization's entry point inside the main application. */
     public function url()
     {
         return url('/org/' . $this->slug);
+    }
+
+    /** Base URL of the showcase site, or '' when it is not configured. */
+    public static function showcaseBase()
+    {
+        return rtrim((string) config('imwellapp.showcase_url', ''), '/');
+    }
+
+    /**
+     * Where members should be sent to read about this organization: the
+     * showcase landing page when imwell.app is configured, otherwise the main
+     * application as before.
+     */
+    public function landingUrl()
+    {
+        $base = static::showcaseBase();
+
+        return $base !== '' ? $base . '/' . $this->slug : $this->url();
+    }
+
+    /** Where an activation link should point. */
+    public function activationUrl($token)
+    {
+        $base = static::showcaseBase();
+
+        return $base !== ''
+            ? $base . '/' . $this->slug . '/activate/' . $token
+            : url('/org/' . $this->slug . '/activate/' . $token);
     }
 }

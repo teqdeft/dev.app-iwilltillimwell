@@ -25,6 +25,19 @@
  */
 return [
 
+    /*
+     | Public URL of the imwell.app showcase site, without a trailing slash
+     | (e.g. https://imwell.app). Set IMWELL_SHOWCASE_URL in .env.
+     |
+     | When set:
+     |   - activation emails link to the showcase site, so members activate
+     |     there and land on their organization's landing page
+     |   - activating through an older main-app link still finishes on the
+     |     showcase landing page
+     | When empty, everything stays on the main application as before.
+     */
+    'showcase_url' => env('IMWELL_SHOWCASE_URL', ''),
+
     // Paths every signed-in member may always reach, whatever their org has
     // enabled (account, auth, consent, onboarding).
     'always_allowed' => [

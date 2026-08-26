@@ -132,6 +132,15 @@ class OrgAuthController extends Controller
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
 
+        // New activation emails point at the showcase site, but links from
+        // older emails still arrive here. Finish on the organization's landing
+        // page so both routes end in the same place.
+        $showcase = ImwellOrg::showcaseBase();
+
+        if ($showcase !== '') {
+            return redirect()->away($org->landingUrl());
+        }
+
         return redirect()
             ->to(RouteServiceProvider::DASHBOARD)
             ->with('success', 'Your account is active. Welcome to ' . $org->name . '.');
