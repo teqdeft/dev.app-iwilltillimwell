@@ -62,7 +62,7 @@
 					     Same markup and classes as
 					     consultation/my-consultations-dashboard.blade.php, so it
 					     picks up the existing styling. --}}
-					<div class="dash2_urgent">
+					<div class="dash2_urgent imwell-empty-consult">
 						<div class="dash2_no_record">
 							<div class="image">
 								<img src="{{ asset('assets/dashboard/htmlv/assets/images/friendly-male-doctor.png') }}" alt="Dr. Jill" />
@@ -84,6 +84,31 @@
 							</div>
 						</div>
 					</div>
+					<style>
+						/* The stock rule positions the illustration absolutely at
+						   bottom:-49px, which assumes the taller layout that includes
+						   the CTA. Without the button the block is shorter and the
+						   image rides up over the card title, so pin it inside a
+						   container of its own with room for it. Scoped to
+						   .imwell-empty-consult, which only renders for org members. */
+						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{
+							position:relative;min-height:200px;overflow:hidden;padding:6px 0}
+						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image{
+							position:absolute;left:0;bottom:0;height:auto;width:170px;
+							max-height:196px;display:flex;align-items:flex-end}
+						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image img{
+							width:100%;height:auto;object-fit:contain;display:block}
+						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .dash_no_recordd_text{
+							padding-left:190px;display:flex;flex-direction:column;
+							justify-content:center;min-height:200px}
+						@media(max-width:1199px){
+							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{min-height:172px}
+							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image{
+								width:142px;max-height:168px}
+							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .dash_no_recordd_text{
+								padding-left:158px;min-height:172px}
+						}
+					</style>
 				@else
 				<div class="dash2_urgent" id="dash-consut-list">
 					<div class="dash_consul_record" style="display:none;">
