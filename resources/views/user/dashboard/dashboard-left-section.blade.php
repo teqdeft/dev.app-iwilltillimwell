@@ -5,7 +5,7 @@
 		@include('user.dashboard.dashboard-medical-care-slider')
 		@endif
 
-		@if(org_can('medical_care') || org_can('counseling'))
+		@if(org_can('medical_care') || org_can('mental_health'))
 		@include('user.dashboard.dashboard-medical-care')
 		@endif
 		<?php /*

@@ -52,7 +52,7 @@
 
 
         <!-- Get Care -->
-        @if(org_can('medical_care') || org_can('counseling') || org_can('pets'))
+        @if(org_can('medical_care') || org_can('mental_health') || org_can('pets'))
         <li class="menu-item has-sub get-care-now">
           <a href="#">
             <span class="icon">
@@ -112,7 +112,7 @@
               </li>
 
             </ul>
-        @if(org_can('counseling'))
+        @if(org_can('mental_health'))
         @endif
             <div class="category mental">
               <p>
@@ -198,7 +198,7 @@
         @endif
 
         <!-- My Health -->
-        @if(org_can('health_record') || org_can('care_coordination') || org_can('journal') || org_can('mood_tracking') || org_can('cbt') || org_can('safety_plan') || org_can('affirmations') || org_can('pets'))
+        @if(org_can('health_record') || org_can('care_coordination') || org_can('mental_health') || org_can('pets'))
         <li class="menu-item has-sub">
 
           <a href="#">
@@ -276,7 +276,7 @@
               </li>
 
             </ul>
-        @if(org_can('journal') || org_can('mood_tracking') || org_can('cbt') || org_can('safety_plan') || org_can('affirmations'))
+        @if(org_can('mental_health'))
         @endif
             <div class="category mental">
               <p>

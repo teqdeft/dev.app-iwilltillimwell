@@ -13,17 +13,12 @@ class Repository
      * application's code - only on its database.
      */
     const FEATURES = [
-        'medical_care'       => ['label' => 'Medical Care',        'blurb' => 'Virtual urgent care, primary care and dermatology consultations with licensed physicians.'],
+        'medical_care'       => ['label' => 'Medical Care',         'blurb' => 'Virtual urgent care, primary care and dermatology consultations with licensed physicians.'],
         'health_record'      => ['label' => 'Health Records & Labs','blurb' => 'Personal health records, medications, allergies, conditions and lab requests in one place.'],
-        'counseling'         => ['label' => 'Counseling',          'blurb' => 'Behavioral health support, psychology and psychiatry sessions.'],
-        'care_coordination'  => ['label' => 'Care Coordination',   'blurb' => 'A care coordinator to help navigate appointments, referrals and advocacy.'],
-        'message_specialist' => ['label' => 'Message a Specialist','blurb' => 'Send a question to a specialist and get a written response.'],
-        'journal'            => ['label' => 'Journal',             'blurb' => 'Written and audio journaling to track how things are going.'],
-        'mood_tracking'      => ['label' => 'Mood Tracking',       'blurb' => 'Log moods over time and see patterns emerge.'],
-        'cbt'                => ['label' => 'CBT & Screenings',    'blurb' => 'Guided thought analysis plus GAD-7 and PHQ-9 mental health screenings.'],
-        'safety_plan'        => ['label' => 'Safety Plan',         'blurb' => 'Build a personal safety plan and keep it close at hand.'],
-        'affirmations'       => ['label' => 'Affirmations',        'blurb' => 'Daily affirmations, and the option to share them with people you trust.'],
-        'pets'               => ['label' => 'Pet Care',            'blurb' => 'Talk to a veterinarian about your pets and keep their history.'],
+        'mental_health'      => ['label' => 'Mental Health',        'blurb' => 'In-the-moment care and crisis support, therapy, moods, journaling, safety plans, thought analysis and screenings.'],
+        'care_coordination'  => ['label' => 'Care Coordination',    'blurb' => 'A care coordinator to help navigate appointments, referrals and advocacy.'],
+        'message_specialist' => ['label' => 'Message a Specialist', 'blurb' => 'Send a question to a specialist and get a written response.'],
+        'pets'               => ['label' => 'Pet Care',             'blurb' => 'Talk to a veterinarian about your pets and keep their history.'],
     ];
 
     /** Active organizations, for the directory page. */

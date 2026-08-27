@@ -72,11 +72,36 @@ return [
             ],
         ],
         [
-            'key' => 'counseling', 'label' => 'Counseling / Behavioral Health', 'icon' => 'fas fa-comments',
-            'services' => [16],
+            /*
+             | One switch for the whole mental health area: the "My Mental
+             | Health" cards and the "Schedule Your Consultation" column that
+             | sit side by side on the dashboard.
+             |
+             | Replaces the earlier separate counseling / journal /
+             | mood_tracking / cbt / safety_plan / affirmations switches -
+             | see the 2026_08_26 migration, which turns any of those that were
+             | enabled into this one.
+             */
+            'key' => 'mental_health', 'label' => 'Mental Health', 'icon' => 'fas fa-brain',
+            'services' => [16, 19],
             'paths' => [
+                // counseling / therapy
                 'counseling', 'behavioral-health', 'in-the-moment-care',
                 'subscribe-to-counseling', 'group-counseling', 'group-counseling/*',
+                // journal
+                'journal', 'journal-deleted', 'my-journal-audio',
+                'view-journal-log', 'view-journal-log-post', 'view-journal-log-post-deleted',
+                'voice-journal/*', 'store-save-mode-message', 'upload-audio',
+                // moods
+                'my-mood-feeling', 'my-mood-feeling-history', 'my-mood-feeling-history-graph',
+                'my-mood-feeling-history-deleted', 'feels/mood-logs', 'what-is-mood',
+                // CBT and screenings
+                'cbt-therapy', 'cbt-therapy/*', 'mental-health-screening',
+                'mental-health-screening/*', 'my-screening-history-graph',
+                // safety plan
+                'my-safety-plan', 'safety-plan', 'safety-plan/*',
+                // affirmations
+                'requested-affirmation', 'get-next-affirmation', 'affirmation', 'affirmation/*',
             ],
         ],
         [
@@ -88,41 +113,6 @@ return [
             'key' => 'message_specialist', 'label' => 'Message a Specialist', 'icon' => 'fas fa-envelope-open-text',
             'services' => [2],
             'paths' => ['message-a-specialist', 'message-specialist', 'postMessageReply'],
-        ],
-        [
-            'key' => 'journal', 'label' => 'Journal', 'icon' => 'fas fa-book',
-            'services' => [19],
-            'paths' => [
-                'journal', 'journal-deleted', 'my-journal-audio',
-                'view-journal-log', 'view-journal-log-post', 'view-journal-log-post-deleted',
-                'voice-journal/*', 'store-save-mode-message', 'upload-audio',
-            ],
-        ],
-        [
-            'key' => 'mood_tracking', 'label' => 'Mood Tracking', 'icon' => 'fas fa-smile',
-            'services' => [19],
-            'paths' => [
-                'my-mood-feeling', 'my-mood-feeling-history', 'my-mood-feeling-history-graph',
-                'my-mood-feeling-history-deleted', 'feels/mood-logs', 'what-is-mood',
-            ],
-        ],
-        [
-            'key' => 'cbt', 'label' => 'CBT & Screenings', 'icon' => 'fas fa-brain',
-            'services' => [19],
-            'paths' => [
-                'cbt-therapy', 'cbt-therapy/*', 'mental-health-screening',
-                'mental-health-screening/*', 'my-screening-history-graph',
-            ],
-        ],
-        [
-            'key' => 'safety_plan', 'label' => 'Safety Plan', 'icon' => 'fas fa-shield-alt',
-            'services' => [19],
-            'paths' => ['my-safety-plan', 'safety-plan', 'safety-plan/*'],
-        ],
-        [
-            'key' => 'affirmations', 'label' => 'Affirmations', 'icon' => 'fas fa-sun',
-            'services' => [19],
-            'paths' => ['requested-affirmation', 'get-next-affirmation', 'affirmation', 'affirmation/*'],
         ],
         [
             'key' => 'pets', 'label' => 'Pet Care', 'icon' => 'fas fa-paw',
