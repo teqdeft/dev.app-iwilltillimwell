@@ -1,10 +1,3 @@
-@php
-    /* Defined at the top: the tab buttons below use these before the
-       main @php block further down the file. */
-    $imwellOrgMember = function_exists('org_current') && org_current();
-    $imwellCan = function ($k) { return !function_exists('org_can') || org_can($k); };
-@endphp
-
 <?php 
 
 		// new section add 12 25 25
@@ -23,7 +16,7 @@
 
                 <div class="tab-buttons patient-details">
 
-                    @if($imwellCan('medical_care') || $imwellCan('health_record'))
+                    @if(org_can('medical_care') || org_can('health_record'))
                     <button class="tab-link {{ request()->get('active-tab') == 'medical-tab' || !request()->has('active-tab') ? 'active' : '' }}" data-tab="medical-tab">
 
                         <span>
@@ -35,7 +28,7 @@
                     </button>
 
                     @endif
-@if($imwellCan('mental_health'))
+@if(org_can('mental_health'))
                     <button class="tab-link {{ request()->get('active-tab') == 'mental-tab' ? 'active' : '' }}" data-tab="mental-tab">
 
                         <span>
@@ -47,7 +40,7 @@
                     </button>
 
                     @endif
-@if($imwellCan('pets'))
+@if(org_can('pets'))
                     <button class="tab-link {{ request()->get('active-tab') == 'pet-tab' ? 'active' : '' }}" data-tab="pet-tab">
 
                         <span>
@@ -163,7 +156,7 @@ $data_medical[] = [
 
 // Organisation members get two separate cards - Crisis Management
 	// first - each opening only its own panel.
-	if( $imwellOrgMember ){
+	if( org_current() ){
 		$data_mental[] = [
 			'id'=>'23',
 			'name'=>'Crisis Management',
@@ -213,7 +206,7 @@ $data_mental[] = [
 				];
 
 // Paid per-visit consultations are not part of an organisation plan.
-	if( !$imwellOrgMember ){
+	if( !org_current() ){
 $data_mental[] = [
 
 					'id'=>'3',
@@ -283,7 +276,7 @@ $data_pet[] = [
 
                 <!-- Tab Content -->
 
-                @if($imwellCan('medical_care') || $imwellCan('health_record'))
+                @if(org_can('medical_care') || org_can('health_record'))
                 <div id="medical-tab" class="tab-content {{ request()->get('active-tab') == 'medical-tab' || !request()->has('active-tab') ? 'active' : '' }}">
 
 				
@@ -307,7 +300,7 @@ $data_pet[] = [
 
 
 
-                @if($imwellCan('mental_health'))
+                @if(org_can('mental_health'))
                 <div id="mental-tab" class="tab-content {{ request()->get('active-tab') == 'mental-tab' ? 'active' : '' }}">
 
 					
@@ -329,7 +322,7 @@ $data_pet[] = [
 
 
 
-                @if($imwellCan('pets'))
+                @if(org_can('pets'))
                 <div id="pet-tab" class="tab-content {{ request()->get('active-tab') == 'pet-tab' ? 'active' : '' }}">
 
 
