@@ -1,3 +1,10 @@
+@php
+    /* Defined at the top: the tab buttons below use these before the
+       main @php block further down the file. */
+    $imwellOrgMember = function_exists('org_current') && org_current();
+    $imwellCan = function ($k) { return !function_exists('org_can') || org_can($k); };
+@endphp
+
 <?php 
 
 		// new section add 12 25 25
@@ -60,8 +67,6 @@
 
 @php
 
-	$imwellOrgMember = function_exists('org_current') && org_current();
-	$imwellCan = function ($k) { return !function_exists('org_can') || org_can($k); };
 
 
 				
