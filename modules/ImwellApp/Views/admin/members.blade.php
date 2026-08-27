@@ -15,6 +15,7 @@
                                 <a href="{{ route('imwell.admin.import.form', $org->id) }}" class="btn-custom">
                                     <i class="fas fa-file-upload" aria-hidden="true"></i> Import Users
                                 </a>
+                                @if(Lyric::enabled())
                                 <a href="javascript:;" class="btn-custom"
                                    onclick="document.getElementById('imwell-lyric-all').submit();">
                                     <i class="fas fa-notes-medical" aria-hidden="true"></i> Retry Lyric for all
@@ -22,6 +23,7 @@
                                 <form method="POST" id="imwell-lyric-all"
                                       action="{{ route('imwell.admin.lyric.retry.all', $org->id) }}"
                                       style="display:none">@csrf</form>
+                                @endif
                                 <a href="{{ route('imwell.admin.index') }}" class="btn-custom">
                                     <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to list
                                 </a>
@@ -47,7 +49,9 @@
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Account</th>
+                                        @if(Lyric::enabled())
                                         <th>Telemedicine</th>
+                                        @endif
                                         <th>Imported</th>
                                         <th>Actions</th>
                                     </tr>
@@ -70,6 +74,7 @@
                                                 <label class="badge badge-warning">Pending activation</label>
                                             @endif
                                         </td>
+                                        @if(Lyric::enabled())
                                         <td>
                                             @if($registered)
                                                 <label class="badge badge-success">Registered</label>
@@ -81,6 +86,7 @@
                                                 <label class="badge badge-warning">Not registered</label>
                                             @endif
                                         </td>
+                                        @endif
                                         <td>{{ $member->created_at ? $member->created_at->format('m/d/Y') : '-' }}</td>
                                         <td class="to-show">
                                             <ul>
@@ -95,7 +101,7 @@
                                                               style="display:none">@csrf</form>
                                                     </li>
                                                 @endif
-                                                @if(! $registered)
+                                                @if(Lyric::enabled() && ! $registered)
                                                     <li>
                                                         <a href="javascript:;" data-toggle="tooltip" title="Register on Lyric"
                                                            onclick="document.getElementById('imwell-lyric-{{ $member->id }}').submit();">
@@ -106,7 +112,7 @@
                                                               style="display:none">@csrf</form>
                                                     </li>
                                                 @endif
-                                                @if((int) $member->status === 1 && $registered)
+                                                @if((int) $member->status === 1 && (! Lyric::enabled() || $registered))
                                                     <li>&mdash;</li>
                                                 @endif
                                             </ul>
@@ -114,7 +120,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No members imported yet.</td>
+                                        <td colspan="{{ Lyric::enabled() ? 8 : 7 }}" class="text-center">No members imported yet.</td>
                                     </tr>
                                 @endforelse
                                 </tbody>
@@ -123,6 +129,7 @@
 
                         {{ $members->links() }}
 
+                        @if(Lyric::enabled())
                         <p class="imwell-note">
                             <strong>Telemedicine</strong> shows whether the member exists on Lyric, which
                             consultations, health records and lab reports depend on. Registration happens
@@ -130,6 +137,7 @@
                             use the retry action if a member is stuck. "Missing details" means the sheet did
                             not supply everything Lyric requires &mdash; fill those in and retry.
                         </p>
+                        @endif
 
                     </div>
                 </div>

@@ -31,6 +31,15 @@ use Modules\ImwellApp\Models\ImwellOrg;
  */
 class Lyric
 {
+    /**
+     * Is Lyric registration switched on for organisation members?
+     * Off by default - see imwellapp.lyric_enabled.
+     */
+    public static function enabled()
+    {
+        return (bool) config('imwellapp.lyric_enabled', false);
+    }
+
     /** users.userid holds the Lyric member id once registered. */
     public static function isRegistered(User $user)
     {
@@ -44,6 +53,16 @@ class Lyric
      */
     public static function ensureMember(User $user, ImwellOrg $org = null)
     {
+        // Organisation members are not added to Lyric unless it is explicitly
+        // switched on. No API call is made at import, activation or sign in.
+        if (! static::enabled()) {
+            return [
+                'ok'      => true,
+                'skipped' => true,
+                'message' => 'Lyric registration is switched off for organization members.',
+            ];
+        }
+
         if (static::isRegistered($user)) {
             return ['ok' => true, 'message' => 'Already registered.', 'skipped' => true];
         }
@@ -122,6 +141,10 @@ class Lyric
      */
     public static function openSession(User $user)
     {
+        if (! static::enabled()) {
+            return false;
+        }
+
         if (! static::isRegistered($user) || empty($user->user_password)) {
             return false;
         }

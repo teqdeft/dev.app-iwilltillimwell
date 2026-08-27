@@ -38,6 +38,20 @@ return [
      */
     'showcase_url' => env('IMWELL_SHOWCASE_URL', ''),
 
+    /*
+     | Should organisation members be registered on Lyric (telemedicine)?
+     |
+     | OFF by default: members imported for an organisation are not added to
+     | Lyric, and no Lyric session is opened for them. The consequence is that
+     | Lyric-backed screens - consultations, health records, lab reports - will
+     | not work for them, so only enable the Medical Care / Health Records
+     | switches for an organisation once this is turned on.
+     |
+     | Set IMWELL_LYRIC_ENABLED=true in .env to turn it back on; the whole
+     | registration path is still in Support/Lyric.php.
+     */
+    'lyric_enabled' => env('IMWELL_LYRIC_ENABLED', false),
+
     // Paths every signed-in member may always reach, whatever their org has
     // enabled (account, auth, consent, onboarding).
     'always_allowed' => [
