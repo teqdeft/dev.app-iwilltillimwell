@@ -36,7 +36,7 @@
 									'name'=>'Crisis Management',
 									'sub_name'=>'',
 									'tag'=>'Immidiate Care',
-									'ico'=>'crises.svg',
+									'ico'=>'crisis-management.svg',
 									'slug'=>'in-the-moment-care?care=crisis'
 								];
 				}

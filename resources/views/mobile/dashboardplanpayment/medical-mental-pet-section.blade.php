@@ -161,7 +161,7 @@ $data_medical[] = [
 			'id'=>'23',
 			'name'=>'Crisis Management',
 			'sub_name'=>'',
-			'ico'=>'in-the-moment-care.svg',
+			'ico'=>'crisis-management.svg',
 			'slug'=>'in-the-moment-care?care=crisis',
 			'service_status'=>'active',
 			'tag'=>'Immidiate Care'
