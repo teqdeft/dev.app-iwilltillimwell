@@ -276,6 +276,8 @@ $graph_data = array();
                                 </div>
                             </div>
 
+								{{-- Family Depandents block: hidden for organisation members. --}}
+								@if(!$imwellOrgMember)
 								@if(!Auth::user()->parentId)
 									<div class="dash-card">
 										<div class="card-title">
@@ -319,6 +321,7 @@ $graph_data = array();
 											</div>
 										</div>
 									</div>
+								@endif
 								@endif
                         </div>
                     </div>

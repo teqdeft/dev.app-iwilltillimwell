@@ -49,6 +49,19 @@
 					</div>
 				</div>
 				
+				@if(org_current())
+					{{-- Organisation members have no consultation counters to show,
+					     so the card carries a static image instead of sitting empty. --}}
+					<div class="dash2_urgent imwell-consul-static">
+						<img src="{{ asset('assets/images/dr-jill.png') }}" alt="iWILL 'til i'mWELL">
+					</div>
+					<style>
+						.imwell-consul-static{display:flex;align-items:center;justify-content:center;
+							padding:6px 0}
+						.imwell-consul-static img{display:block;max-width:100%;max-height:190px;
+							width:auto;height:auto;object-fit:contain}
+					</style>
+				@else
 				<div class="dash2_urgent" id="dash-consut-list">
 					<div class="dash_consul_record" style="display:none;">
 																		
@@ -90,6 +103,7 @@
 									
 								</div>
 				</div>
+				@endif
 				
 			</div>
 	</div>         
