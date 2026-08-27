@@ -187,6 +187,8 @@ class Lyric
             'sendRegistrationNotification' => 0,   // the member already has our activation mail
             'numAllowedDependents'         => 8,
             'language'                     => 'en',
+            'customAttributeId'            => '',   // sent empty by the normal
+            'customAttributeValue'         => '',   // flow too - kept for parity
             'effectiveDate'                => date('m/d/Y'),
             'gender'                       => static::gender($user->gender),
         ];
