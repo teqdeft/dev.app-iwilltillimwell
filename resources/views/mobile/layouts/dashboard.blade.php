@@ -303,6 +303,9 @@ function showLoaderPageLoad(action) {
 
 
 
+<style>
+    .app-logo .logo.org-logo-m{height:auto;width:auto;max-height:38px;max-width:132px;object-fit:contain}
+</style>
 </head>
 
 
@@ -341,7 +344,12 @@ function showLoaderPageLoad(action) {
 
                     <a href="{{ url('mobile-dashboard')}}">
 
-                        <img class="logo"  src="{{ asset(env('MOBILE_DASHBOARD_LOGO')) }}" alt="web logo">
+                        @if(function_exists('org_logo') && org_current() && org_logo())
+                            {{-- Organisation members see their own logo. --}}
+                            <img class="logo org-logo-m" src="{{ org_logo() }}" alt="{{ org_current()->name }}">
+                        @else
+                            <img class="logo"  src="{{ asset(env('MOBILE_DASHBOARD_LOGO')) }}" alt="web logo">
+                        @endif
 
                     </a>
 
