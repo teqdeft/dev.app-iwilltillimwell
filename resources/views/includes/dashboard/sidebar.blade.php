@@ -20,14 +20,16 @@
 				<span class="org-brand-name">{{ org_current()->name }}</span>
 			</a>
 			<style>
-				/* Organisation logos vary in shape, so contain rather than crop
-				   and let the name wrap instead of overflowing the sidebar. */
-				.sidebar_brand_logo .org-brand{display:flex;align-items:center;gap:10px;
-					min-width:0;padding:6px 14px !important;box-sizing:border-box}
-				.sidebar_brand_logo .org-brand img{flex:0 0 auto;height:auto;width:auto;
-					max-height:46px;max-width:96px;object-fit:contain}
-				.sidebar_brand_logo .org-brand-name{flex:1 1 auto;min-width:0;font-size:14px;
-					font-weight:600;line-height:1.3;color:#22252e;
+				/* Logo above, organisation name centred underneath.
+				   Logos vary in shape, so contain rather than crop, and let a
+				   long name wrap instead of overflowing the sidebar. */
+				.sidebar_brand_logo .org-brand{display:flex !important;flex-direction:column;
+					align-items:center;justify-content:center;gap:8px;width:100%;
+					padding:14px 12px !important;box-sizing:border-box;text-align:center}
+				.sidebar_brand_logo .org-brand img{display:block;height:auto;width:auto;
+					max-height:52px;max-width:100%;object-fit:contain;margin:0 auto}
+				.sidebar_brand_logo .org-brand-name{display:block;width:100%;font-size:15px;
+					font-weight:600;line-height:1.3;color:#22252e;text-align:center;
 					overflow-wrap:anywhere;word-break:break-word}
 			</style>
 		@else
@@ -57,7 +59,9 @@
 
 
         <!-- Get Care -->
-        @if(org_can('medical_care') || org_can('mental_health') || org_can('pets'))
+        {{-- Organisation members navigate from the dashboard cards, so these two
+             top-level menus are not shown for them. --}}
+        @if(!org_current() && (org_can('medical_care') || org_can('mental_health') || org_can('pets')))
         <li class="menu-item has-sub get-care-now">
           <a href="#">
             <span class="icon">
@@ -203,7 +207,7 @@
         @endif
 
         <!-- My Health -->
-        @if(org_can('health_record') || org_can('care_coordination') || org_can('mental_health') || org_can('pets'))
+        @if(!org_current() && (org_can('health_record') || org_can('care_coordination') || org_can('mental_health') || org_can('pets')))
         <li class="menu-item has-sub">
 
           <a href="#">

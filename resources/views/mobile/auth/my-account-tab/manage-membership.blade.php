@@ -84,7 +84,9 @@ echo "</pre>";   */
 										*/ ?>
 
                                         <div class="col-100 cta">
+                                            @if(!(function_exists('org_current') && org_current()))
                                             <button type="button" class="primary-button" onclick="ChangePlan()">Upgrade Your Plan</button>
+                                            @endif
                                             
                                         </div>
                                         

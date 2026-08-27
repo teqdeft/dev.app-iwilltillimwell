@@ -60,6 +60,8 @@
             </div>
         </div>
 		*/ ?>
+        {{-- An organisation pays for its members, so there is no plan for them to upgrade. --}}
+        @if(!(function_exists('org_current') && org_current()))
         <div class="col-sm-12  mt-4">
             <a href="{{ url('dashboard?action=change-plan')}}" class="btn btn-primary mr-3">
               
@@ -68,6 +70,7 @@
 			  Upgrade Your Plan</a>
             <!-- <button type="submit" class="btn btn-primary mr-3"><i class="fas fa-calendar-times mr-2"></i>Cancel Plan</button> -->
         </div>
+        @endif
     </div>
 </div>
 @include('includes.planPopup')
