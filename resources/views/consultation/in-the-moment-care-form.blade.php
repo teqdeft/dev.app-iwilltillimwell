@@ -1,3 +1,18 @@
+@php
+    /*
+     | Organisation members reach this page from two separate dashboard
+     | cards, so each card opens only its own panel:
+     |   ?care=itmc    -> In-The-Moment Care only
+     |   ?care=crisis  -> Crisis Management only
+     | With no parameter - and for every non-org user - both panels show
+     | exactly as before.
+     */
+    $imwellCare      = function_exists('org_current') && org_current() ? request('care') : null;
+    $imwellShowItmc  = $imwellCare !== 'crisis';
+    $imwellShowCrisis= $imwellCare !== 'itmc';
+    $imwellCol       = ($imwellShowItmc && $imwellShowCrisis) ? 'col-lg-6' : 'col-lg-12';
+@endphp
+
 <section class="support-section">
 
         <div class="container">
@@ -8,7 +23,8 @@
 
                 <!-- Telus -->
 
-                <div class="col-lg-6">
+                @if($imwellShowItmc)
+                <div class="{{ $imwellCol }}">
 
                     <div class="card support-card p-4">
 
@@ -115,10 +131,12 @@
                     </div>
 
                 </div>
+                @endif
 
                 <!-- Lyric -->
 
-                <div class="col-lg-6">
+                @if($imwellShowCrisis)
+                <div class="{{ $imwellCol }}">
 
                     <div class="card support-card p-4">
 
@@ -217,6 +235,7 @@
                     </div>
 
                 </div>
+                @endif
 
             </div>
 

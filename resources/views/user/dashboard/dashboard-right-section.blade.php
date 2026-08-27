@@ -1,14 +1,26 @@
+@php
+    /*
+     | Recent Prescriptions and Pick Up Pharmacy are not part of an
+     | organisation plan, so both tabs and their panels are hidden for
+     | organisation members. Every other user sees them exactly as before.
+     */
+    $imwellOrgMember = function_exists('org_current') && org_current();
+@endphp
+
 <div class="dash-right">
                     <div class="dash-filter">
+                        @if(!$imwellOrgMember)
                         <div class="tabs">
                             <div class="tab active" data-tab="Recent-tab">Recent Prescriptions</div>
                             <div class="tab" data-tab="Pharmacy-tab">Pick Up Pharmacy</div>
                         </div>
+                        @endif
                         <div class="content">
 						
 <?php 
 $graph_data = array();
 ?>						
+                        @if(!$imwellOrgMember)
                             <div class="tab-content active" id="Recent-tab">
                                 <div class="dash-card">
                                     <div class="card-title">
@@ -55,12 +67,14 @@ $graph_data = array();
                                     </div>
                                 </div>
                             </div>
+                        @endif
 							
 							
 							
 							
 							
 							
+                        @if(!$imwellOrgMember)
                             <div class="tab-content" id="Pharmacy-tab">
                                 <div class="dash-card">
                                     <div class="card-title">
@@ -115,6 +129,7 @@ $graph_data = array();
                                     </div>
                                 </div>
                             </div>
+                        @endif
 							
 							@include('user.dashboard.personal-analytics-graph',['graph_data' => $graph_data])
 							
