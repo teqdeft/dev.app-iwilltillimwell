@@ -97,10 +97,10 @@
 							position:absolute;left:0;bottom:0;height:auto;width:148px;
 							max-height:170px;display:flex;align-items:flex-end}
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image img{
-							width:100%;height:auto;object-fit:contain;display:block}
+							width:114%;height:auto;object-fit:contain;display:block}
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .dash_no_recordd_text{
 							padding-left:166px;display:flex;flex-direction:column;
-							justify-content:center;min-height:172px}
+							justify-content:center;min-height:118px}
 						@media(max-width:1199px){
 							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{min-height:150px}
 							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image{
