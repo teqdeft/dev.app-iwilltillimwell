@@ -28,18 +28,8 @@
 			@php
 				$imwellOrgMember = function_exists('org_current') && org_current();
 
-				$schedule[] = [
-								'id'=>'19',
-								'name'=>'In-The-Moment Care',
-								'sub_name'=>'',
-								'tag'=>'Immidiate Care',
-								'ico'=>'crises.svg',
-								// Org members open only the In-The-Moment Care panel.
-								'slug'=> $imwellOrgMember ? 'in-the-moment-care?care=itmc' : 'in-the-moment-care'
-							];
-
-				// Crisis Management gets its own card for organisation members,
-				// opening only the Crisis Management panel.
+				// Organisation members get Crisis Management first, then
+				// In-The-Moment Care. Each card opens only its own panel.
 				if( $imwellOrgMember ){
 					$schedule[] = [
 									'id'=>'23',
@@ -50,6 +40,15 @@
 									'slug'=>'in-the-moment-care?care=crisis'
 								];
 				}
+
+				$schedule[] = [
+								'id'=>'19',
+								'name'=>'In-The-Moment Care',
+								'sub_name'=>'',
+								'tag'=>'Immidiate Care',
+								'ico'=>'crises.svg',
+								'slug'=> $imwellOrgMember ? 'in-the-moment-care?care=itmc' : 'in-the-moment-care'
+							];
 
 				$schedule[] = [
 								'id'=>'20',

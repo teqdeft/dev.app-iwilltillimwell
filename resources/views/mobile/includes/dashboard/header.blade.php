@@ -4,8 +4,26 @@
 <div class="container-scroller">
   	<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row dashboard-header">
   		<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+  			@if(function_exists('org_current') && org_current())
+  				{{-- Organisation members see their own brand, not the iWILL logo. --}}
+  				<a class="navbar-brand brand-logo px-1 org-brand-m" href="{{ url('/') }}">
+  					@if(org_logo())
+  						<img src="{{ org_logo() }}" alt="{{ org_current()->name }}"/>
+  					@endif
+  					<span class="org-brand-m-name">{{ org_current()->name }}</span>
+  				</a>
+  				<style>
+  					.navbar-brand.org-brand-m{display:flex;align-items:center;gap:8px;min-width:0}
+  					.navbar-brand.org-brand-m img{flex:0 0 auto;height:auto;width:auto;
+  						max-height:34px;max-width:78px;object-fit:contain}
+  					.navbar-brand.org-brand-m .org-brand-m-name{flex:1 1 auto;min-width:0;
+  						font-size:13px;font-weight:600;line-height:1.25;color:#22252e;
+  						overflow-wrap:anywhere;word-break:break-word}
+  				</style>
+  			@else
   			<a class="navbar-brand brand-logo px-1" href="{{ url('/')  }}"><img src="{{ asset('assets/assets/images/sg-iwilltilimwell-h-headerbar-logomark.png') }}"  alt="logo"/></a>
   			<a class="navbar-brand brand-logo-mini" href="{{ url('/') }}"><img src="{{ asset('assets/assets/images/sg-iwilltilimwell-h-headerbar-logomark-mini.png' ) }}" alt="logo"/></a>
+  			@endif
   		</div>
   		<div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
   			<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">

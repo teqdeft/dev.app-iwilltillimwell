@@ -16,6 +16,7 @@
 
                 <div class="tab-buttons patient-details">
 
+                    @if($imwellCan('medical_care') || $imwellCan('health_record'))
                     <button class="tab-link {{ request()->get('active-tab') == 'medical-tab' || !request()->has('active-tab') ? 'active' : '' }}" data-tab="medical-tab">
 
                         <span>
@@ -26,6 +27,8 @@
 
                     </button>
 
+                    @endif
+@if($imwellCan('mental_health'))
                     <button class="tab-link {{ request()->get('active-tab') == 'mental-tab' ? 'active' : '' }}" data-tab="mental-tab">
 
                         <span>
@@ -36,6 +39,8 @@
 
                     </button>
 
+                    @endif
+@if($imwellCan('pets'))
                     <button class="tab-link {{ request()->get('active-tab') == 'pet-tab' ? 'active' : '' }}" data-tab="pet-tab">
 
                         <span>
@@ -45,6 +50,7 @@
                         </span>
 
                     </button>
+                @endif
 
                 </div>
 
@@ -52,7 +58,11 @@
 
 
 
-@php 
+@php
+
+	$imwellOrgMember = function_exists('org_current') && org_current();
+	$imwellCan = function ($k) { return !function_exists('org_can') || org_can($k); };
+
 
 				
 
@@ -146,23 +156,38 @@ $data_medical[] = [
 
 							
 
-$data_mental[] = [
-
-					'id'=>'1',
-
-					'name'=>'In-The-Moment Care & Crisis Management ',
-
-					'sub_name'=>'',
-
-					'ico'=>'in-the-moment-care.svg',
-
-					'slug'=>'in-the-moment-care',
-
-					'service_status'=>'active',
-
-					'tag'=>'Immidiate Care'
-
-				];
+// Organisation members get two separate cards - Crisis Management
+	// first - each opening only its own panel.
+	if( $imwellOrgMember ){
+		$data_mental[] = [
+			'id'=>'23',
+			'name'=>'Crisis Management',
+			'sub_name'=>'',
+			'ico'=>'in-the-moment-care.svg',
+			'slug'=>'in-the-moment-care?care=crisis',
+			'service_status'=>'active',
+			'tag'=>'Immidiate Care'
+		];
+		$data_mental[] = [
+			'id'=>'1',
+			'name'=>'In-The-Moment Care',
+			'sub_name'=>'',
+			'ico'=>'in-the-moment-care.svg',
+			'slug'=>'in-the-moment-care?care=itmc',
+			'service_status'=>'active',
+			'tag'=>'Immidiate Care'
+		];
+	} else {
+		$data_mental[] = [
+			'id'=>'1',
+			'name'=>'In-The-Moment Care & Crisis Management ',
+			'sub_name'=>'',
+			'ico'=>'in-the-moment-care.svg',
+			'slug'=>'in-the-moment-care',
+			'service_status'=>'active',
+			'tag'=>'Immidiate Care'
+		];
+	}
 
 $data_mental[] = [
 
@@ -182,6 +207,8 @@ $data_mental[] = [
 
 				];
 
+// Paid per-visit consultations are not part of an organisation plan.
+	if( !$imwellOrgMember ){
 $data_mental[] = [
 
 					'id'=>'3',
@@ -221,6 +248,7 @@ $data_mental[] = [
 					'tag'=>'Long-Term Therapy'
 
 				];
+	}
 
 								
 
@@ -250,6 +278,7 @@ $data_pet[] = [
 
                 <!-- Tab Content -->
 
+                @if($imwellCan('medical_care') || $imwellCan('health_record'))
                 <div id="medical-tab" class="tab-content {{ request()->get('active-tab') == 'medical-tab' || !request()->has('active-tab') ? 'active' : '' }}">
 
 				
@@ -269,9 +298,11 @@ $data_pet[] = [
 					 
 
                 </div>
+                @endif
 
 
 
+                @if($imwellCan('mental_health'))
                 <div id="mental-tab" class="tab-content {{ request()->get('active-tab') == 'mental-tab' ? 'active' : '' }}">
 
 					
@@ -289,9 +320,11 @@ $data_pet[] = [
                     
 
 				</div>
+                @endif
 
 
 
+                @if($imwellCan('pets'))
                 <div id="pet-tab" class="tab-content {{ request()->get('active-tab') == 'pet-tab' ? 'active' : '' }}">
 
 
@@ -309,6 +342,7 @@ $data_pet[] = [
 				 
 
                 </div>
+                @endif
 
 
 

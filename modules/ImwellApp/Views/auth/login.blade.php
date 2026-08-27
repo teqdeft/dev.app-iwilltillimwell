@@ -7,6 +7,7 @@
 --}}
 @extends('layouts.auth')
 @section('content')
+@include('ImwellApp::auth.brand-css')
 <section class="new-login-web">
     <div class="new-login-container">
 
@@ -21,9 +22,9 @@
                 <div class="card">
 
                     <div class="top-section">
-                        <div class="logo">
+                        <div class="logo org-logo">
                             <a href="{{ url('/org/' . $org->slug) }}">
-                                <img class="logo"
+                                <img
                                      src="{{ $org->logoUrl() ?: asset(env('APP_LOGIN_MOBILE_BLACK')) }}"
                                      alt="{{ $org->name }} logo">
                             </a>

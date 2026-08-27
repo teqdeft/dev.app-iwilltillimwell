@@ -20,10 +20,15 @@
 				<span class="org-brand-name">{{ org_current()->name }}</span>
 			</a>
 			<style>
-				.sidebar_brand_logo .org-brand{display:flex;align-items:center;gap:10px;min-width:0}
-				.sidebar_brand_logo .org-brand img{max-height:44px;max-width:130px;width:auto;object-fit:contain}
-				.sidebar_brand_logo .org-brand-name{font-size:15px;font-weight:600;line-height:1.25;
-					color:#22252e;white-space:normal;overflow:hidden}
+				/* Organisation logos vary in shape, so contain rather than crop
+				   and let the name wrap instead of overflowing the sidebar. */
+				.sidebar_brand_logo .org-brand{display:flex;align-items:center;gap:10px;
+					min-width:0;padding:6px 14px !important;box-sizing:border-box}
+				.sidebar_brand_logo .org-brand img{flex:0 0 auto;height:auto;width:auto;
+					max-height:46px;max-width:96px;object-fit:contain}
+				.sidebar_brand_logo .org-brand-name{flex:1 1 auto;min-width:0;font-size:14px;
+					font-weight:600;line-height:1.3;color:#22252e;
+					overflow-wrap:anywhere;word-break:break-word}
 			</style>
 		@else
 			<a class="navbar-brand brand-logo" href="{{$dashboard_url}}"><img src="{{ asset(env('APP_LOGO_WEB')) }}"  alt="logo"/></a>

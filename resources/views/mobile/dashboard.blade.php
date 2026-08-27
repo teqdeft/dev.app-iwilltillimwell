@@ -77,7 +77,9 @@
 	
 	
 	
-	@include('mobile.dashboardplanpayment.medical-mental-pet-section')
+	@if(org_can('medical_care') || org_can('mental_health') || org_can('pets'))
+	@include('mobile.dashboardplanpayment.medical-mental-pet-section')
+	@endif
 	{{-- @include('mobile.dashboardplanpayment.schedule-your-consultations') --}}
 	
 	
@@ -437,7 +439,7 @@
 @php
     $group_exits = GetGroupAnalytics();
 @endphp						
-    @if($group_exits)
+    @if($group_exits && !(function_exists('org_current') && org_current()))
                     <a 
 					target="_blank"
 					href="https://script.google.com/macros/s/AKfycbw1lV3BByxySHBAWQSud4vSP4sTI0DNKmZrHZ5nBdlybbee8SBgytQ7v6adqLfS1hPL/exec" 
@@ -494,8 +496,12 @@
             
 		
 	
-@include('mobile.dashboardplanpayment.pets-section')
-@include('mobile.dashboardplanpayment.prescriptions-section')
+@if(org_can('pets'))
+@include('mobile.dashboardplanpayment.pets-section')
+@endif
+@if(org_can('medical_care'))
+@include('mobile.dashboardplanpayment.prescriptions-section')
+@endif
 	
             
 	
