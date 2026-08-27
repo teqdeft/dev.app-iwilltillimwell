@@ -7,11 +7,14 @@
 				<p>Welcome to Your Health Dashboard</p>
 			</div>
     </div>
+    {{-- Health-record completion bar: hidden for organisation members, who have no health record area. --}}
+    @if(org_can('health_record'))
     <div class="pro-value">
 			<div class="progress-main">
 				{!! $GetHealthRecordProcessBarPercentage !!}
 			</div>
     </div>
+    @endif
 </div>
 <div class="upcom-row dashboard-header-default">
 

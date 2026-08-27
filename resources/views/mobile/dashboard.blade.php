@@ -33,7 +33,10 @@
   
 	</section>
 	
+	{{-- Health-record completion bar: hidden for organisation members. --}}
+	@if(org_can('health_record'))
 	{!! $GetHealthRecordProcessBarPercentage !!}
+	@endif
 	
     <section class="schedule-consultation">
         <div class="cust-container-md">
