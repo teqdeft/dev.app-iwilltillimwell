@@ -92,21 +92,21 @@
 						   container of its own with room for it. Scoped to
 						   .imwell-empty-consult, which only renders for org members. */
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{
-							position:relative;min-height:200px;overflow:hidden;padding:6px 0}
+							position:relative;min-height:172px;overflow:hidden;padding:4px 0}
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image{
-							position:absolute;left:0;bottom:0;height:auto;width:170px;
-							max-height:196px;display:flex;align-items:flex-end}
+							position:absolute;left:0;bottom:0;height:auto;width:148px;
+							max-height:170px;display:flex;align-items:flex-end}
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image img{
 							width:100%;height:auto;object-fit:contain;display:block}
 						.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .dash_no_recordd_text{
-							padding-left:190px;display:flex;flex-direction:column;
-							justify-content:center;min-height:200px}
+							padding-left:166px;display:flex;flex-direction:column;
+							justify-content:center;min-height:172px}
 						@media(max-width:1199px){
-							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{min-height:172px}
+							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record{min-height:150px}
 							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .image{
-								width:142px;max-height:168px}
+								width:128px;max-height:148px}
 							.upcoming-visit.vis_dash2 .imwell-empty-consult .dash2_no_record .dash_no_recordd_text{
-								padding-left:158px;min-height:172px}
+								padding-left:144px;min-height:150px}
 						}
 					</style>
 				@else
