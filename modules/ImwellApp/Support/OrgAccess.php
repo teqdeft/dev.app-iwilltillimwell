@@ -170,13 +170,21 @@ class OrgAccess
         return true;
     }
 
-    /** Comma separated service ids for every feature the org has enabled. */
+    /**
+     * Comma separated service ids for every feature the org has enabled.
+     * Features marked 'hidden' are skipped, so a stale imwell_org_features row
+     * cannot unlock a dashboard tile for a feature that is withheld.
+     */
     public static function serviceListFor(ImwellOrg $org)
     {
         $enabled = $org->enabledFeatureKeys();
         $ids = [];
 
         foreach (Features::all() as $feature) {
+            if (! empty($feature['hidden'])) {
+                continue;
+            }
+
             if (in_array($feature['key'], $enabled, true)) {
                 foreach ((array) ($feature['services'] ?? []) as $id) {
                     $ids[] = (int) $id;

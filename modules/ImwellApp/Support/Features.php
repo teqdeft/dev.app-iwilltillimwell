@@ -24,9 +24,23 @@ class Features
         return config('imwellapp.pages', []);
     }
 
+    /**
+     * Features an admin may switch on. Anything marked 'hidden' is withheld
+     * from organisations entirely and never appears on the setup screen.
+     */
     public static function toggleable()
     {
-        return static::all();
+        return array_values(array_filter(static::all(), function ($f) {
+            return empty($f['hidden']);
+        }));
+    }
+
+    /** Is this feature withheld from organisation members altogether? */
+    public static function isHidden($featureKey)
+    {
+        $feature = static::byKey($featureKey);
+
+        return $feature ? ! empty($feature['hidden']) : false;
     }
 
     public static function keys()
@@ -101,7 +115,17 @@ class Features
 
         $org = static::currentOrg();
 
-        return static::$cachedKeys = $org ? $org->enabledFeatureKeys() : [];
+        if (! $org) {
+            return static::$cachedKeys = [];
+        }
+
+        // Strip anything withheld from organisations, so an old row left in
+        // imwell_org_features cannot re-open a feature that is now hidden.
+        $keys = array_filter($org->enabledFeatureKeys(), function ($key) {
+            return ! static::isHidden($key);
+        });
+
+        return static::$cachedKeys = array_values($keys);
     }
 
     /**
@@ -116,6 +140,11 @@ class Features
             return true;
         }
 
+        // Withheld from organisations no matter what is stored against them.
+        if (static::isHidden($featureKey)) {
+            return false;
+        }
+
         return in_array($featureKey, static::currentKeys(), true);
     }
 
@@ -125,7 +154,7 @@ class Features
         $enabled = $org->enabledFeatureKeys();
 
         return array_values(array_filter(static::all(), function ($f) use ($enabled) {
-            return in_array($f['key'], $enabled, true);
+            return empty($f['hidden']) && in_array($f['key'], $enabled, true);
         }));
     }
 

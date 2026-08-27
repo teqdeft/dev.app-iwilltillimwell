@@ -16,18 +16,19 @@
 			<a class="navbar-brand brand-logo org-brand" href="{{$dashboard_url}}">
 				@if(org_logo())
 					<img src="{{ org_logo() }}" alt="{{ org_current()->name }}"/>
+				@else
+					{{-- No logo uploaded yet: fall back to the name so the
+					     brand area is never empty. --}}
+					<span class="org-brand-name">{{ org_current()->name }}</span>
 				@endif
-				<span class="org-brand-name">{{ org_current()->name }}</span>
 			</a>
 			<style>
-				/* Logo above, organisation name centred underneath.
-				   Logos vary in shape, so contain rather than crop, and let a
-				   long name wrap instead of overflowing the sidebar. */
-				.sidebar_brand_logo .org-brand{display:flex !important;flex-direction:column;
-					align-items:center;justify-content:center;gap:8px;width:100%;
-					padding:14px 12px !important;box-sizing:border-box;text-align:center}
+				/* Logo only. Logos vary in shape, so contain rather than crop. */
+				.sidebar_brand_logo .org-brand{display:flex !important;align-items:center;
+					justify-content:center;width:100%;padding:16px 12px !important;
+					box-sizing:border-box;text-align:center}
 				.sidebar_brand_logo .org-brand img{display:block;height:auto;width:auto;
-					max-height:52px;max-width:100%;object-fit:contain;margin:0 auto}
+					max-height:58px;max-width:100%;object-fit:contain;margin:0 auto}
 				.sidebar_brand_logo .org-brand-name{display:block;width:100%;font-size:15px;
 					font-weight:600;line-height:1.3;color:#22252e;text-align:center;
 					overflow-wrap:anywhere;word-break:break-word}

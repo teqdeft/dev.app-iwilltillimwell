@@ -75,6 +75,17 @@ return [
             ],
         ],
         [
+            /*
+             | Withheld from organisations entirely: it does not appear on the
+             | admin setup screen, org_can('health_record') is always false for
+             | a member, and EnforceOrgAccess blocks the paths below even if an
+             | older imwell_org_features row still says enabled.
+             |
+             | Health records are Lyric-backed, and Lyric registration is off
+             | for org members - see imwellapp.lyric_enabled. Remove 'hidden'
+             | here to bring it back.
+             */
+            'hidden' => true,
             'key' => 'health_record', 'label' => 'Health Records & Labs', 'icon' => 'fas fa-notes-medical',
             'services' => [15],
             'paths' => [
