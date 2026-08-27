@@ -29,4 +29,9 @@ Route::prefix('admin/imwell-app')
         Route::get('/{org}/members', [OrgImportController::class, 'members'])->name('import.members');
         Route::get('/sample-csv', [OrgImportController::class, 'sampleCsv'])->name('import.sample');
         Route::post('/{org}/resend/{user}', [OrgImportController::class, 'resendActivation'])->name('import.resend');
+
+        // Retry the Lyric (telemedicine) registration - one member, or every
+        // member of the organization still missing it.
+        Route::post('/{org}/lyric-retry', [OrgImportController::class, 'retryLyric'])->name('lyric.retry.all');
+        Route::post('/{org}/lyric-retry/{user}', [OrgImportController::class, 'retryLyric'])->name('lyric.retry');
     });

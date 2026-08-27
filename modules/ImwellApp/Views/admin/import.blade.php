@@ -90,7 +90,7 @@
                                     <tr><td>email</td><td>Yes</td><td>city</td><td>No</td></tr>
                                     <tr><td>phone</td><td>No</td><td>state</td><td>No</td></tr>
                                     <tr><td>dob</td><td>No</td><td>zip_code</td><td>No</td></tr>
-                                    <tr><td>gender</td><td>No</td><td></td><td></td></tr>
+                                    <tr><td>gender</td><td>No</td><td>timezone</td><td>No</td></tr>
                                 </tbody>
                             </table>
                         </div>

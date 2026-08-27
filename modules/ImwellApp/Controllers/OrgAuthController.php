@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Modules\ImwellApp\Models\ImwellOrg;
 use Modules\ImwellApp\Models\ImwellOrgActivation;
+use Modules\ImwellApp\Support\Lyric;
 use Modules\ImwellApp\Support\OrgAccess;
 
 /**
@@ -71,6 +72,11 @@ class OrgAuthController extends Controller
         Auth::guard('web')->login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
+        // Pick up anyone whose Lyric registration did not complete earlier,
+        // then open their Lyric session for the medical screens.
+        Lyric::ensureMember($user, $org);
+        Lyric::openSession($user);
+
         // Straight into the real application - no payment screen.
         return redirect()->intended(RouteServiceProvider::DASHBOARD);
     }
@@ -125,6 +131,12 @@ class OrgAuthController extends Controller
         // for them so they are never sent through checkout. EnforceOrgAccess
         // keeps this in step afterwards, whichever login they use next.
         OrgAccess::sync($user, $org);
+
+        // Register on Lyric so consultations, health records and labs work.
+        // Never fatal: a Lyric outage must not block activation, and the
+        // members screen shows anyone who still needs registering.
+        Lyric::ensureMember($user, $org);
+        Lyric::openSession($user);
 
         $activation->used_at = now();
         $activation->save();

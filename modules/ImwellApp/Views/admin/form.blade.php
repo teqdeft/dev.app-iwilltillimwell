@@ -190,18 +190,24 @@
             </div>
 
             <div class="row">
-                <div class="col-12 mb-5">
-                    <button type="submit" class="btn btn-primary">
-                        {{ $org->exists ? 'Save changes' : 'Create organization' }}
-                    </button>
-                    @if($org->exists)
-                        <a href="{{ route('imwell.admin.import.form', $org->id) }}" class="btn btn-info">
-                            <i class="fas fa-file-upload"></i> Import Users
-                        </a>
-                        <a href="{{ $org->landingUrl() }}" target="_blank" class="btn btn-light">
-                            <i class="fas fa-external-link-alt"></i> Open member URL
-                        </a>
-                    @endif
+                <div class="col-sm-12">
+                    <div class="form-group imwell-form-actions">
+                        <button type="submit" class="btn btn-primary mr-3" id="submit">
+                            {{ $org->exists ? 'Save Changes' : 'Create Organization' }}
+                        </button>
+
+                        @if($org->exists)
+                            <a href="{{ route('imwell.admin.import.form', $org->id) }}" class="btn-custom">
+                                <i class="fas fa-file-upload" aria-hidden="true"></i> Import Users
+                            </a>
+                            <a href="{{ route('imwell.admin.import.members', $org->id) }}" class="btn-custom">
+                                <i class="fas fa-users" aria-hidden="true"></i> View Members
+                            </a>
+                            <a href="{{ $org->landingUrl() }}" target="_blank" class="btn-custom">
+                                <i class="fas fa-external-link-alt" aria-hidden="true"></i> Open Member URL
+                            </a>
+                        @endif
+                    </div>
                 </div>
             </div>
         </form>
@@ -210,6 +216,16 @@
 </div>
 
 <style>
+/* Footer actions on one baseline: the project's btn-custom is an inline <a>
+   with its own padding, so without this it sits lower than the submit button
+   and wraps onto a second line. */
+.imwell-form-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:40px}
+.imwell-form-actions .btn,
+.imwell-form-actions .btn-custom{margin:0 !important;display:inline-flex;align-items:center;gap:7px;
+    line-height:1.2;white-space:nowrap}
+.imwell-form-actions .btn-primary{padding:9px 22px}
+.imwell-form-actions .btn-custom i{margin:0}
+
 .ie-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:4px;border:1px solid #dfe3e8;border-bottom:0;
     border-radius:8px 8px 0 0;background:#f8f9fb;padding:8px}
 .ie-toolbar button{border:1px solid transparent;background:transparent;border-radius:6px;padding:5px 10px;

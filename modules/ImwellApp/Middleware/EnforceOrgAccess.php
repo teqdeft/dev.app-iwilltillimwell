@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\ImwellApp\Support\Features;
+use Modules\ImwellApp\Support\Lyric;
 use Modules\ImwellApp\Support\OrgAccess;
 
 /**
@@ -64,6 +65,17 @@ class EnforceOrgAccess
         }
 
         if (in_array($feature['key'], Features::currentKeys(), true)) {
+            // Medical screens talk to Lyric and need its Bearer token. Open it
+            // lazily so the member works no matter which login they used, and
+            // pick up anyone whose registration did not complete earlier.
+            if (in_array($feature['key'], ['medical_care', 'health_record'], true)) {
+                if (! Lyric::isRegistered($user)) {
+                    Lyric::ensureMember($user, $org);
+                }
+
+                Lyric::openSession($user);
+            }
+
             return $next($request);
         }
 

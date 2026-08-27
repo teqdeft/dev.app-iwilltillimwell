@@ -3,6 +3,8 @@
 namespace Modules\ImwellApp\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\States;
+use App\Models\Timezones;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +17,7 @@ use Modules\ImwellApp\Exports\MemberSampleExport;
 use Modules\ImwellApp\Mail\OrgActivationMail;
 use Modules\ImwellApp\Models\ImwellOrg;
 use Modules\ImwellApp\Models\ImwellOrgActivation;
+use Modules\ImwellApp\Support\Lyric;
 
 /**
  * Imports members INTO a specific organisation.
@@ -32,7 +35,7 @@ class OrgImportController extends Controller
     const COLUMNS = [
         'first_name', 'last_name', 'email',
         'phone', 'dob', 'gender',
-        'address', 'address2', 'city', 'state', 'zip_code',
+        'address', 'address2', 'city', 'state', 'zip_code', 'timezone',
     ];
 
     public function form($id)
@@ -64,7 +67,7 @@ class OrgImportController extends Controller
         $rows = [
             self::COLUMNS,
             ['Jane', 'Doe', 'jane.doe@example.com', '5551234567', '1990-04-21', 'Female',
-             '12 Main St', 'Apt 4', 'Austin', 'TX', '73301'],
+             '12 Main St', 'Apt 4', 'Austin', 'Texas', '73301', 'Central'],
         ];
 
         if ($request->get('format') === 'xlsx') {
@@ -168,6 +171,47 @@ class OrgImportController extends Controller
         return back()->with('success', 'Activation link resent to ' . $user->email . '.');
     }
 
+    /**
+     * Retry the Lyric registration for one member, or for everyone in the
+     * organization who is still missing it.
+     */
+    public function retryLyric(Request $request, $id, $userId = null)
+    {
+        $org = ImwellOrg::findOrFail($id);
+
+        $members = User::where('imwell_org_id', $org->id)
+            ->when($userId, fn ($q) => $q->where('id', $userId))
+            ->whereNull('userid')
+            ->get();
+
+        if ($members->isEmpty()) {
+            return back()->with('success', 'Everyone is already registered on Lyric.');
+        }
+
+        $done = 0;
+        $failed = [];
+
+        foreach ($members as $member) {
+            $result = Lyric::ensureMember($member, $org);
+
+            if (! empty($result['ok'])) {
+                $done++;
+            } else {
+                $failed[] = $member->email . ': ' . $result['message'];
+            }
+        }
+
+        $message = $done . ' member(s) registered on Lyric.';
+
+        if ($failed) {
+            return back()
+                ->with('success', $message)
+                ->with('error', 'Still failing - ' . implode(' | ', array_slice($failed, 0, 5)));
+        }
+
+        return back()->with('success', $message);
+    }
+
     // ------------------------------------------------------------------
 
     /** Maps normalised header labels to their column index. */
@@ -188,6 +232,8 @@ class OrgImportController extends Controller
             'zipcode'      => 'zip_code',
             'postalcode'   => 'zip_code',
             'addressline2' => 'address2',
+            'timezonename' => 'timezone',
+            'tz'           => 'timezone',
         ];
 
         $map = [];
@@ -268,6 +314,10 @@ class OrgImportController extends Controller
         $user->zipCode       = $data['zip_code'] ?: null;
         $user->user_role     = 'user';
 
+        // Lyric needs numeric ids, not the names that appear in the sheet.
+        $user->stateid    = $this->resolveStateId($data['state']);
+        $user->timezoneId = $this->resolveTimezoneId($data['timezone']);
+
         if (! empty($data['dob'])) {
             $user->dob = $this->normaliseDob($data['dob']);
         }
@@ -282,6 +332,62 @@ class OrgImportController extends Controller
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Accepts a state name ("Texas") or its code ("TX") and returns the id
+     * Lyric expects. Null when it cannot be matched - the member is still
+     * imported, and the Lyric column on the members screen shows what is
+     * missing so an admin can fix it and retry.
+     */
+    protected function resolveStateId($value)
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        $states = States::all();
+
+        foreach ($states as $state) {
+            if (strcasecmp(trim($state->name), $value) === 0) {
+                return $state->id;
+            }
+        }
+
+        foreach ($states as $state) {
+            $code = $state->code ?? $state->abbreviation ?? null;
+
+            if ($code && strcasecmp(trim($code), $value) === 0) {
+                return $state->id;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Accepts a timezone label such as "Central" or "Central Time" and returns
+     * the matching id, mirroring the legacy checkTimezone() helper.
+     */
+    protected function resolveTimezoneId($value)
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        foreach (Timezones::all() as $zone) {
+            $label = explode('(', (string) $zone->name)[0];
+
+            if (stripos($label, $value) !== false || strcasecmp(trim($label), $value) === 0) {
+                return $zone->id;
+            }
+        }
+
+        return null;
     }
 
     protected function normaliseDob($value)
