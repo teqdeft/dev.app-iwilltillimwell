@@ -23,6 +23,11 @@
 				@endif
 			</a>
 			<style>
+				/* A rule under the logo so it reads as separate from the menu.
+				   This block only renders for organisation members, so the
+				   default sidebar is untouched. */
+				.sidebar_brand_logo{border-bottom:1px solid #e6e8ee;margin-bottom:10px}
+
 				/* Logo only. Logos vary in shape, so contain rather than crop. */
 				.sidebar_brand_logo .org-brand{display:flex !important;align-items:center;
 					justify-content:center;width:100%;padding:16px 12px !important;
