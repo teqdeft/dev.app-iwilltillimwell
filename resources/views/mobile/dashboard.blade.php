@@ -91,6 +91,7 @@
     <section class="main-dashboard">
         <div class="cust-container-md">
 
+                @if(org_can('health_record') || org_can('message_specialist') || org_can('medical_care'))
             <div class="dash-section">
                 <div class="dashboard-title">
                     <div class="title">
@@ -98,6 +99,7 @@
                     </div>
                 </div>
                 <div class="dash-row">
+                @if(org_can('health_record'))
                    <a href="{{ route('personal-record')}}" class="showLoaderPageLoad">
                         <div class="dash-menu-card">
                             <div class="icon">
@@ -120,6 +122,8 @@
                             </div>
                         </div>
                     </a>
+                @endif
+                @if(org_can('message_specialist'))
                     <a href="{{url('/message-a-specialist')}}" class="showLoaderPageLoad">
                         <div class="dash-menu-card">
                             <div class="icon">
@@ -136,9 +140,11 @@
                             </div>
                         </div>
                     </a>
+                @endif
 					
                     
 					
+                @if(org_can('health_record'))
                     <a 
 			
 					@if($lab_request)
@@ -178,8 +184,10 @@
                             </div>
                         </div>
                     </a>
+                @endif
 					
 					<?php /*	
+                @if(org_can('medical_care'))
                     <a href="javascript:void(0)" class="open-modal" data-modal="dash-semaglutide-alert">
                         <div class="dash-menu-card service-disabled">
                             <div class="icon">
@@ -202,7 +210,9 @@
                             </div>
                         </div>
                     </a>
+                @endif
 					
+                @if(org_can('medical_care'))
                     <a href="javascript:void(0)" class="open-modal" data-modal="dash-semaglutide-alert">
                         <div class="dash-menu-card service-disabled">
                             <div class="icon">
@@ -226,11 +236,13 @@
                             </div>
                         </div>
                     </a>
+                @endif
 					
 					*/ ?>
 
                 </div>
             </div>
+                @endif
 
             <div class="dash-section">
                 <div class="dashboard-title">

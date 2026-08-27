@@ -1,7 +1,12 @@
 <div class="dash-left">
 		@include('user.dashboard.dashboard-aff-consultation-section')
 
-		@if(org_can('medical_care'))
+		{{-- This block holds two columns: "My Medical Care" (health record,
+		     message a specialist, care coordination) and "Schedule Your
+		     Consultation" (medical care). Each column is gated inside the
+		     include; this outer guard just avoids rendering an empty shell. --}}
+		@if(org_can('health_record') || org_can('message_specialist')
+		    || org_can('care_coordination') || org_can('medical_care'))
 		@include('user.dashboard.dashboard-medical-care-slider')
 		@endif
 
