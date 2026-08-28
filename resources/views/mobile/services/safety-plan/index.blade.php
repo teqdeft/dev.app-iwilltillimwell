@@ -146,21 +146,13 @@
 
                         <a id="safety-plan-<?php echo $counter ?>"
 
-                            @if($value->id==14)
+                            {{-- Urgent care / emergency room now open Google Maps in a new
+                                 tab, matching the other "near me" entries. --}}
+                            @if($value->id==14 || $value->id==13)
 
-                                class="safety-plan-card open-modal"
-                                href="javascript:void(0);"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#mapModal"
-                                data-type="emergency"
-
-                            @elseif($value->id==13)
-
-                                 class="safety-plan-card open-modal"
-                                 href="javascript:void(0);"
-                                  data-bs-toggle="modal" 
-                                  data-bs-target="#mapModal"
-                                 data-type="urgent care"
+                                class="safety-plan-card no-modal googleNearMe"
+                                href="javascript:;"
+                                data-link="https://www.google.com/maps/search/{{ urlencode(trim(strip_tags(html_entity_decode($value->title)))) }}"
 
                             @elseif($counter==9)
 

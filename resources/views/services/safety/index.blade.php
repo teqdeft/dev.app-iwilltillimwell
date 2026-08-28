@@ -143,17 +143,14 @@
 
                                                     <a 
 													
-                                                    @if($value->id==14)
+                                                    {{-- Urgent care / emergency room now open Google Maps in a new tab,
+                                                         the same way the other "near me" entries do. The old in-page
+                                                         #mapModal never rendered its map. --}}
+                                                    @if($value->id==14 || $value->id==13)
 
-                                                        data-type="emergency"
-                                                        data-bs-toggle="modal" data-bs-target="#mapModal"
-                                                        href="javascript:void(0)"
-
-													@elseif($value->id==13)
-
-                                                        data-type="urgent care"
-                                                        data-bs-toggle="modal" data-bs-target="#mapModal"
-                                                        href="javascript:void(0)"
+                                                        class="googleNearMe"
+                                                        href="javascript:;"
+                                                        data-link="https://www.google.com/maps/search/{{ urlencode(trim(strip_tags(html_entity_decode($value->title)))) }}"
 
 													@elseif($counter==9)
 														
