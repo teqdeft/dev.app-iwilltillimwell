@@ -1,67 +1,94 @@
-# imwell.app — showcase site
+# imwell.app — organization landing page
 
-A small standalone PHP site for **imwell.app**. It has no framework and no schema of
-its own: it reads the main application's database and shows, per organization, the
-name, logo, description and the services the admin enabled.
+One dynamic page, per organization. A member lands here after activating their
+account in the main application, sees who provides their benefits and what is
+included, and presses a button to go into the app.
 
-It handles account **activation** and a local **sign in**, then points members at the
-main app.
-
-## What it does
+Deliberately small: no framework, no schema of its own, **no sign in, no
+activation, and no writes**. It reads the main application's database and
+renders a page.
 
 | Route | Purpose |
 |---|---|
-| `/` | Directory of active organizations |
-| `/{slug}` | Landing page: logo, name, about, services offered |
-| `/{slug}/login` | Branded sign in |
-| `/{slug}/activate/{token}` | Member sets their own password |
-| `/{slug}/logout` | Sign out |
+| `/` | 302 to the main application |
+| `/{slug}` | The organization's landing page |
+| anything else | 404 |
 
 `{slug}` is the same slug the main app generates from the organization name, so
 `Satluj School` → `imwell.app/satluj-school`.
 
+## The member journey
+
+1. Admin imports the sheet. Each member is emailed a one-time activation link
+   pointing at the **main app**: `app.iwilltilimwell.com/org/{slug}/activate/{token}`.
+2. The member sets their own password there. The main app marks the token used,
+   sets `status = 1`, grants org access (`OrgAccess::sync`) and **signs them in**.
+3. It then redirects them here, to `imwell.app/{slug}`.
+4. **Continue to the app** sends them to `{APP_URL}/org/{slug}`. They already
+   have a session on that domain, so `OrgAuthController::showLogin` drops them
+   straight at the dashboard — no second password prompt.
+
+Step 4 targets the organization's own sign-in URL rather than the bare app root,
+so a member who arrives without a session still gets the org-branded login
+instead of the generic one.
+
+## Why there is no sign in here
+
+A session created on imwell.app does not exist on app.iwilltilimwell.com —
+browsers do not share cookies across root domains. Signing in here would have
+meant typing the password twice. Activation and sign in therefore live in the
+main app only, and this site is a read-only shop window.
+
+That is also why `Database` exposes `select()` and nothing else: there is no code
+path from this site that can modify the shared database.
+
 ## Deploying
 
-Point the **imwell.app** document root at `imwell-showcase/public`. Nothing else is
+> **Check what is on imwell.app first.** That domain currently serves a complete
+> Laravel 8 application (`bitbucket.org:developers_teq/imwell`, whose `.env` reads
+> `APP_URL=https://imwell.app`). It is deployed cPanel-style with `index.php` at
+> the repo root, so **pointing the document root here would replace that whole
+> application**, including its legacy `Company` / `/services/{slug}` organization
+> flow. Do not repoint imwell.app until that site is confirmed retired.
+
+Point the chosen document root at `imwell-showcase/public`. Nothing else is
 required — no Composer, no build step. PHP 7.4+ with PDO MySQL.
 
-Database credentials are read from `../.env` (the main application's) automatically.
-If this folder is deployed somewhere that file is not readable, copy `.env.example`
-to `.env` and fill in the DB values.
+Safe options while the legacy site is still live:
 
-## How it relates to the main app
+- a **subdomain** — `members.imwell.app`, `go.imwell.app`
+- a **sub-directory** — the front controller strips its own base path, so
+  `imwell.app/members` works unchanged
+- a **different domain** entirely
 
-- **Database:** shared, read-only except for activation.
-- **Schema:** owned entirely by the main app (`imwell_orgs`, `imwell_org_features`,
-  `imwell_org_activations`, `users`). Create an organization there and it appears
-  here immediately.
-- **Passwords:** bcrypt, so hashes written here are readable by Laravel and vice versa.
-- **Activation** sets the password, marks the token used and sets `status = 1`. It
-  deliberately does **not** grant app access (`payment_status`, `doctor_step`, the
-  sponsored subscription). The main app's `EnforceOrgAccess` middleware does that on
-  the member's first request there, so that logic stays in one place.
-- **Service catalogue:** the labels and blurbs in `src/Repository.php::FEATURES` mirror
-  `modules/ImwellApp/Config/features.php`. If you add a feature there, add it here too
-  or it simply won't be described on the landing page.
+Database credentials are read from `../.env` (the main application's)
+automatically. If this folder is deployed where that file is not readable, copy
+`.env.example` to `.env` and fill in the DB values plus `APP_URL`.
 
-## Sessions — a real limitation
+## Turning it on
 
-Signing in here creates a session for **imwell.app only**. Browsers cannot share
-cookies across different root domains, so a member who signs in here is **not** signed
-in on the main app; "Continue to the app" sends them there to sign in once.
+The main app decides, from one environment variable, whether members are sent
+here after activating. Add to the **main application's** `.env`:
 
-Making that seamless needs a one-time token handoff: the showcase site would redirect
-to something like `app.iwilltilimwell.com/auto-login?token=…`, and the main app would
-verify the token and start the session. The main app already ships `/api/auto-login`
-and Sanctum, so the pieces exist — it just hasn't been wired up.
+```
+IMWELL_SHOWCASE_URL=https://members.imwell.app
+```
 
-## Pointing activation emails here
+With it set, `ImwellOrg::landingUrl()` returns this site and
+`OrgAuthController::activate()` finishes here. With it unset (the default),
+activation ends on the dashboard and this site is simply never linked to.
 
-The main app currently emails activation links to its own domain
-(`OrgImportController::sendActivation`). To send members here instead, change that URL
-to `https://imwell.app/{slug}/activate/{token}`. The token is validated against the
-same table either way, so both work — pick one so members aren't split across two
-domains.
+Activation links always point at the main app either way — `activationUrl()`
+ignores this variable on purpose, because there is no activation screen here.
+
+Run `php artisan config:clear` after changing it; `mergeConfigFrom()` is skipped
+while the config cache is warm, so a cached config ignores the new value.
+
+## Keeping the service list honest
+
+The labels and blurbs in `src/Repository.php::FEATURES` mirror
+`modules/ImwellApp/Config/features.php`. Add a feature there and add it here too,
+or it will not be described on the landing page.
 
 ## Files
 
@@ -69,9 +96,10 @@ domains.
 public/index.php     front controller and routing
 public/.htaccess     pretty URLs
 src/Config.php       reads .env (own, else the main app's)
-src/Database.php     PDO connection
-src/Repository.php   all queries + the service catalogue
-src/Session.php      session, CSRF
-src/View.php         tiny renderer, escaping, logo URLs
-views/               layout + pages
+src/Database.php     PDO connection, select only
+src/Repository.php   the queries + the service catalogue
+src/View.php         tiny renderer, escaping, URLs
+views/layout.php     page chrome
+views/org.php        the landing page
+views/error.php      404 and 500
 ```

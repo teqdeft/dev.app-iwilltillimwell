@@ -1,11 +1,8 @@
 <?php use Showcase\View; ?>
+<?php $appUrl = View::memberAppUrl($org['slug']); ?>
 
 <div class="hero">
     <div class="wrap">
-        <?php if ($success): ?>
-            <div class="alert alert-ok" style="margin-bottom:22px"><?= View::e($success) ?></div>
-        <?php endif; ?>
-
         <div class="hero-inner">
             <?php if ($logo = View::logoUrl($org['logo'])): ?>
                 <div class="hero-logo"><img src="<?= View::e($logo) ?>" alt="<?= View::e($org['name']) ?> logo"></div>
@@ -25,13 +22,9 @@
                 <?php endif; ?>
 
                 <div class="cta-row">
-                    <?php if ($member): ?>
-                        <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
-                    <?php else: ?>
-                        <a class="btn" href="/<?= View::e($org['slug']) ?>/login">Sign in</a>
-                        <a class="btn ghost" href="<?= View::e($appUrl) ?>">Go to the app</a>
-                    <?php endif; ?>
+                    <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
                 </div>
+                <p class="hint">Takes you to your dashboard on iWILL &lsquo;til i&rsquo;mWELL.</p>
             </div>
         </div>
     </div>
@@ -63,20 +56,13 @@
 
 <section class="block" style="padding-top:0">
     <div class="wrap">
-        <div class="panel">
-            <h2><?= $member ? 'You are signed in' : 'Already a member?' ?></h2>
-            <?php if ($member): ?>
-                <p style="color:var(--muted)">
-                    Signed in as <?= View::e($member['email']) ?>. Open the app to use your services.
-                </p>
-                <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
-            <?php else: ?>
-                <p style="color:var(--muted)">
-                    If <?= View::e($org['name']) ?> has registered you, use the activation link we
-                    emailed you to set a password &mdash; then sign in here or go straight to the app.
-                </p>
-                <a class="btn" href="/<?= View::e($org['slug']) ?>/login">Sign in</a>
-            <?php endif; ?>
+        <div class="panel" style="text-align:center">
+            <h2>Ready when you are</h2>
+            <p style="color:var(--muted);max-width:520px;margin:0 auto 20px">
+                Your <?= View::e($org['name']) ?> membership is already set up. Open the app to
+                book a consultation, message a specialist and use everything above.
+            </p>
+            <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
         </div>
     </div>
 </section>

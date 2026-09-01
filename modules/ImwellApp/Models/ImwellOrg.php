@@ -100,13 +100,16 @@ class ImwellOrg extends Model
         return $base !== '' ? $base . '/' . $this->slug : $this->url();
     }
 
-    /** Where an activation link should point. */
+    /**
+     * Where an activation link should point.
+     *
+     * Always this application. The showcase site is a single read-only landing
+     * page - it has no activation screen and never writes to the database, so
+     * members set their password here, are signed in here, and are then sent
+     * out to the landing page.
+     */
     public function activationUrl($token)
     {
-        $base = static::showcaseBase();
-
-        return $base !== ''
-            ? $base . '/' . $this->slug . '/activate/' . $token
-            : url('/org/' . $this->slug . '/activate/' . $token);
+        return url('/org/' . $this->slug . '/activate/' . $token);
     }
 }

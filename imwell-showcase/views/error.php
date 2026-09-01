@@ -1,18 +1,16 @@
 <?php use Showcase\View; ?>
 
-<div class="authwrap">
-    <div class="authcard">
-        <div class="head">
-            <h1><?= View::e($title ?? 'Something went wrong') ?></h1>
-        </div>
-        <div class="body">
-            <p style="margin:0 0 18px;color:var(--muted);font-size:14px">
+<section class="block">
+    <div class="wrap">
+        <div class="panel" style="max-width:560px;margin:0 auto;text-align:center">
+            <h2><?= View::e($title ?? 'Something went wrong') ?></h2>
+            <p style="color:var(--muted);margin:0 0 20px">
                 <?= View::e($message ?? 'We could not load this page.') ?>
             </p>
             <?php if (! empty($detail)): ?>
-                <div class="alert alert-error"><?= View::e($detail) ?></div>
+                <p style="color:#a3212c;font-size:13px;margin:0 0 20px"><?= View::e($detail) ?></p>
             <?php endif; ?>
-            <a class="btn block" href="/">Back to organizations</a>
+            <a class="btn" href="<?= View::e(View::appBaseUrl()) ?>">Go to iWILL &lsquo;til i&rsquo;mWELL</a>
         </div>
     </div>
-</div>
+</section>

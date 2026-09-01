@@ -69,9 +69,9 @@
                         <p class="imwell-note">
                             Every member in the sheet is linked to <strong>{{ $org->name }}</strong> automatically &mdash;
                             no organization column is needed. The first row must be a header row; column order does not
-                            matter. Each member is emailed a one-time activation link for
-                            <a target="_blank" href="{{ $org->landingUrl() }}">{{ $org->landingUrl() }}</a>, where they set their own
-                            password. No password is ever generated or emailed.
+                            matter. Each member is emailed a one-time activation link where they set their own
+                            password &mdash; no password is ever generated or emailed. After activating they land on
+                            <a target="_blank" href="{{ $org->landingUrl() }}">{{ $org->landingUrl() }}</a>.
                         </p>
 
                         <div class="table-responsive pt-3">

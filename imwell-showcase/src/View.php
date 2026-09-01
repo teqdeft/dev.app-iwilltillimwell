@@ -6,10 +6,6 @@ class View
 {
     public static function render($template, array $data = [])
     {
-        $data['appUrl']      = rtrim(Config::get('APP_URL', 'https://app.iwilltilimwell.com'), '/');
-        $data['showcaseUrl'] = rtrim(Config::get('SHOWCASE_URL', ''), '/');
-        $data['csrf']        = Session::csrf();
-
         extract($data, EXTR_SKIP);
 
         ob_start();
@@ -23,6 +19,23 @@ class View
     public static function e($value)
     {
         return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
+    /** Root of the main application. */
+    public static function appBaseUrl()
+    {
+        return rtrim(Config::get('APP_URL', 'https://app.iwilltilimwell.com'), '/');
+    }
+
+    /**
+     * Where a member continues into the real application: their organization's
+     * own branded sign-in page, not the generic app root. The main app sends
+     * them straight to the dashboard when they already have a session there,
+     * which they do right after activating.
+     */
+    public static function memberAppUrl($slug)
+    {
+        return static::appBaseUrl() . '/org/' . rawurlencode((string) $slug);
     }
 
     /**
@@ -39,7 +52,7 @@ class View
             return $logo;
         }
 
-        return rtrim(Config::get('APP_URL', ''), '/') . '/' . ltrim($logo, '/');
+        return static::appBaseUrl() . '/' . ltrim($logo, '/');
     }
 
     public static function notFound($message = 'Page not found')

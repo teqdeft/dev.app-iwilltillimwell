@@ -5,12 +5,11 @@ namespace Showcase;
 use PDO;
 
 /**
- * Read-mostly PDO connection to the MAIN application's database.
+ * Read-only PDO connection to the MAIN application's database.
  *
  * The showcase site owns no schema of its own; organizations, features and
- * members all live in the main app. The only writes it ever performs are the
- * two in Repository::activate() (setting a member's chosen password and
- * consuming their activation token).
+ * members all live in the main app, and activation and sign in happen there
+ * too. There is deliberately no way to write from here - only select().
  */
 class Database
 {
@@ -59,12 +58,5 @@ class Database
         $rows = static::select($sql, $bindings);
 
         return $rows ? $rows[0] : null;
-    }
-
-    public static function statement($sql, array $bindings = [])
-    {
-        $stmt = static::pdo()->prepare($sql);
-
-        return $stmt->execute($bindings);
     }
 }
