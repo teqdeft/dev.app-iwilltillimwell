@@ -15,6 +15,26 @@ use Modules\ImwellApp\Models\ImwellOrg;
  */
 class Catalog
 {
+    /**
+     * Product branding for imwell.app: logo, favicon, hero image and the
+     * palette, as absolute URLs on this application. Sent with every response
+     * so that site never hard-codes an asset path or a colour of its own.
+     */
+    public static function brand()
+    {
+        $brand = (array) config('imwellapp.brand', []);
+
+        return [
+            'name'        => $brand['name'] ?? config('app.name'),
+            'mark_url'    => ! empty($brand['mark']) ? asset($brand['mark']) : null,
+            'favicon_url' => ! empty($brand['favicon']) ? asset($brand['favicon']) : null,
+            'hero_url'    => ! empty($brand['hero']) ? asset($brand['hero']) : null,
+            'primary'     => $brand['primary'] ?? '#6D578F',
+            'accent'      => $brand['accent'] ?? '#9f50b6',
+            'support'     => $brand['support'] ?? null,
+        ];
+    }
+
     public static function org(ImwellOrg $org)
     {
         return [
@@ -23,7 +43,7 @@ class Catalog
             'slug'          => $org->slug,
             'description'   => $org->description,
             'logo_url'      => $org->logoUrl(),
-            'primary_color' => $org->primary_color ?: '#994c8d',
+            'primary_color' => $org->primary_color ?: null,
             'contact_email' => $org->contact_email,
             'contact_phone' => $org->contact_phone,
             'app_url'       => $org->url(),

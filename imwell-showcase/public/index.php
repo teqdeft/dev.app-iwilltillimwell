@@ -40,6 +40,7 @@ spl_autoload_register(function ($class) {
 
 use Showcase\Api;
 use Showcase\ApiException;
+use Showcase\Brand;
 use Showcase\Config;
 use Showcase\Session;
 use Showcase\View;
@@ -89,6 +90,7 @@ try {
 
     $slug = $segments[0];
     $data = Api::org($slug);
+    Brand::set($data['brand'] ?? null);
 
     if (empty($data['ok'])) {
         View::notFound('We could not find an organization at this address.');
@@ -130,6 +132,7 @@ try {
 function showActivation($slug, $token)
 {
     $data = Api::activation($slug, $token);
+    Brand::set($data['brand'] ?? null);
 
     if (($data['_status'] ?? 200) === 404) {
         View::notFound('We could not find an organization at this address.');
@@ -165,6 +168,8 @@ function submitActivation($slug, $token)
         (string) ($_POST['password_confirmation'] ?? '')
     );
 
+    Brand::set($data['brand'] ?? null);
+
     if (($data['_status'] ?? 200) === 404) {
         View::notFound('We could not find an organization at this address.');
     }
@@ -172,6 +177,7 @@ function submitActivation($slug, $token)
     // The password itself was refused - show the form again with the reason.
     if (empty($data['ok']) && ($data['error'] ?? '') === 'validation') {
         $lookup = Api::activation($slug, $token);
+        Brand::set($lookup['brand'] ?? null);
 
         View::render('activate', [
             'title'  => 'Activate your account',

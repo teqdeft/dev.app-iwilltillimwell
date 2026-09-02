@@ -75,6 +75,36 @@ return [
      */
     'lyric_enabled' => env('IMWELL_LYRIC_ENABLED', false),
 
+    /*
+     | Product branding sent to imwell.app, so that site renders in the same
+     | skin as this one without hard-coding anything of its own.
+     |
+     | Paths are relative to public/ and are turned into absolute URLs by
+     | Catalog::brand(). Colours come from the login stylesheet
+     | (public/assets/frontend/assets/css/new-login-style.css) - change them
+     | there and here together.
+     |
+     | Kept in config rather than read with env() at runtime, because env()
+     | stops resolving once the config is cached.
+     */
+    'brand' => [
+        /*
+         | imwell.app carries the imwell name, not the iWILL 'til i'mWELL
+         | wordmark - it is the members' own address.
+         |
+         | There is no imwell wordmark image in the project, so the site pairs
+         | the lotus mark below with the name set as live text. Point 'mark' at
+         | a wordmark image instead and it will be used as-is.
+         */
+        'name'    => 'imwell',
+        'mark'    => 'assets/images/imwell-favi.png',
+        'favicon' => 'assets/images/imwell-favi.png',
+        'hero'    => 'assets/frontend/assets/images/login-image-updated.png',
+        'primary' => '#6D578F',
+        'accent'  => '#9f50b6',
+        'support' => 'support@iwilltilimwell.com',
+    ],
+
     // Paths every signed-in member may always reach, whatever their org has
     // enabled (account, auth, consent, onboarding).
     'always_allowed' => [

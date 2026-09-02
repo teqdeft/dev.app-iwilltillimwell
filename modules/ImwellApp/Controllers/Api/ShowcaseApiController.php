@@ -41,6 +41,7 @@ class ShowcaseApiController extends Controller
 
         return response()->json([
             'ok'       => true,
+            'brand'    => Catalog::brand(),
             'org'      => Catalog::org($org),
             'services' => Catalog::services($org),
         ]);
@@ -74,6 +75,7 @@ class ShowcaseApiController extends Controller
 
         return response()->json([
             'ok'     => true,
+            'brand'  => Catalog::brand(),
             'org'    => Catalog::org($org),
             'member' => [
                 'first_name' => $user->fname,
@@ -155,6 +157,7 @@ class ShowcaseApiController extends Controller
         return response()->json([
             'ok'       => true,
             'message'  => 'Your account is active.',
+            'brand'    => Catalog::brand(),
             'org'      => Catalog::org($org),
             'services' => Catalog::services($org),
             'member'   => [
@@ -191,6 +194,7 @@ class ShowcaseApiController extends Controller
             'ok'       => false,
             'error'    => 'invalid_token',
             'message'  => 'This activation link is no longer valid. It may have already been used or expired.',
+            'brand'    => Catalog::brand(),
             'org'      => Catalog::org($org),
             'services' => Catalog::services($org),
         ]);
