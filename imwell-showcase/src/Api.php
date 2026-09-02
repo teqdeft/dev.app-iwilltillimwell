@@ -47,9 +47,14 @@ class Api
 
     // ---------------------------------------------------------------
 
+    /**
+     * Root of the main application. Deliberately no built-in default: a
+     * guessed domain fails silently and confusingly (every page loads, every
+     * link goes to the wrong host), so an unset APP_URL is an error instead.
+     */
     public static function baseUrl()
     {
-        return rtrim(Config::get('APP_URL', 'https://app.iwilltilimwell.com'), '/');
+        return rtrim((string) Config::get('APP_URL', ''), '/');
     }
 
     public static function secret()
@@ -64,6 +69,13 @@ class Api
      */
     protected static function request($method, $path, array $body = null)
     {
+        if (static::baseUrl() === '') {
+            throw new ApiException(
+                'APP_URL is not set. Copy .env.example to .env and point it at the main '
+                . 'application, e.g. https://dev.iwilltilimwell.com.'
+            );
+        }
+
         $secret = static::secret();
 
         if ($secret === '') {

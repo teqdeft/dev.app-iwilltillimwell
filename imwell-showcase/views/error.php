@@ -10,7 +10,9 @@
             <?php if (! empty($detail)): ?>
                 <p style="color:#a3212c;font-size:13px;margin:0 0 20px"><?= View::e($detail) ?></p>
             <?php endif; ?>
-            <a class="btn" href="<?= View::e(View::appBaseUrl()) ?>">Go to iWILL &lsquo;til i&rsquo;mWELL</a>
+            <?php if ($appUrl = View::appBaseUrl()): ?>
+                <a class="btn" href="<?= View::e($appUrl) ?>">Go to iWILL &lsquo;til i&rsquo;mWELL</a>
+            <?php endif; ?>
         </div>
     </div>
 </section>

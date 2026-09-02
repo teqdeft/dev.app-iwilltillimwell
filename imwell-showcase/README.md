@@ -41,7 +41,7 @@ gets the org-branded login instead of the generic one.
 
 ## Why the ticket exists
 
-A session created on imwell.app does not exist on app.iwilltilimwell.com —
+A session created on imwell.app does not exist on dev.iwilltilimwell.com —
 browsers do not share cookies across root domains. Without the ticket, a member
 who had just chosen a password would be asked for it again the instant they
 pressed the button.
@@ -101,7 +101,7 @@ this site lives on its own domain that file is not readable, so copy
 `.env.example` to `.env` and fill in:
 
 ```
-APP_URL=https://app.iwilltilimwell.com
+APP_URL=https://dev.iwilltilimwell.com
 IMWELL_SHOWCASE_SECRET=<the shared secret>
 APP_DEBUG=false
 ```
