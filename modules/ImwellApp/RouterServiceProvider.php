@@ -18,6 +18,10 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::middleware('web')->group(__DIR__ . '/Routes/admin.php');
         Route::middleware('web')->group(__DIR__ . '/Routes/public.php');
+
+        // Called by the imwell.app site, never by a browser on this domain -
+        // stateless, so the "api" group rather than "web".
+        Route::middleware('api')->group(__DIR__ . '/Routes/api.php');
     }
 
     /**
@@ -29,6 +33,9 @@ class RouterServiceProvider extends ServiceProvider
         $router = $this->app['router'];
 
         $router->aliasMiddleware('imwell_org_member', Middleware\EnsureOrgMember::class);
+
+        // Shared-secret gate for /api/imwell/*, the endpoints imwell.app calls.
+        $router->aliasMiddleware('imwell_showcase_key', Middleware\VerifyShowcaseKey::class);
 
         // Applies to the whole real application, but is a no-op for anyone who
         // is not an ImWell org member - see EnforceOrgAccess.

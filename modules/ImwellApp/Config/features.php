@@ -26,17 +26,40 @@
 return [
 
     /*
-     | Public URL of the imwell.app showcase site, without a trailing slash
+     | Public URL of the imwell.app site, without a trailing slash
      | (e.g. https://imwell.app). Set IMWELL_SHOWCASE_URL in .env.
      |
      | When set:
-     |   - activation emails link to the showcase site, so members activate
-     |     there and land on their organization's landing page
-     |   - activating through an older main-app link still finishes on the
-     |     showcase landing page
+     |   - activation emails link to imwell.app, so members choose their
+     |     password there and land on their organization's dashboard there
+     |   - activating through an older main-app link still finishes on that
+     |     same imwell.app dashboard
      | When empty, everything stays on the main application as before.
      */
     'showcase_url' => env('IMWELL_SHOWCASE_URL', ''),
+
+    /*
+     | Shared secret the imwell.app site sends as the X-Imwell-Key header on
+     | every call to /api/imwell/*. Those endpoints activate accounts, so they
+     | fail CLOSED: while this is empty the whole API answers 503 and nothing
+     | can be activated from imwell.app.
+     |
+     | Put the SAME value in IMWELL_SHOWCASE_SECRET on both sites. Generate one
+     | with:  php -r "echo bin2hex(random_bytes(32));"
+     */
+    'showcase_secret' => env('IMWELL_SHOWCASE_SECRET', ''),
+
+    /*
+     | How long a one-time hand-off ticket stays valid, in minutes.
+     |
+     | imwell.app and the main application are different root domains, so a
+     | session made on one is invisible to the other. After a member activates
+     | on imwell.app the API returns a ticket; pressing "Continue to the app"
+     | spends it at /org/{slug}/continue/{ticket} on the main application,
+     | which signs them in there. Single use, and short lived because it
+     | travels in a URL.
+     */
+    'handoff_minutes' => (int) env('IMWELL_HANDOFF_MINUTES', 30),
 
     /*
      | Should organisation members be registered on Lyric (telemedicine)?
@@ -66,6 +89,13 @@ return [
         [
             'key' => 'medical_care', 'label' => 'Medical Care', 'icon' => 'fas fa-laptop-medical',
             'services' => [1, 4, 5],
+            'blurb' => 'See a licensed physician by video or phone, without an appointment.',
+            'details' => [
+                'Virtual urgent care, day or night',
+                'Virtual primary care visits',
+                'Dermatology reviews from a photo',
+                'Prescriptions sent to your pharmacy',
+            ],
             'paths' => [
                 'consultation-type', 'consultation-type/*',
                 'my-consultations', 'my-consultations/*', 'my-consultations-dashboard',
@@ -88,6 +118,13 @@ return [
             'hidden' => true,
             'key' => 'health_record', 'label' => 'Health Records & Labs', 'icon' => 'fas fa-notes-medical',
             'services' => [15],
+            'blurb' => 'Your health history, medications and lab results kept together in one place.',
+            'details' => [
+                'Personal health record',
+                'Medications and allergies',
+                'Medical and surgical history',
+                'Lab requests and results',
+            ],
             'paths' => [
                 'personal-record', 'medications', 'medication-allergies',
                 'medical-history', 'medical-history/*', 'surgical-conditions',
@@ -109,6 +146,14 @@ return [
              */
             'key' => 'mental_health', 'label' => 'Mental Health', 'icon' => 'fas fa-brain',
             'services' => [16, 19],
+            'blurb' => 'Support when you need it, from in-the-moment help to ongoing therapy.',
+            'details' => [
+                'In-the-moment care and crisis support',
+                'Counseling and group sessions',
+                'Mood tracking and voice journaling',
+                'Thought analysis (CBT) and screenings',
+                'Your own safety plan and affirmations',
+            ],
             'paths' => [
                 // counseling / therapy
                 'counseling', 'behavioral-health', 'in-the-moment-care',
@@ -132,16 +177,34 @@ return [
         [
             'key' => 'care_coordination', 'label' => 'Care Coordination', 'icon' => 'fas fa-hands-helping',
             'services' => [3],
+            'blurb' => 'A care coordinator who helps you get to the right place.',
+            'details' => [
+                'Help finding the right provider',
+                'Appointments and referrals arranged',
+                'Advocacy on bills and coverage',
+            ],
             'paths' => ['care-coordination', 'healthcare-advocacy'],
         ],
         [
             'key' => 'message_specialist', 'label' => 'Message a Specialist', 'icon' => 'fas fa-envelope-open-text',
             'services' => [2],
+            'blurb' => 'Send a question to a specialist and get a written answer back.',
+            'details' => [
+                'Ask about a diagnosis or a treatment',
+                'A written response you can keep',
+                'No appointment needed',
+            ],
             'paths' => ['message-a-specialist', 'message-specialist', 'postMessageReply'],
         ],
         [
             'key' => 'pets', 'label' => 'Pet Care', 'icon' => 'fas fa-paw',
             'services' => [9],
+            'blurb' => 'Talk to a veterinarian about your pet, from home.',
+            'details' => [
+                'Virtual veterinary consultations',
+                'Advice on symptoms and behaviour',
+                'A record for each of your pets',
+            ],
             'paths' => [
                 'pets', 'pets/*', 'pet-consultations', 'pet-faq',
                 'pet-schedule-save', 'pet-consultation/*',

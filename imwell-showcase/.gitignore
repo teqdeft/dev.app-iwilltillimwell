@@ -1,1 +1,10 @@
+# Real credentials, never committed.
 .env
+
+# The repository root ignores `.env.*` and `.htaccess` everywhere. All three of
+# the files below are part of THIS folder's deliverable, and two of them are
+# what stop `src/`, `views/` and `.env` being downloaded when the folder is
+# served as the document root - so they are re-included here.
+!.env.example
+!.htaccess
+!public/.htaccess

@@ -9,7 +9,8 @@ use Modules\ImwellApp\Controllers\OrgAuthController;
 | {slug} is the slugified ORGANISATION NAME (e.g. "Springfield High School"
 | -> /org/springfield-high-school).
 |
-| These routes only handle sign in and activation. Once authenticated the
+| These routes handle sign in, activation and the hand-off from imwell.app.
+| Once authenticated the
 | member is sent into the REAL application (/dashboard and the normal pages);
 | what they may open there is enforced by EnforceOrgAccess, which the module's
 | RouterServiceProvider pushes onto the "web" middleware group.
@@ -24,6 +25,13 @@ Route::prefix('org/{slug}')->name('imwell.org.')->group(function () {
 
     Route::get('/activate/{token}', [OrgAuthController::class, 'showActivate'])->name('activate');
     Route::post('/activate/{token}', [OrgAuthController::class, 'activate'])->name('activate.post');
+
+    // Arrive from imwell.app already activated: spends a one-time ticket and
+    // signs the member in here, so they are not asked for their password a
+    // second time on a domain that cannot see the session they just made.
+    Route::get('/continue/{token}', [OrgAuthController::class, 'handoff'])
+        ->name('continue')
+        ->middleware('throttle:20,1');
 
     Route::post('/logout', [OrgAuthController::class, 'logout'])->name('logout');
 });

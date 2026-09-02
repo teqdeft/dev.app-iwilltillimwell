@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Modules\ImwellApp\Models\ImwellAppHandoff;
 use Modules\ImwellApp\Models\ImwellOrg;
 use Modules\ImwellApp\Models\ImwellOrgActivation;
 use Modules\ImwellApp\Support\Lyric;
@@ -144,18 +145,76 @@ class OrgAuthController extends Controller
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
 
-        // New activation emails point at the showcase site, but links from
-        // older emails still arrive here. Finish on the organization's landing
-        // page so both routes end in the same place.
-        $showcase = ImwellOrg::showcaseBase();
+        // New activation emails point at imwell.app, but links from older
+        // emails still arrive here. Finish on the same imwell.app dashboard so
+        // both routes end in the same place - carrying a ticket, because the
+        // session just created here is invisible over there and the member
+        // must be able to come straight back.
+        if (ImwellOrg::showcaseBase() !== '') {
+            $ticket = ImwellAppHandoff::issueFor($user->id, $org->id);
 
-        if ($showcase !== '') {
-            return redirect()->away($org->landingUrl());
+            return redirect()->away($org->dashboardUrl() . '?ticket=' . urlencode($ticket->token));
         }
 
         return redirect()
             ->to(RouteServiceProvider::DASHBOARD)
             ->with('success', 'Your account is active. Welcome to ' . $org->name . '.');
+    }
+
+    /**
+     * Spend a one-time ticket issued on imwell.app and sign the member in here.
+     *
+     * imwell.app cannot write a session on this domain - browsers do not share
+     * cookies across root domains - so a member who has just set their password
+     * over there would otherwise be asked for it again the moment they pressed
+     * "Continue to the app". The ticket closes that gap: short lived, single
+     * use, and worthless once spent.
+     */
+    public function handoff(Request $request, $slug, $token)
+    {
+        $org = $this->resolveOrg($slug);
+
+        $handoff = ImwellAppHandoff::with('user')
+            ->where('token', $token)
+            ->where('imwell_org_id', $org->id)
+            ->first();
+
+        // Expired, already spent, or the member has since left the org: fall
+        // back to the org's own sign-in page rather than a dead end.
+        if (! $handoff || ! $handoff->isUsable() || ! $handoff->user
+            || (int) $handoff->user->imwell_org_id !== (int) $org->id) {
+            return redirect()
+                ->to('/org/' . $org->slug)
+                ->withErrors(['email' => 'That link has expired. Please sign in to continue.']);
+        }
+
+        $user = $handoff->user;
+
+        // Burn it first: a ticket that has been looked at is a ticket that is
+        // gone, even if anything below fails.
+        $handoff->used_at = now();
+        $handoff->save();
+
+        // An account deactivated between activating and pressing the button.
+        // Same refusal as login(), so a ticket is never a way around it.
+        if ((int) $user->status !== 1) {
+            return redirect()
+                ->to('/org/' . $org->slug)
+                ->withErrors(['email' => 'Your account is not active. Please contact your organization.']);
+        }
+
+        // Their organization pays for them - keep them out of checkout.
+        OrgAccess::sync($user, $org);
+
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
+
+        Lyric::ensureMember($user, $org);
+        Lyric::openSession($user);
+
+        return redirect()
+            ->to(RouteServiceProvider::DASHBOARD)
+            ->with('success', 'Welcome to ' . $org->name . '.');
     }
 
 

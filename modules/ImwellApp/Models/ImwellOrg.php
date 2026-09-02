@@ -90,7 +90,7 @@ class ImwellOrg extends Model
 
     /**
      * Where members should be sent to read about this organization: the
-     * showcase landing page when imwell.app is configured, otherwise the main
+     * imwell.app landing page when it is configured, otherwise the main
      * application as before.
      */
     public function landingUrl()
@@ -101,15 +101,43 @@ class ImwellOrg extends Model
     }
 
     /**
+     * The member's service dashboard on imwell.app - where activation ends.
+     * Falls back to this application's dashboard when imwell.app is not
+     * configured.
+     */
+    public function dashboardUrl()
+    {
+        $base = static::showcaseBase();
+
+        return $base !== '' ? $base . '/' . $this->slug . '/dashboard' : url('/dashboard');
+    }
+
+    /**
      * Where an activation link should point.
      *
-     * Always this application. The showcase site is a single read-only landing
-     * page - it has no activation screen and never writes to the database, so
-     * members set their password here, are signed in here, and are then sent
-     * out to the landing page.
+     * imwell.app when it is configured: the member chooses their password
+     * there and lands on their organization's dashboard there. The equivalent
+     * screen on this application stays live either way, so links in already
+     * delivered emails keep working.
      */
     public function activationUrl($token)
     {
+        $base = static::showcaseBase();
+
+        if ($base !== '') {
+            return $base . '/activate/' . $this->slug . '/' . $token;
+        }
+
         return url('/org/' . $this->slug . '/activate/' . $token);
+    }
+
+    /**
+     * Spend a one-time ticket to arrive on this application already signed in.
+     * imwell.app cannot create a session on this domain, so this is how a
+     * member crosses from there to here without a second password prompt.
+     */
+    public function handoffUrl($token)
+    {
+        return url('/org/' . $this->slug . '/continue/' . $token);
     }
 }

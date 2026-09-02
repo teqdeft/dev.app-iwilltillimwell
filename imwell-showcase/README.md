@@ -1,17 +1,19 @@
-# imwell.app — organization landing page
+# imwell.app — member activation and organization dashboard
 
-One dynamic page, per organization. A member lands here after activating their
-account in the main application, sees who provides their benefits and what is
-included, and presses a button to go into the app.
+The second site. A member imported by an admin activates their account here,
+lands on a dashboard listing exactly the services their organization switched
+on, and presses one button to walk into the main application already signed in.
 
-Deliberately small: no framework, no schema of its own, **no sign in, no
-activation, and no writes**. It reads the main application's database and
-renders a page.
+No framework, no schema of its own, and **no database credentials**. Everything
+it shows and everything it changes goes through the main application's API.
 
 | Route | Purpose |
 |---|---|
-| `/` | 302 to the main application |
-| `/{slug}` | The organization's landing page |
+| `GET /` | 302 to the main application |
+| `GET /activate/{slug}/{token}` | choose a password |
+| `POST /activate/{slug}/{token}` | activate the account |
+| `GET /{slug}` | the organization's public landing page |
+| `GET /{slug}/dashboard` | the member's services after activating |
 | anything else | 404 |
 
 `{slug}` is the same slug the main app generates from the organization name, so
@@ -19,87 +21,149 @@ renders a page.
 
 ## The member journey
 
-1. Admin imports the sheet. Each member is emailed a one-time activation link
-   pointing at the **main app**: `app.iwilltilimwell.com/org/{slug}/activate/{token}`.
-2. The member sets their own password there. The main app marks the token used,
-   sets `status = 1`, grants org access (`OrgAccess::sync`) and **signs them in**.
-3. It then redirects them here, to `imwell.app/{slug}`.
-4. **Continue to the app** sends them to `{APP_URL}/org/{slug}`. They already
-   have a session on that domain, so `OrgAuthController::showLogin` drops them
-   straight at the dashboard — no second password prompt.
+1. Admin imports the sheet in **admin → ImWell App → Import**. Each member is
+   emailed a one-time activation link pointing **here**:
+   `imwell.app/activate/{slug}/{token}`.
+2. The member chooses a password on this site. It is POSTed to the main
+   application, which sets the password, marks the token used, sets
+   `status = 1`, grants organization access (`OrgAccess::sync`), registers them
+   on Lyric if that is enabled, and returns a **one-time hand-off ticket**.
+3. They land on `imwell.app/{slug}/dashboard`, listing the services their
+   organization enabled, each with what it includes.
+4. **Continue to the app** spends the ticket at
+   `{APP_URL}/org/{slug}/continue/{ticket}`. The main application validates it,
+   signs them in on its own domain and drops them at the dashboard — no second
+   password prompt.
 
-Step 4 targets the organization's own sign-in URL rather than the bare app root,
-so a member who arrives without a session still gets the org-branded login
-instead of the generic one.
+Without a ticket — an ordinary visit to `/{slug}` — that button targets the
+organization's own sign-in URL rather than the bare app root, so a member still
+gets the org-branded login instead of the generic one.
 
-## Why there is no sign in here
+## Why the ticket exists
 
 A session created on imwell.app does not exist on app.iwilltilimwell.com —
-browsers do not share cookies across root domains. Signing in here would have
-meant typing the password twice. Activation and sign in therefore live in the
-main app only, and this site is a read-only shop window.
+browsers do not share cookies across root domains. Without the ticket, a member
+who had just chosen a password would be asked for it again the instant they
+pressed the button.
 
-That is also why `Database` exposes `select()` and nothing else: there is no code
-path from this site that can modify the shared database.
+The ticket closes that gap and nothing more: single use, expires in 30 minutes
+(`IMWELL_HANDOFF_MINUTES`), burned the first time it is looked at, and useless
+to anyone who did not just activate. It is the only thing this site can present
+that identifies a member.
+
+## Why activation goes through the API
+
+Activating is not one UPDATE. It sets the password, spends the token, flips the
+member into the "my organization pays for me" state, writes the sponsored
+`braintree_subscription` row that decides which dashboard tiles unlock, and
+registers them on Lyric. Those rules live in the main application and would rot
+the moment they were copied into raw SQL on a second domain.
+
+So this site holds no database credentials at all — only `APP_URL` and a shared
+secret. `src/Api.php` is its single route to the data.
 
 ## Deploying
 
-> **Check what is on imwell.app first.** That domain currently serves a complete
-> Laravel 8 application (`bitbucket.org:developers_teq/imwell`, whose `.env` reads
-> `APP_URL=https://imwell.app`). It is deployed cPanel-style with `index.php` at
-> the repo root, so **pointing the document root here would replace that whole
-> application**, including its legacy `Company` / `/services/{slug}` organization
-> flow. Do not repoint imwell.app until that site is confirmed retired.
+> **imwell.app previously served a different application** — a complete Laravel 8
+> app (`bitbucket.org:developers_teq/imwell`) with its own `Company` /
+> `/services/{slug}` organization flow and its own admin. This site replaced it, so
+> those legacy URLs no longer resolve. If any organization was still using
+> `/services/{slug}`, or if anyone still has the old React Native app installed
+> (its WebView loaded `imwell.app/app-redirect/{token}`), those journeys are gone.
+> Keep that repo — it is the only copy of that product.
 
-Point the chosen document root at `imwell-showcase/public`. Nothing else is
-required — no Composer, no build step. PHP 7.4+ with PDO MySQL.
+PHP 7.4+ with cURL. No Composer, no build step. Three layouts work:
 
-Safe options while the legacy site is still live:
+**A — document root at `imwell-showcase/public`** (preferred). Only `public/` is
+reachable over HTTP; `src/` and `views/` sit above it and cannot be fetched.
 
-- a **subdomain** — `members.imwell.app`, `go.imwell.app`
-- a **sub-directory** — the front controller strips its own base path, so
-  `imwell.app/members` works unchanged
-- a **different domain** entirely
+**B — this folder itself as the document root** (cPanel `public_html`). cPanel will
+not let you repoint a primary domain, so this is often the only option. `index.php`
+at the root forwards to `public/index.php`, and the `.htaccess` beside it blocks
+`src/`, `views/`, `.env` and `*.md` from being served. **Both files must be present**
+— without the `.htaccess`, your source and your shared secret are downloadable.
 
-Database credentials are read from `../.env` (the main application's)
-automatically. If this folder is deployed where that file is not readable, copy
-`.env.example` to `.env` and fill in the DB values plus `APP_URL`.
+**C — a sub-directory**, e.g. `imwell.app/members`. The front controller strips its
+own base path, so no configuration is needed.
 
-## Turning it on
+> The root `.gitignore` ignores `.env.*` and `.htaccess` everywhere, which would
+> have kept `.htaccess`, `public/.htaccess` and `.env.example` out of every
+> clone — including the two files layout B depends on for its safety. This
+> folder's own `.gitignore` re-includes all three. If you add another, check it
+> is actually tracked before relying on it being deployed.
 
-The main app decides, from one environment variable, whether members are sent
-here after activating. Add to the **main application's** `.env`:
+## Configuration
+
+### This site
+
+Settings are read from `../.env` (the main application's) automatically. Once
+this site lives on its own domain that file is not readable, so copy
+`.env.example` to `.env` and fill in:
 
 ```
-IMWELL_SHOWCASE_URL=https://members.imwell.app
+APP_URL=https://app.iwilltilimwell.com
+IMWELL_SHOWCASE_SECRET=<the shared secret>
+APP_DEBUG=false
 ```
 
-With it set, `ImwellOrg::landingUrl()` returns this site and
-`OrgAuthController::activate()` finishes here. With it unset (the default),
-activation ends on the dashboard and this site is simply never linked to.
+### The main application
 
-Activation links always point at the main app either way — `activationUrl()`
-ignores this variable on purpose, because there is no activation screen here.
+```
+IMWELL_SHOWCASE_URL=https://imwell.app
+IMWELL_SHOWCASE_SECRET=<the same shared secret>
+IMWELL_HANDOFF_MINUTES=30
+```
 
-Run `php artisan config:clear` after changing it; `mergeConfigFrom()` is skipped
-while the config cache is warm, so a cached config ignores the new value.
+Generate the secret with:
+
+```bash
+php -r "echo bin2hex(random_bytes(32));"
+```
+
+`IMWELL_SHOWCASE_URL` is the switch. With it set, activation emails point here
+and `ImwellOrg::activationUrl()` returns this site. With it unset, activation
+stays on the main application exactly as before and this site is never linked
+to. The API **fails closed**: while `IMWELL_SHOWCASE_SECRET` is empty on the
+main application, `/api/imwell/*` answers 503 and nothing here can activate
+anything.
+
+Run `php artisan config:clear` after changing either — `mergeConfigFrom()` is
+skipped while the config cache is warm, so a cached config ignores new values.
+
+Then run the migration for the hand-off table:
+
+```bash
+php artisan migrate
+```
+
+### Links already in inboxes
+
+Emails sent before the switch point at `{APP_URL}/org/{slug}/activate/{token}`.
+That screen is still live and still works; it now finishes on this site's
+dashboard, carrying its own ticket, so both generations of link end in the same
+place.
 
 ## Keeping the service list honest
 
-The labels and blurbs in `src/Repository.php::FEATURES` mirror
-`modules/ImwellApp/Config/features.php`. Add a feature there and add it here too,
-or it will not be described on the landing page.
+There is nothing to keep in step. Labels, blurbs and the bullet lists all come
+from `modules/ImwellApp/Config/features.php` through the API — add a feature
+there and it appears here, described, with no change to this site.
 
 ## Files
 
 ```
-public/index.php     front controller and routing
-public/.htaccess     pretty URLs
-src/Config.php       reads .env (own, else the main app's)
-src/Database.php     PDO connection, select only
-src/Repository.php   the queries + the service catalogue
-src/View.php         tiny renderer, escaping, URLs
-views/layout.php     page chrome
-views/org.php        the landing page
-views/error.php      404 and 500
+index.php               shim for layout B; forwards to public/index.php
+.htaccess               layout B only: blocks src/, views/, .env, *.md
+public/index.php        front controller and routing
+public/.htaccess        pretty URLs and security headers
+src/Config.php          reads .env (own, else the main app's)
+src/Api.php             the only route to the main application
+src/Session.php         CSRF token + the hand-off ticket, nothing else
+src/View.php            tiny renderer, escaping, URLs
+views/layout.php        page chrome
+views/activate.php      choose a password
+views/activate-invalid.php  spent or expired link
+views/dashboard.php     the member's services after activating
+views/org.php           public landing page
+views/error.php         404, 500 and 503
 ```

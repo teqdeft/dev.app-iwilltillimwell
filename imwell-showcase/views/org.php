@@ -4,8 +4,10 @@
 <div class="hero">
     <div class="wrap">
         <div class="hero-inner">
-            <?php if ($logo = View::logoUrl($org['logo'])): ?>
-                <div class="hero-logo"><img src="<?= View::e($logo) ?>" alt="<?= View::e($org['name']) ?> logo"></div>
+            <?php if (! empty($org['logo_url'])): ?>
+                <div class="hero-logo">
+                    <img src="<?= View::e($org['logo_url']) ?>" alt="<?= View::e($org['name']) ?> logo">
+                </div>
             <?php endif; ?>
 
             <div class="hero-text">
@@ -22,9 +24,11 @@
                 <?php endif; ?>
 
                 <div class="cta-row">
-                    <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
+                    <a class="btn" href="<?= View::e($appUrl) ?>">Sign in to the app</a>
                 </div>
-                <p class="hint">Takes you to your dashboard on iWILL &lsquo;til i&rsquo;mWELL.</p>
+                <p class="hint">
+                    New here? Use the activation link we emailed you to set your password.
+                </p>
             </div>
         </div>
     </div>
@@ -47,6 +51,14 @@
                     <div class="card">
                         <h3><?= View::e($service['label']) ?></h3>
                         <p><?= View::e($service['blurb']) ?></p>
+
+                        <?php if (! empty($service['details'])): ?>
+                            <ul>
+                                <?php foreach ($service['details'] as $detail): ?>
+                                    <li><?= View::e($detail) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -62,7 +74,7 @@
                 Your <?= View::e($org['name']) ?> membership is already set up. Open the app to
                 book a consultation, message a specialist and use everything above.
             </p>
-            <a class="btn" href="<?= View::e($appUrl) ?>">Continue to the app</a>
+            <a class="btn" href="<?= View::e($appUrl) ?>">Sign in to the app</a>
         </div>
     </div>
 </section>

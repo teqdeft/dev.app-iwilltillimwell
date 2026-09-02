@@ -21,38 +21,71 @@ class View
         return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
+    // ---------------------------------------------------------------
+    // URLs on this site
+    // ---------------------------------------------------------------
+
+    /**
+     * This site's own base path. Empty at a domain root, '/members' when it is
+     * served from a sub-directory - see the front controller, which strips the
+     * same prefix off incoming requests.
+     */
+    public static function base()
+    {
+        $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+
+        return $base === '/' ? '' : $base;
+    }
+
+    public static function url($path = '')
+    {
+        return static::base() . '/' . ltrim($path, '/');
+    }
+
+    public static function orgUrl($slug)
+    {
+        return static::url(rawurlencode((string) $slug));
+    }
+
+    public static function dashboardUrl($slug)
+    {
+        return static::url(rawurlencode((string) $slug) . '/dashboard');
+    }
+
+    public static function activateUrl($slug, $token)
+    {
+        return static::url('activate/' . rawurlencode((string) $slug) . '/' . rawurlencode((string) $token));
+    }
+
+    // ---------------------------------------------------------------
+    // URLs on the main application
+    // ---------------------------------------------------------------
+
     /** Root of the main application. */
     public static function appBaseUrl()
     {
-        return rtrim(Config::get('APP_URL', 'https://app.iwilltilimwell.com'), '/');
+        return Api::baseUrl();
     }
 
     /**
-     * Where a member continues into the real application: their organization's
-     * own branded sign-in page, not the generic app root. The main app sends
-     * them straight to the dashboard when they already have a session there,
-     * which they do right after activating.
+     * Where a member continues into the application.
+     *
+     * With a hand-off ticket - which they have right after activating - this
+     * signs them in on that domain and drops them at their dashboard. Without
+     * one it is their organization's branded sign-in page, never the generic
+     * app root.
      */
-    public static function memberAppUrl($slug)
+    public static function memberAppUrl($slug, $ticket = null)
     {
-        return static::appBaseUrl() . '/org/' . rawurlencode((string) $slug);
+        $base = static::appBaseUrl() . '/org/' . rawurlencode((string) $slug);
+
+        return $ticket ? $base . '/continue/' . rawurlencode((string) $ticket) : $base;
     }
 
-    /**
-     * Organization logos are uploaded through the main application and live
-     * under its public/ directory, so they are served from the main app's URL.
-     */
-    public static function logoUrl($logo)
+    /** Deep link to one service inside the application. */
+    public static function servicePath($path)
     {
-        if (! $logo) {
-            return null;
-        }
-
-        if (preg_match('#^https?://#i', $logo)) {
-            return $logo;
-        }
-
-        return static::appBaseUrl() . '/' . ltrim($logo, '/');
+        return $path ? static::appBaseUrl() . '/' . ltrim($path, '/') : null;
     }
 
     public static function notFound($message = 'Page not found')

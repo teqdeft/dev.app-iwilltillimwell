@@ -1,0 +1,30 @@
+# Only used when this folder itself is the document root (e.g. dropped in as
+# cPanel's public_html). When the document root is imwell-showcase/public,
+# Apache never reads this file and public/.htaccess does the work instead.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Application source is never served over HTTP.
+    RewriteRule ^(src|views)/ - [F,L]
+
+    # Real files and folders are served as-is; everything else goes to the
+    # front controller. index.php is a real file, so this cannot loop.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Configuration and documentation are not public. .env has no PHP handler, so
+# without this it would be served as plain text.
+<FilesMatch "^\.env|\.md$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

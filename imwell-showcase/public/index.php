@@ -1,19 +1,28 @@
 <?php
 
 /**
- * imwell.app - organization landing page.
+ * imwell.app - member activation and organization dashboard.
  *
- * One dynamic page. Members arrive here after activating their account on the
- * main application, see who provides their benefits and what is included, then
- * press a button to go back to the main application.
+ * The whole member journey after an admin imports the sheet:
  *
- * There is no sign in and no activation here: both live in the main app, which
- * signs the member in before sending them over. This site therefore never
- * writes to the database and keeps no session of its own.
+ *   1. The activation email points here.
+ *   2. The member chooses a password on this site; it is sent to the main
+ *      application's API, which activates the account and returns a one-time
+ *      hand-off ticket.
+ *   3. They land on their organization's dashboard here, listing exactly the
+ *      services their admin switched on.
+ *   4. "Continue to the app" spends the ticket on the main application, which
+ *      signs them in there - no second password prompt.
+ *
+ * There are no database credentials on this site and no user accounts of its
+ * own: everything it shows and everything it changes goes through the API.
  *
  * Routes:
- *   GET /            redirect to the main application
- *   GET /{slug}      the organization's landing page
+ *   GET  /                          redirect to the main application
+ *   GET  /activate/{slug}/{token}   choose a password
+ *   POST /activate/{slug}/{token}   activate
+ *   GET  /{slug}                    the organization's public landing page
+ *   GET  /{slug}/dashboard          the member's services after activating
  */
 
 declare(strict_types=1);
@@ -29,43 +38,80 @@ spl_autoload_register(function ($class) {
     }
 });
 
+use Showcase\Api;
+use Showcase\ApiException;
 use Showcase\Config;
-use Showcase\Repository;
+use Showcase\Session;
 use Showcase\View;
 
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+$path   = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
 // Support being served from a sub-directory as well as a domain root.
 $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
-if ($base !== '' && strpos($path, $base) === 0) {
+if ($base !== '' && $base !== '/' && strpos($path, $base) === 0) {
     $path = substr($path, strlen($base));
 }
 
 $segments = array_values(array_filter(explode('/', trim($path, '/')), 'strlen'));
 
 try {
-    // Nothing to show at the root - the organization is the page.
+    // ---------------------------------------------------------------
+    // GET /  - nothing to show at the root; the organization is the page.
+    // ---------------------------------------------------------------
     if (! $segments) {
-        header('Location: ' . rtrim(Config::get('APP_URL', 'https://app.iwilltilimwell.com'), '/'), true, 302);
+        header('Location: ' . View::appBaseUrl(), true, 302);
         exit;
     }
 
-    // Only /{slug}. Anything deeper belonged to the old sign-in and activation
-    // pages, which now live in the main application.
-    if (count($segments) > 1) {
+    // ---------------------------------------------------------------
+    // /activate/{slug}/{token}
+    // ---------------------------------------------------------------
+    if ($segments[0] === 'activate') {
+        if (count($segments) !== 3) {
+            View::notFound();
+        }
+
+        [, $slug, $token] = $segments;
+
+        $method === 'POST'
+            ? submitActivation($slug, $token)
+            : showActivation($slug, $token);
+        exit;
+    }
+
+    // ---------------------------------------------------------------
+    // /{slug} and /{slug}/dashboard
+    // ---------------------------------------------------------------
+    if (count($segments) > 2 || (count($segments) === 2 && $segments[1] !== 'dashboard')) {
         View::notFound();
     }
 
-    $org = Repository::organizationBySlug($segments[0]);
+    $slug = $segments[0];
+    $data = Api::org($slug);
 
-    if (! $org) {
+    if (empty($data['ok'])) {
         View::notFound('We could not find an organization at this address.');
     }
 
+    if (count($segments) === 2) {
+        showDashboard($slug, $data);
+        exit;
+    }
+
     View::render('org', [
-        'title'    => $org['name'],
-        'org'      => $org,
-        'services' => Repository::services($org['id']),
+        'title'    => $data['org']['name'],
+        'org'      => $data['org'],
+        'services' => $data['services'],
+    ]);
+} catch (ApiException $e) {
+    // The application could not be reached. Say so plainly - a member has no
+    // use for a stack trace, and the detail only shows with APP_DEBUG on.
+    http_response_code(503);
+    View::render('error', [
+        'title'   => 'We are having trouble connecting',
+        'message' => 'We could not reach iWILL \'til i\'mWELL right now. Please try again in a few minutes.',
+        'detail'  => (Config::get('APP_DEBUG') === 'true') ? $e->getMessage() : null,
     ]);
 } catch (\Throwable $e) {
     http_response_code(500);
@@ -74,4 +120,124 @@ try {
         'message' => 'We could not load this page right now. Please try again shortly.',
         'detail'  => (Config::get('APP_DEBUG') === 'true') ? $e->getMessage() : null,
     ]);
+}
+
+// -------------------------------------------------------------------
+// Handlers
+// -------------------------------------------------------------------
+
+/** The password form behind an activation link. */
+function showActivation($slug, $token)
+{
+    $data = Api::activation($slug, $token);
+
+    if (($data['_status'] ?? 200) === 404) {
+        View::notFound('We could not find an organization at this address.');
+    }
+
+    if (empty($data['ok'])) {
+        renderInvalid($data);
+    }
+
+    View::render('activate', [
+        'title'  => 'Activate your account',
+        'org'    => $data['org'],
+        'member' => $data['member'],
+        'token'  => $token,
+        'error'  => null,
+        'csrf'   => Session::csrfToken(),
+    ]);
+}
+
+/** Chosen password submitted: activate through the API. */
+function submitActivation($slug, $token)
+{
+    if (! Session::csrfValid($_POST['_token'] ?? null)) {
+        // A stale form, usually a back button or a very old tab.
+        header('Location: ' . View::activateUrl($slug, $token), true, 302);
+        exit;
+    }
+
+    $data = Api::activate(
+        $slug,
+        $token,
+        (string) ($_POST['password'] ?? ''),
+        (string) ($_POST['password_confirmation'] ?? '')
+    );
+
+    if (($data['_status'] ?? 200) === 404) {
+        View::notFound('We could not find an organization at this address.');
+    }
+
+    // The password itself was refused - show the form again with the reason.
+    if (empty($data['ok']) && ($data['error'] ?? '') === 'validation') {
+        $lookup = Api::activation($slug, $token);
+
+        View::render('activate', [
+            'title'  => 'Activate your account',
+            'org'    => $lookup['org'] ?? $data['org'] ?? [],
+            'member' => $lookup['member'] ?? ['first_name' => '', 'email' => ''],
+            'token'  => $token,
+            'error'  => $data['message'] ?? 'Please check your password and try again.',
+            'csrf'   => Session::csrfToken(),
+        ]);
+        exit;
+    }
+
+    if (empty($data['ok'])) {
+        renderInvalid($data);
+    }
+
+    // Activated. Hold the ticket in this browser rather than in the URL, then
+    // send them to their dashboard.
+    Session::rememberActivation($slug, [
+        'ticket' => $data['ticket'] ?? null,
+        'name'   => $data['member']['first_name'] ?? '',
+    ]);
+
+    header('Location: ' . View::dashboardUrl($slug) . '?welcome=1', true, 302);
+    exit;
+}
+
+/**
+ * The member's dashboard: every service their organization switched on.
+ *
+ * Reachable without having just activated - it says nothing that the public
+ * landing page does not. The difference is the button: with a ticket it walks
+ * straight into the application, without one it goes to the sign-in page.
+ */
+function showDashboard($slug, array $data)
+{
+    // Activating on the main application (an older email link) finishes here
+    // with the ticket in the query string. Move it into the session and drop
+    // it from the URL, so it is not left in history or a referrer header.
+    if (! empty($_GET['ticket'])) {
+        Session::rememberActivation($slug, ['ticket' => (string) $_GET['ticket'], 'name' => '']);
+
+        header('Location: ' . View::dashboardUrl($slug) . '?welcome=1', true, 302);
+        exit;
+    }
+
+    $activation = Session::activation($slug);
+
+    View::render('dashboard', [
+        'title'    => $data['org']['name'] . ' - your services',
+        'org'      => $data['org'],
+        'services' => $data['services'],
+        'ticket'   => $activation['ticket'] ?? null,
+        'name'     => $activation['name'] ?? '',
+        'welcome'  => isset($_GET['welcome']),
+    ]);
+}
+
+/** A link that is spent, expired or simply wrong. */
+function renderInvalid(array $data)
+{
+    http_response_code(410);
+    View::render('activate-invalid', [
+        'title'   => 'This link is no longer valid',
+        'org'     => $data['org'] ?? [],
+        'message' => $data['message'] ?? 'This activation link is no longer valid.',
+    ]);
+    exit;
 }
