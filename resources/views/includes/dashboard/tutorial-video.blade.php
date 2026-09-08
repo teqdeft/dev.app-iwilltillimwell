@@ -46,7 +46,7 @@
 	.tutorial-modal__content {
 		position: relative;
 		width: 100%;
-		max-width: 900px;
+		max-width: 1100px;
 		background: #000;
 		border-radius: 12px;
 		overflow: hidden;
@@ -55,7 +55,12 @@
 	.tutorial-modal__content video {
 		display: block;
 		width: 100%;
-		max-height: 80vh;
+		/* The source is 1920x1080. Reserving the 16:9 box up front stops the
+		   player collapsing to a bare control bar while it is unloaded
+		   (preload="none" means no intrinsic size until playback starts). */
+		aspect-ratio: 16 / 9;
+		max-height: 85vh;
+		object-fit: contain;
 		background: #000;
 	}
 	.tutorial-modal__close {
