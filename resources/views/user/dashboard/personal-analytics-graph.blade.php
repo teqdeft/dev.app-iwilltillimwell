@@ -1,5 +1,5 @@
 <div class="dash-card pers-chart-details">
-	<div class="card-title"><p>Personal Analytics</p></div>
+	<div class="card-title"><p>All-Time Personal Analytics</p></div>
 	<div class="content">
 		<div class="adult-info">
 		
