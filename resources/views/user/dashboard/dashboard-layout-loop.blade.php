@@ -30,7 +30,13 @@ $slug = isset($list['slug']) && !empty($list['slug']) ? $list['slug'] : 'persona
 
 
 
-	@if($slug=="search-prescription-plan" )
+	@if(isset($list['popup']))
+
+	href="javascript:void(0)"
+
+	onclick="show_popup('{{ $list['popup'] }}','flex')"
+
+	@elseif($slug=="search-prescription-plan" )
 
 	data-toggle="modal" data-target="#pre-search-dash-model" onclick="prescriptionsearchmodal()"
 

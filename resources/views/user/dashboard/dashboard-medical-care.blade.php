@@ -6,7 +6,7 @@
 			@php 
 			
 				$data[] = ['id'=>'11','name'=>'My Moods','ico'=>'my-moods.svg','slug'=>'my-mood-feeling'];	
-				$data[] = ['id'=>'12','name'=>'My Journal','ico'=>'my-journal.svg','slug'=>'journal'];	
+				$data[] = ['id'=>'12','name'=>'My Journal','ico'=>'my-journal.svg','slug'=>'journal','popup'=>'MyJournalModal'];	
 				$data[] = ['id'=>'13','name'=>'My Safety Plan','ico'=>'my-safety.svg','slug'=>'my-safety-plan'];	
 				$data[] = ['id'=>'14','name'=>'My Thought Analysis','ico'=>'my-thought-analysis.svg','slug'=>'cbt-therapy'];	
 				$data[] = ['id'=>'15','name'=>'Mental Health Screenings','ico'=>'mental-health-screenings.svg','slug'=>'mental-health-screening'];	
