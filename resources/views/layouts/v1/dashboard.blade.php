@@ -740,6 +740,8 @@ $(document).ready(function() {
 
 </script>
 
+@include('includes.dashboard.tutorial-video')
+
 </body>
 
 </html>
