@@ -5,8 +5,10 @@
 <style>
 	.tutorial-fab {
 		position: fixed;
+		/* Sits above the existing chat launcher in the bottom-right corner,
+		   rather than on top of it. */
 		right: 24px;
-		bottom: 24px;
+		bottom: 100px;
 		z-index: 9998;
 		display: flex;
 		align-items: center;
@@ -80,7 +82,7 @@
 	@media (max-width: 767px) {
 		.tutorial-fab {
 			right: 16px;
-			bottom: 80px;
+			bottom: 150px;
 			padding: 14px;
 			font-size: 0;
 			gap: 0;
