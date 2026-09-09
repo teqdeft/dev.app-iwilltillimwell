@@ -760,6 +760,46 @@ function clearMarkers() {
     nextTab();
 </script>
 
+<script>
+// The ".googleNearMe" click handler lives in assets/js/script.js, which the
+// mobile layout never loads - so tapping "Find urgent care / emergency room
+// near me" did nothing here while it worked on desktop. Bound locally instead.
+$(document).on("click", ".googleNearMe", function (e) {
+    e.preventDefault();
+
+    var hrefLink = $(this).attr("data-link");
+    if (!hrefLink || hrefLink === 'javascript') {
+        return false;
+    }
+
+    function openMaps(suffix) {
+        var url = hrefLink + (suffix || "");
+        // Mobile browsers block window.open once it is no longer tied to the
+        // tap (the geolocation callback is async), so fall back to navigating
+        // this tab rather than leaving the user with nothing.
+        var win = window.open(url, "_blank");
+        if (!win) {
+            window.location.href = url;
+        }
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                openMaps("/@" + position.coords.latitude + "," + position.coords.longitude);
+            },
+            function () {
+                // Permission denied or unavailable - still open the search.
+                openMaps();
+            },
+            { timeout: 8000 }
+        );
+    } else {
+        openMaps();
+    }
+});
+</script>
+
 
 @else
 <section class="written-journal">
