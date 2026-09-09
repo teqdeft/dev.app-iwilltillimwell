@@ -66,8 +66,8 @@ var recognization = new SpeechRecognition();
 
 </script>
 
+<script src="{{ asset('js/recorder.js') }}" defer></script>
 <script src="{{ asset('assets/dashboard/assets/js/recorder/app.js') }}" defer></script>
-<script src="https://www.imwell.app/js/recorder/recorder.js" defer></script>
 
 <script>
 $(document).on("click", ".delete-journal", function() {

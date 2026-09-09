@@ -208,7 +208,7 @@ var recognization = new SpeechRecognition();
 
 </script>
 <script src="https://app.iwilltilimwell.com/assets/js/appShareMobile.js" defer></script>
-<script src="https://www.imwell.app/js/recorder/recorder.js" defer></script>
+<script src="{{ asset('js/recorder.js') }}" defer></script>
 
 <style>
 .main-panel { width: 100% !important;margin: 0px !important;}
