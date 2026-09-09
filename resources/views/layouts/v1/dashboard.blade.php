@@ -142,14 +142,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 	<div id="loader-wrapper"><div class="loader"></div></div>
 
+{{-- Exei chat widget temporarily disabled. --}}
+{{--
 	<iframe id="myIframe" allow="microphone" src="https://sdk.exei.ai/sdk/689c53c8c3b6d733bae9d3cb?mic=true&channelType=WEBSITE&API_KEY=0505d61bb1a441f884510105bf30401d" style="position: fixed; bottom: 85px; right: 20px; width: 400px; height: 70%; border: none; z-index: 9999;" title="Exei SDK">
 
     <p>Your browser does not support iframes.</p>
 
 </iframe>
+--}}
 
 
-<script src="https://iframe-cdn.exei.ai/script-prod-minified.js"></script>
+{{-- <script src="https://iframe-cdn.exei.ai/script-prod-minified.js"></script> --}}
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5KWPMSFC" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <?php /**/ ?>
 
