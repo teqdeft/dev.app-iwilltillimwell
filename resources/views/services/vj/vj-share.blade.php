@@ -98,7 +98,38 @@ var instructions = $('#action');
 
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 var recognization = new SpeechRecognition();
-    recognization.continuous = true;
+    // Chrome only finalises a result once it hears a clear silence, so a
+    // continuous session returned one unbroken block of text however long the
+    // user spoke. Ending the session after each utterance instead gives one
+    // result per phrase - which formatVoiceTranscript() turns into a sentence -
+    // so we restart it ourselves for as long as the user is still recording.
+    recognization.continuous = false;
+
+    // Does the user still expect dictation to be running? app.js drives
+    // recording through recognization.start()/stop(), so wrap those rather
+    // than reaching into the recorder logic.
+    var vjListening = false;
+    var vjStart = recognization.start.bind(recognization);
+    var vjStop = recognization.stop.bind(recognization);
+
+    recognization.start = function() {
+      vjListening = true;
+      try { vjStart(); } catch (e) { /* already running */ }
+    };
+
+    recognization.stop = function() {
+      vjListening = false;
+      vjStop();
+    };
+
+    recognization.onend = function() {
+      if (!vjListening) { return; }
+      // Chrome throws if restarted in the same tick that ended the session.
+      setTimeout(function() {
+        if (!vjListening) { return; }
+        try { vjStart(); } catch (e) { /* restart raced with stop */ }
+      }, 250);
+    };
 
     // This block is called every time the Speech APi captures a line. 
     // The Web Speech API returns bare words - no punctuation, no spacing - so
@@ -173,7 +204,14 @@ var recognization = new SpeechRecognition();
     // }
     
     recognization.onerror = function(event) {
-      if(event.error == 'no-speech') {
+      if (event.error == 'not-allowed' || event.error == 'service-not-allowed') {
+        // Microphone blocked - stop restarting, or onend would loop forever.
+        vjListening = false;
+      }
+
+      // Short silences are normal now that the session restarts after every
+      // utterance, so only warn once dictation has genuinely stopped.
+      if(event.error == 'no-speech' && !vjListening) {
         instructions.text('No speech was detected. Try again.').css("color", "red");  
       };
     }
