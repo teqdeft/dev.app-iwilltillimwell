@@ -5,10 +5,10 @@
 <style>
 	.tutorial-fab {
 		position: fixed;
-		/* Sits above the existing chat launcher in the bottom-right corner,
-		   rather than on top of it. */
+		/* Bottom-right corner. If the Exei chat widget is re-enabled, raise
+		   this back to ~100px so the two do not overlap. */
 		right: 24px;
-		bottom: 100px;
+		bottom: 24px;
 		z-index: 9998;
 		display: flex;
 		align-items: center;
@@ -87,7 +87,7 @@
 	@media (max-width: 767px) {
 		.tutorial-fab {
 			right: 16px;
-			bottom: 150px;
+			bottom: 80px;
 			padding: 14px;
 			font-size: 0;
 			gap: 0;
