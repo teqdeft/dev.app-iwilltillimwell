@@ -153,6 +153,53 @@ var recognization = new SpeechRecognition();
     recognization.continuous = true;
 
     // This block is called every time the Speech APi captures a line. 
+    // The Web Speech API returns bare words - no punctuation, no spacing - so
+    // every segment used to run straight into the previous one. This tidies the
+    // transcript as it arrives: a space between segments, a capital letter to
+    // start each sentence, and a full stop where the speaker paused. Spoken
+    // punctuation ("comma", "full stop", "question mark", "new line") is
+    // honoured too, the way dictation tools normally behave.
+    function formatVoiceTranscript(existing, transcript) {
+      var text = (transcript || '').trim();
+      if (!text) { return existing; }
+
+      // Spoken punctuation -> the real mark.
+      text = text
+        .replace(/\b(full stop|period)\b/gi, '.')
+        .replace(/\bcomma\b/gi, ',')
+        .replace(/\bquestion mark\b/gi, '?')
+        .replace(/\bexclamation (mark|point)\b/gi, '!')
+        .replace(/\bnew (line|paragraph)\b/gi, '\n');
+
+      // Tidy the spacing those replacements leave behind.
+      text = text.replace(/\s+([.,?!])/g, '$1')
+                 .replace(/([.,?!])(?=[^\s])/g, '$1 ')
+                 .replace(/[^\S\n]{2,}/g, ' ')
+                 .replace(/[^\S\n]*\n[^\S\n]*/g, '\n')
+                 .replace(/\bi\b/g, 'I')
+                 .trim();
+      if (!text) { return existing; }
+
+      var out = existing || '';
+
+      // A pause between segments reads as the end of a sentence.
+      if (out && !/[.,?!\n]\s*$/.test(out)) {
+        out = out.replace(/\s+$/, '') + '.';
+      }
+      if (out && !/\n$/.test(out)) { out += ' '; }
+
+      // Capitalise only where a fresh sentence is starting.
+      if (!out || /(^|[.?!]\s|\n)$/.test(out)) {
+        text = text.charAt(0).toUpperCase() + text.slice(1);
+      }
+
+      out += text;
+
+      // app.js refuses to save any transcript containing consecutive dots, so
+      // make sure this formatting can never produce them.
+      return out.replace(/\.{2,}/g, '.');
+    }
+
     recognization.onresult = function(event) {
     
       // We only need the current one.
@@ -164,7 +211,7 @@ var recognization = new SpeechRecognition();
       var mobileRepeatBug = (current == 1 && transcript == event.results[0][0].transcript);
     
       if(!mobileRepeatBug) {
-        content += transcript;
+        content = formatVoiceTranscript(content, transcript);
         output.val(content);
       }
     };    
