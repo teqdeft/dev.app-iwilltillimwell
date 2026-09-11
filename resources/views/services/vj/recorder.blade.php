@@ -1,146 +1,227 @@
 @extends('layouts.v1.dashboard')
 @section('content')
-<div class='moodContainer content-wrapper'>	
-	<div class="row">      
-		<div class="col-md-12 grid-margin">        
-			<div class="row">          
-				<div class="col-12 col-xl-6 mb-4 mb-xl-0">            
-					<div class="patient-details ">              
-						<div class="media">                
-							<div class="title-heading-icon-box-cus">                  
-								<i class="far fa-calendar-alt"></i>                
-							</div>               
-							<div class="media-body">                  
-								<h3 class="font-weight-bold"> My Voice Journal</h3>                  
-								<h6 class="font-weight-normal mb-0"></h6>                
-							</div>              
-						</div>            
-					</div>          
-				</div>        
-			</div>      
-		</div>    
-	</div>	
-    <div class="card--white full-height feels-view voice-journal">
-       
-        @if(!LoginUserBToBVerification())
-            {{ LoginUserBToBVerificationMSG() }}
-        @else           
+{{-- Voice journal, redesigned. Every id and class app.js binds to is kept
+     exactly as it was (#controls, #recordButton, #pauseButton, #stopButton,
+     #action, #output, #display, #recordingsList, li.all-detail, .detail,
+     .autio-con12, #no-data, #voiceRecModal) - this is presentation only. --}}
+<div class='moodContainer content-wrapper vj-page'>
 
+	<div class="vj-topbar">
+		<span class="vj-topbar__icon"><i class="far fa-calendar-alt"></i></span>
+		<h3>My Voice Journal</h3>
+	</div>
 
-        <!-- start generate link -->
-        <div class="generate-min">
-            <div class="left">
-                <div class="hear-send-link">
-                    <h3 class="here-send">Hear from friends and family</h3>
-                    <p class="detail">Send an invitation to someone that enables the recording of a brief affirmation or uplifting message of encouragement.</p>
-                </div>
-            </div>
-            <div class="right">
-                <div class="genert-link">
-                    <button id="generateLink" title='Clicking here sends a secure automated link allowing the recipient to record an uplifting message that populates into the "Requested Affirmations" section in your Mental Health Menu.'><i class="fas fa-link"></i> Send Link</button>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="shareableModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content"> 
-                <form id="form-submit-mail=share">
-                    @csrf
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Send shareable link</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <p id="showLink"></p>
-                      <div class="test-12">
-                        <div class="form-group">
-                            <label for="email">Name*</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required >
-                            <p id="email-error"></p>
-                            <label for="email">Email address*</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required >
-                            <p id="email-error"></p>
-                            <small id="emailHelp" class="form-text text-muted">We'll share link to this email.</small>
-                            
-                            <label for="email">Message</label>
-                            <textarea class="form-control" rows="4" cols="50" name="message" id="emailMsg" placeholder="Enter message here..."></textarea>
-                            <input type="hidden" value="" name="share_token" id="showLinkText">
-                        </div>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                    <input type="button" id="subscribeForm" class="btn btn-primary" value="Send" onclick="ShareNow()">
-                  </div>
-                </form>
-            </div>
-          </div>
-        </div>
-        <!-- end start generate link -->
-        
-        <div class="recording-sample-wrap">
-            <div id="controls">
-          	 <button id="recordButton"><i class="fas fa-microphone-alt"></i> Record</button>
-          	 <button id="pauseButton" disabled><i class="fas fa-pause"></i> Pause</button>
-          	 <button id="stopButton" disabled><i class="fas fa-stop"></i> Stop</button>
-            </div>
-            <p id="action" style="display:block;color:grey;font-weight: 800;"></p>
-            
-            <!-- Custom Code for showing text -->
-            <textarea id="output" style="display:none;" placeholder="Create a new note by typing or using voice recognition." rows="6" cols="100"></textarea>
-            <p id="display" style="display:none;">00:00:00</p>
-            <!-- End of custom Code for showing text -->
-            
-          	<p><strong>Recordings:</strong></p>
+	<div class="card--white full-height feels-view voice-journal">
 
-          	<ol id="recordingsList" class="all-recordings">
-      	    <?php if (!empty($data)) { ?>
-              	<?php foreach($data as $row): ?>
-                        <li class="all-detail">
-                            <div class="detail"><p><?= $row['voice_text'] ?> </p></div>
-                            <div class="name"><p><?= $row['link_visitor'] ?> </p></div>
-                            <div class="vj-time">
-                                <b><?= convertDateToUserTimeZone($row['created_at']); ?></b>
-                            </div>
-                            <audio controls id="cust-audio-control">
-                              <source src="<?= asset('audio/' . $row['file_name']) ?>" type="audio/wav">
-                            </audio>
-                            <div class="autio-con12">
-                                <a href="<?= asset('audio/' . $row['file_name']) ?>" download><i class="fas fa-download"></i> </a>
-                                
+		@if(!LoginUserBToBVerification())
+			{{ LoginUserBToBVerificationMSG() }}
+		@else
+
+		<!-- start generate link -->
+		<div class="generate-min vj-invite">
+			<div class="left">
+				<div class="hear-send-link">
+					<h3 class="here-send">Hear from friends and family</h3>
+					<p class="detail">Send an invitation to someone that enables the recording of a brief affirmation or uplifting message of encouragement.</p>
+				</div>
+			</div>
+			<div class="right">
+				<div class="genert-link">
+					<button id="generateLink" title='Clicking here sends a secure automated link allowing the recipient to record an uplifting message that populates into the "Requested Affirmations" section in your Mental Health Menu.'><i class="fas fa-link"></i> Send Link</button>
+				</div>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="shareableModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form id="form-submit-mail=share">
+					@csrf
+				  <div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Send shareable link</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					  <p id="showLink"></p>
+					  <div class="test-12">
+						<div class="form-group">
+							<label for="email">Name*</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required >
+							<p id="email-error"></p>
+							<label for="email">Email address*</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required >
+							<p id="email-error"></p>
+							<small id="emailHelp" class="form-text text-muted">We'll share link to this email.</small>
+
+							<label for="email">Message</label>
+							<textarea class="form-control" rows="4" cols="50" name="message" id="emailMsg" placeholder="Enter message here..."></textarea>
+							<input type="hidden" value="" name="share_token" id="showLinkText">
+						</div>
+					  </div>
+				  </div>
+				  <div class="modal-footer">
+					<input type="button" id="subscribeForm" class="btn btn-primary" value="Send" onclick="ShareNow()">
+				  </div>
+				</form>
+			</div>
+		  </div>
+		</div>
+		<!-- end start generate link -->
+
+		<div class="recording-sample-wrap vj-studio">
+
+			<div class="vj-studio__grid" id="vjStage">
+
+				<div class="vj-studio__controls">
+					<div id="controls">
+						<button id="recordButton"><i class="fas fa-microphone-alt"></i> Record</button>
+						<button id="pauseButton" disabled><i class="fas fa-pause"></i> Pause</button>
+						<button id="stopButton" disabled><i class="fas fa-stop"></i> Stop</button>
+					</div>
+					<h4 class="vj-studio__lead">Speak from the heart</h4>
+					<p class="vj-studio__sub">Your voice matters. Record a short message of support, love or encouragement.</p>
+					<p id="action" style="display:block;color:grey;font-weight: 800;"></p>
+				</div>
+
+				<div class="vj-studio__stage">
+					<div class="vj-stage__visual">
+						<span class="vj-wave" aria-hidden="true">
+							<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+						</span>
+						<span class="vj-mic" aria-hidden="true"><i class="fas fa-microphone"></i></span>
+						<span class="vj-wave" aria-hidden="true">
+							<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+						</span>
+					</div>
+					{{-- app.js writes the elapsed time here and toggles it with
+					     show()/hide(), so the id and inline display must stay. --}}
+					<p id="display" style="display:none;">00:00:00</p>
+					<p class="vj-stage__hint">Recording limit 3:00</p>
+				</div>
+
+				<aside class="vj-tips">
+					<h5 class="vj-tips__head"><span class="vj-tips__icon"><i class="far fa-lightbulb"></i></span> Quick Tips</h5>
+					<ul>
+						<li><i class="fas fa-check"></i> Find a quiet place</li>
+						<li><i class="fas fa-check"></i> Keep it short (10&ndash;60 seconds)</li>
+						<li><i class="fas fa-check"></i> Speak naturally</li>
+						<li><i class="fas fa-check"></i> Share from the heart &#128156;</li>
+					</ul>
+				</aside>
+
+			</div>
+
+			<!-- Custom Code for showing text -->
+			<textarea id="output" style="display:none;" placeholder="Create a new note by typing or using voice recognition." rows="6" cols="100"></textarea>
+			<!-- End of custom Code for showing text -->
+
+			<div class="vj-list">
+				<div class="vj-list__head">
+					<div class="vj-list__title">
+						<h4>Recordings</h4>
+						<p>Your recorded messages will appear here.</p>
+					</div>
+					<select id="vjSortOrder" class="vj-sort" aria-label="Sort recordings">
+						<option value="newest">Newest first</option>
+						<option value="oldest">Oldest first</option>
+					</select>
+				</div>
+
+				<ol id="recordingsList" class="all-recordings">
+				<?php if (!empty($data)) { ?>
+					<?php foreach($data as $row): ?>
+						<li class="all-detail">
+							<div class="detail"><p><?= $row['voice_text'] ?> </p></div>
+							<div class="name"><p><?= $row['link_visitor'] ?> </p></div>
+							<div class="vj-time">
+								<b><?= convertDateToUserTimeZone($row['created_at']); ?></b>
+							</div>
+							<audio controls id="cust-audio-control">
+							  <source src="<?= asset('audio/' . $row['file_name']) ?>" type="audio/wav">
+							</audio>
+							<div class="autio-con12">
+								<a href="<?= asset('audio/' . $row['file_name']) ?>" download><i class="fas fa-download"></i> </a>
+
 								<a href="javascript:void(0);" data-recording-id="<?= $row['id'] ?>"  class="deleteByAjax" data-url="{{url('my-journal-audio-deleted')}}/<?= $row['id'] ?>">
 									<i class="fas fa-trash-alt"></i>
 								</a>
-                            </div>
-                        </li>
-                <?php endforeach ?>
-            <?php } ?>
-            </ol>
-            <?php if(empty($data)) { ?>
-      	        <p id="no-data">
-                  <b>No Voice Journal Found.</b>
-                </p>
-            <?php } ?>
-        </div>
-        <!-- The Modal -->
-        <div class="modal" id="voiceRecModal"  tabindex="-1" role="dialog" aria-labelledby="voiceRecModal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                        <!-- Loader icon -->
-                        <div class="text-center">
-                            <i class="fas fa-spinner fa-spin fa-3x"></i>
-                            <p>Please wait...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-    </div>
+							</div>
+						</li>
+					<?php endforeach ?>
+				<?php } ?>
+				</ol>
+
+				<?php if(empty($data)) { ?>
+					<p id="no-data">
+						<span class="vj-empty__icon"><i class="far fa-comment-dots"></i></span>
+						<b>No Voice Journal Found.</b>
+						<span class="vj-empty__sub">Start by recording or ask someone to send you a message.</span>
+					</p>
+				<?php } ?>
+			</div>
+		</div>
+		<!-- The Modal -->
+		<div class="modal" id="voiceRecModal"  tabindex="-1" role="dialog" aria-labelledby="voiceRecModal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<!-- Modal Body -->
+					<div class="modal-body">
+						<!-- Loader icon -->
+						<div class="text-center">
+							<i class="fas fa-spinner fa-spin fa-3x"></i>
+							<p>Please wait...</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		@endif
+	</div>
+</div>
+
+<script>
+// Presentation only - these listeners are additive and never stop, alter or
+// re-order anything app.js does with the same buttons.
+(function () {
+	function ready(fn) {
+		if (document.readyState !== 'loading') { fn(); }
+		else { document.addEventListener('DOMContentLoaded', fn); }
+	}
+
+	ready(function () {
+		var stage = document.getElementById('vjStage');
+		var recordBtn = document.getElementById('recordButton');
+		var pauseBtn = document.getElementById('pauseButton');
+		var stopBtn = document.getElementById('stopButton');
+
+		// Animate the waveform only while a recording is actually running.
+		if (stage && recordBtn && pauseBtn && stopBtn) {
+			recordBtn.addEventListener('click', function () {
+				stage.classList.add('is-recording');
+			});
+			pauseBtn.addEventListener('click', function () {
+				stage.classList.toggle('is-recording');
+			});
+			stopBtn.addEventListener('click', function () {
+				stage.classList.remove('is-recording');
+			});
+		}
+
+		// Reorder the existing list items; nothing is fetched or re-rendered.
+		var sort = document.getElementById('vjSortOrder');
+		var list = document.getElementById('recordingsList');
+		if (sort && list) {
+			sort.addEventListener('change', function () {
+				var items = Array.prototype.slice.call(list.children);
+				items.reverse();
+				items.forEach(function (li) { list.appendChild(li); });
+			});
+		}
+	});
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script>
@@ -392,128 +473,394 @@ $.ajax({
 }
 </script>
 <style>
-
-.generate-min {
-    position: relative;
-    display: grid;
-    grid-template-columns: 35% 1fr;
-    gap: 75px;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-top: 15px;
-    border-top: 1px solid gray;
+/* Voice journal - everything is scoped under .vj-page so no other screen that
+   shares these class names (.detail, .all-detail, .generate-min) is affected. */
+.vj-page {
+	--vj-purple: #6B2FA0;
+	--vj-purple-dark: #4E1E78;
+	--vj-purple-soft: #F3EDFA;
+	--vj-ink: #1F1A2B;
+	--vj-muted: #6E6880;
+	--vj-line: #E7E1F0;
 }
 
-.recording-sample-wrap {
-    padding: 40px 30px;
-    border: 1px solid var(--blue-magenta);
-    overflow: hidden;
+.vj-page .vj-topbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 18px;
 }
-.recording-sample-wrap #controls {
-    position: relative;
-    margin-bottom: 20px;
+.vj-page .vj-topbar__icon {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	background: var(--vj-purple-soft);
+	color: var(--vj-purple);
+	font-size: 17px;
 }
-.recording-sample-wrap #controls button:first-child {
-    border-radius: 10px 0 0 0;
+.vj-page .vj-topbar h3 {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--vj-ink);
 }
-.recording-sample-wrap #controls button:not(:disabled) {
-    color: #fff;
-    background-color: var(--blue-magenta);
-    border-color: #fff;
+
+.vj-page .card--white.voice-journal {
+	background: #fff;
+	border-radius: 16px;
+	padding: 22px;
+	box-shadow: 0 2px 14px rgba(31, 26, 43, .06);
 }
-.recording-sample-wrap #controls button {
-    background: #f6eff5;
-    border: 1px solid #fff;
-    color: #160f18;
-    transition: all 200ms ease-in;
-    padding: 12px 32px;
-    font-size: 15px;
-    font-weight: 600;
+
+/* ---- invite ---- */
+.vj-page .vj-invite {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	flex-wrap: wrap;
+	padding: 0 0 20px;
 }
-.cust-heading, .cust-heading-center {
-    font-size: 26px;
-    line-height: 50px;
-    color: #160f18;
-    position: relative;
-    text-transform: uppercase;
-    font-weight: 700;
-    display: block;
-    margin-bottom: 26px;
-    padding-bottom: 8px;
+.vj-page .vj-invite .here-send {
+	margin: 0 0 6px;
+	font-size: 24px;
+	font-weight: 700;
+	color: var(--vj-ink);
 }
-.generate-min #generateLink {
-    background: var(--blue-magenta);
-    color: #fff;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    transition: all 200ms ease-in;
-    padding: 8px 25px;
-    font-size: 15px;
-    font-weight: 600;
+.vj-page .vj-invite .detail {
+	margin: 0;
+	max-width: 560px;
+	color: var(--vj-muted);
+	font-size: 14px;
+	line-height: 1.5;
 }
-.recording-sample-wrap .all-recordings {
-    position: relative;
-    max-height: 550px;
-    overflow-x: auto;
-    padding: 0 20px 0 40px;
+.vj-page .vj-invite #generateLink {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: 0;
+	border-radius: 10px;
+	padding: 12px 22px;
+	background: var(--vj-purple);
+	color: #fff;
+	font-size: 15px;
+	font-weight: 600;
+	white-space: nowrap;
+	transition: background .2s ease;
 }
-.recording-sample-wrap .all-recordings .all-detail {
-    display: grid
-;
-    grid-template-columns: 57% 26% 17%;
-    row-gap: 10px;
-    justify-content: center;
-    align-items: self-start;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--blue-magenta);
-    position: relative;
+.vj-page .vj-invite #generateLink:hover { background: var(--vj-purple-dark); }
+
+/* ---- studio ---- */
+.vj-page .vj-studio {
+	border: 1px solid var(--vj-line);
+	border-radius: 14px;
+	padding: 20px;
+	background: #fff;
 }
-.recording-sample-wrap .all-recordings .all-detail div:first-child {
-    max-height: 115px;
-    padding-right: 10px;
-    overflow-x: auto;
-    margin-bottom: 5px;
-    font-family: var(--body-font);
-    font-size: var(--body-font-size);
-    line-height: var(--body-line-height);
-    line-height: 22px;
-    text-align: justify;
-    padding-top: 11px;
+.vj-page .vj-studio__grid {
+	display: grid;
+	grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.1fr) minmax(220px, .9fr);
+	gap: 24px;
+	align-items: center;
 }
-.recording-sample-wrap .all-recordings .vj-time {
-    font-size: 14px;
-    text-align: center;
-    padding-top: 12px;
+
+.vj-page #controls {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
 }
-.recording-sample-wrap #cust-audio-control {
-    width: 75%;
-    height: 45px;
-    margin: 0 auto;
+.vj-page #controls button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid var(--vj-line);
+	border-radius: 10px;
+	padding: 11px 18px;
+	background: var(--vj-purple-soft);
+	color: var(--vj-ink);
+	font-size: 14px;
+	font-weight: 600;
+	transition: background .2s ease, color .2s ease, opacity .2s ease;
 }
-.recording-sample-wrap .all-recordings audio {
-    text-align: center !important;
-    margin: 0 auto;
-    padding-bottom: 10px;
+.vj-page #controls #recordButton {
+	background: var(--vj-purple);
+	border-color: var(--vj-purple);
+	color: #fff;
 }
-.recording-sample-wrap .all-recordings .all-detail .autio-con12 {
-    display: flex
-;
-    justify-content: space-evenly;
-    align-items: center;
+.vj-page #controls button:disabled { opacity: .55; cursor: not-allowed; }
+.vj-page #controls button:not(:disabled):hover { border-color: var(--vj-purple); }
+
+.vj-page .vj-studio__lead {
+	margin: 0 0 4px;
+	font-size: 17px;
+	font-weight: 700;
+	color: var(--vj-ink);
 }
-.recording-sample-wrap .all-recordings .all-detail a {
-    color: var(--blue-magenta) !important;
-    font-size: 20px;
-    text-align: center !important;
+.vj-page .vj-studio__sub {
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--vj-muted);
 }
-.recording-sample-wrap .all-recordings .all-detail .detail {
-    grid-row: 1 / span 2;
+.vj-page #action { margin: 10px 0 0; font-size: 13px; }
+
+/* ---- stage ---- */
+.vj-page .vj-studio__stage { text-align: center; }
+.vj-page .vj-stage__visual {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
 }
-.recording-sample-wrap .all-recordings .all-detail div:nth-child(2) {
-    font-size: 12px;
-    text-align: center;
+.vj-page .vj-mic {
+	width: 74px;
+	height: 74px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: var(--vj-purple);
+	color: #fff;
+	font-size: 26px;
+	box-shadow: 0 0 0 10px rgba(107, 47, 160, .10);
+}
+.vj-page .vj-wave {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	height: 56px;
+}
+.vj-page .vj-wave i {
+	display: block;
+	width: 4px;
+	height: 14px;
+	border-radius: 4px;
+	background: #C9B4E4;
+}
+.vj-page .vj-wave i:nth-child(2) { height: 26px; }
+.vj-page .vj-wave i:nth-child(3) { height: 38px; }
+.vj-page .vj-wave i:nth-child(4) { height: 50px; }
+.vj-page .vj-wave i:nth-child(5) { height: 34px; }
+.vj-page .vj-wave i:nth-child(6) { height: 44px; }
+.vj-page .vj-wave i:nth-child(7) { height: 22px; }
+.vj-page .vj-wave i:nth-child(8) { height: 12px; }
+
+/* Bars only move while a recording is running. */
+.vj-page .is-recording .vj-mic { animation: vjPulse 1.6s ease-in-out infinite; }
+.vj-page .is-recording .vj-wave i {
+	background: var(--vj-purple);
+	animation: vjBar 1s ease-in-out infinite;
+}
+.vj-page .is-recording .vj-wave i:nth-child(2) { animation-delay: .1s; }
+.vj-page .is-recording .vj-wave i:nth-child(3) { animation-delay: .2s; }
+.vj-page .is-recording .vj-wave i:nth-child(4) { animation-delay: .3s; }
+.vj-page .is-recording .vj-wave i:nth-child(5) { animation-delay: .15s; }
+.vj-page .is-recording .vj-wave i:nth-child(6) { animation-delay: .25s; }
+.vj-page .is-recording .vj-wave i:nth-child(7) { animation-delay: .35s; }
+.vj-page .is-recording .vj-wave i:nth-child(8) { animation-delay: .05s; }
+
+@keyframes vjBar {
+	0%, 100% { transform: scaleY(.45); }
+	50%      { transform: scaleY(1.25); }
+}
+@keyframes vjPulse {
+	0%, 100% { box-shadow: 0 0 0 10px rgba(107, 47, 160, .10); }
+	50%      { box-shadow: 0 0 0 18px rgba(107, 47, 160, .18); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.vj-page .is-recording .vj-wave i,
+	.vj-page .is-recording .vj-mic { animation: none; }
+}
+
+.vj-page #display {
+	margin: 14px 0 2px;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--vj-ink);
+	letter-spacing: .5px;
+}
+.vj-page .vj-stage__hint {
+	margin: 0;
+	font-size: 12px;
+	color: var(--vj-muted);
+}
+
+/* ---- tips ---- */
+.vj-page .vj-tips {
+	border: 1px solid var(--vj-line);
+	border-radius: 12px;
+	padding: 16px 18px;
+	background: #FBF9FE;
+}
+.vj-page .vj-tips__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 12px;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--vj-ink);
+}
+.vj-page .vj-tips__icon {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: var(--vj-purple-soft);
+	color: var(--vj-purple);
+	font-size: 13px;
+}
+.vj-page .vj-tips ul { margin: 0; padding: 0; list-style: none; }
+.vj-page .vj-tips li {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 5px 0;
+	font-size: 13px;
+	color: var(--vj-ink);
+}
+.vj-page .vj-tips li i { color: var(--vj-purple); font-size: 12px; }
+
+/* ---- recordings ---- */
+.vj-page .vj-list { margin-top: 26px; }
+.vj-page .vj-list__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	margin-bottom: 14px;
+}
+.vj-page .vj-list__title h4 {
+	margin: 0 0 3px;
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--vj-ink);
+}
+.vj-page .vj-list__title p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--vj-muted);
+}
+.vj-page .vj-sort {
+	border: 1px solid var(--vj-line);
+	border-radius: 9px;
+	padding: 9px 12px;
+	background: #fff;
+	font-size: 13px;
+	color: var(--vj-ink);
+}
+
+.vj-page .all-recordings {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+/* Also matches the item app.js builds on save, which has .detail, <audio> and
+   .autio-con12 but no .name or .vj-time. */
+.vj-page .all-recordings .all-detail {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+	border: 1px solid var(--vj-line);
+	border-radius: 12px;
+	padding: 14px 18px;
+	margin-bottom: 12px;
+	background: #fff;
+}
+.vj-page .all-recordings .all-detail .detail {
+	flex: 1 1 240px;
+	min-width: 0;
+}
+.vj-page .all-recordings .all-detail .detail p {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--vj-ink);
+	word-break: break-word;
+}
+.vj-page .all-recordings .all-detail .name p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--vj-muted);
+}
+.vj-page .all-recordings .all-detail .name p:empty { display: none; }
+.vj-page .all-recordings .all-detail .vj-time b {
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--vj-muted);
+	white-space: nowrap;
+}
+.vj-page .all-recordings .all-detail audio {
+	height: 38px;
+	max-width: 100%;
+}
+.vj-page .all-recordings .all-detail .autio-con12 {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-left: auto;
+}
+.vj-page .all-recordings .all-detail .autio-con12 a {
+	color: var(--vj-purple);
+	font-size: 17px;
+	line-height: 1;
+}
+.vj-page .all-recordings .all-detail .autio-con12 a:hover { color: var(--vj-purple-dark); }
+.vj-page .all-recordings .all-detail .autio-con12 .deleteByAjax { color: #D64550; }
+
+/* ---- empty state ---- */
+.vj-page #no-data {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	border: 1px dashed var(--vj-line);
+	border-radius: 12px;
+	padding: 34px 20px;
+	margin: 0;
+	text-align: center;
+}
+.vj-page #no-data .vj-empty__icon {
+	width: 52px;
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 14px;
+	background: var(--vj-purple-soft);
+	color: var(--vj-purple);
+	font-size: 20px;
+	margin-bottom: 4px;
+}
+.vj-page #no-data b {
+	font-size: 16px;
+	color: var(--vj-ink);
+}
+.vj-page #no-data .vj-empty__sub {
+	font-size: 13px;
+	color: var(--vj-muted);
+}
+
+/* ---- narrow screens ---- */
+@media (max-width: 1199px) {
+	.vj-page .vj-studio__grid { grid-template-columns: 1fr 1fr; }
+	.vj-page .vj-tips { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+	.vj-page .vj-studio__grid { grid-template-columns: 1fr; }
+	.vj-page .vj-studio__stage { order: -1; }
+	.vj-page #controls button { flex: 1 1 auto; justify-content: center; }
+	.vj-page .all-recordings .all-detail .autio-con12 { margin-left: 0; }
+	.vj-page .vj-invite #generateLink { width: 100%; justify-content: center; }
 }
 </style>
 @endsection

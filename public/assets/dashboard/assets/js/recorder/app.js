@@ -249,6 +249,13 @@ function createDownloadLink(blob) {
                 noData.hide();
                 */
                 //instructions.text('Voice Recording saved successfully.').css("color", "green").delay(4000).fadeOut('slow', function() { instructions.text('').show(); });
+            } else {
+                // The server answered but could not save (upload path not
+                // writable, FTP disk unreachable, ...). Without this branch the
+                // page sat on "Wait For saving...." forever with no clue why.
+                var reason = (data && data.message) ? data.message : 'Please try again.';
+                instructions.text('Could not save the recording: ' + reason).css("color", "red");
+                console.error('Voice journal save failed:', data);
             }
         })
         .catch(error => {
