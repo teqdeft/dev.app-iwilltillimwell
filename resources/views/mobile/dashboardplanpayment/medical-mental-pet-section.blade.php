@@ -120,6 +120,8 @@ $data_medical[] = [
 
 				
 
+/* Semaglutide temporarily hidden. */
+/*
 $data_medical[] = [
 
 					'id'=>'4',
@@ -135,6 +137,7 @@ $data_medical[] = [
 					'alert_function'=>'dash-semaglutide-alert'
 
 				];
+*/
 
 				
 

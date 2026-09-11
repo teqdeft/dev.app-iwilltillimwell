@@ -55,6 +55,8 @@
 								'book_now'=>'yes'
 							  ];
 				
+/* Semaglutide temporarily hidden. */
+/*
 				$schedule[] = [
 								'id'=>'8',
 								'name'=>'Semaglutide',
@@ -64,6 +66,7 @@
 								'ds_status'=>'true',
 								'book_now'=>'yes'
 							];	
+*/
 				
 				$schedule[] = [
 								'id'=>'9',

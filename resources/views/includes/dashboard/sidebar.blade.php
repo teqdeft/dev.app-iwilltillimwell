@@ -118,9 +118,12 @@
                 <a href="{{url('consultation-type?action=dermatology')}}">Dermatology</a>
               </li>
 
+{{-- Semaglutide temporarily hidden. --}}
+{{--
               <li class="inactive">
                 <a href="javascript:void(0);">Semaglutide <span class="active_priscription_plan immidiate">Coming Soon</span> </a>
               </li>
+--}}
 
               <li class="inactive"> 
                 <a href="javascript:void(0);" >Musculoskeletal <span class="active_priscription_plan immidiate">Coming Soon</span> </a>

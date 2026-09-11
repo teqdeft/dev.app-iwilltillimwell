@@ -190,6 +190,8 @@
                 @endif
 					
 					<?php /*	
+{{-- Semaglutide temporarily hidden. --}}
+{{--
                 @if(org_can('medical_care'))
                     <a href="javascript:void(0)" class="open-modal" data-modal="dash-semaglutide-alert">
                         <div class="dash-menu-card service-disabled">
@@ -214,6 +216,7 @@
                         </div>
                     </a>
                 @endif
+--}}
 					
                 @if(org_can('medical_care'))
                     <a href="javascript:void(0)" class="open-modal" data-modal="dash-semaglutide-alert">
