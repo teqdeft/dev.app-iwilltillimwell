@@ -98,7 +98,6 @@
 					{{-- app.js writes the elapsed time here and toggles it with
 					     show()/hide(), so the id and inline display must stay. --}}
 					<p id="display" style="display:none;">00:00:00</p>
-					<p class="vj-stage__hint">Recording limit 3:00</p>
 				</div>
 
 				<aside class="vj-tips">
@@ -562,7 +561,7 @@ $.ajax({
 }
 .vj-page .vj-studio__grid {
 	display: grid;
-	grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.1fr) minmax(220px, .9fr);
+	grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.15fr) minmax(180px, .62fr);
 	gap: 24px;
 	align-items: center;
 }
@@ -678,55 +677,49 @@ $.ajax({
 }
 
 .vj-page #display {
-	margin: 14px 0 2px;
+	margin: 14px 0 0;
 	font-size: 20px;
 	font-weight: 700;
 	color: var(--vj-ink);
 	letter-spacing: .5px;
 }
-.vj-page .vj-stage__hint {
-	margin: 0;
-	font-size: 12px;
-	color: var(--vj-muted);
-}
-
 /* ---- tips ---- */
 .vj-page .vj-tips {
 	border: 1px solid var(--vj-line);
-	border-radius: 12px;
-	padding: 16px 18px;
+	border-radius: 10px;
+	padding: 12px 14px;
 	background: #FBF9FE;
 }
 .vj-page .vj-tips__head {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	margin: 0 0 12px;
-	font-size: 15px;
+	margin: 0 0 9px;
+	font-size: 13px;
 	font-weight: 700;
 	color: var(--vj-ink);
 }
 .vj-page .vj-tips__icon {
-	width: 28px;
-	height: 28px;
+	width: 23px;
+	height: 23px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 8px;
+	border-radius: 7px;
 	background: var(--vj-purple-soft);
 	color: var(--vj-purple);
-	font-size: 13px;
+	font-size: 11px;
 }
 .vj-page .vj-tips ul { margin: 0; padding: 0; list-style: none; }
 .vj-page .vj-tips li {
 	display: flex;
 	align-items: center;
-	gap: 9px;
-	padding: 5px 0;
-	font-size: 13px;
+	gap: 7px;
+	padding: 3px 0;
+	font-size: 12px;
 	color: var(--vj-ink);
 }
-.vj-page .vj-tips li i { color: var(--vj-purple); font-size: 12px; }
+.vj-page .vj-tips li i { color: var(--vj-purple); font-size: 10px; }
 
 /* ---- recordings ---- */
 .vj-page .vj-list { margin-top: 26px; }
