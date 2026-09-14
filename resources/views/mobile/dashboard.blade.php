@@ -38,6 +38,8 @@
 	{!! $GetHealthRecordProcessBarPercentage !!}
 	@endif
 	
+	{{-- Urgent care is a Medical Care consultation, so it follows that switch. --}}
+	@if(org_can('medical_care'))
     <section class="schedule-consultation">
         <div class="cust-container-md">
             <div class="title-bar">
@@ -66,6 +68,7 @@
             </div>
         </div>
     </section>
+	@endif
 	
 	@php
 		$primarycare = checkServiceEnabled($mypackageservicelist, 5);
