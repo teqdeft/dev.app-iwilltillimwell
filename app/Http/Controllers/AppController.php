@@ -1322,6 +1322,16 @@ class AppController extends Controller implements CommonConstants
     return view('app/account-deactivate');
   }
 
+  /**
+   * Show the account deletion request page.
+   *
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
+  public function deleteAccount()
+  {
+    return view('app/delete-account');
+  }
+
   public function mentalHealthScreening() {
 	  if(isMobile()){
 		return view('mobile.app.mental-health-screening.page');  

@@ -1103,6 +1103,8 @@ Route::group(['middleware' => 'AWMIpricing'], function () {
 
 Route::get('/account-deactivate', [AppController::class, 'accountDeactivate']);
 
+Route::get('/delete-account', [AppController::class, 'deleteAccount'])->name('deleteAccount');
+
 
 
 // new routes for mobile 
