@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+@include('includes.gtm-head')
 	@include('includes.head')
 	<script type="text/javascript">
 		const SITE_URL = "{{URL::to('/')}}";
@@ -17,6 +18,7 @@
 </head>
 
 <body>
+@include('includes.gtm-body')
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5KWPMSFC"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<?php

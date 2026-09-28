@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
 	@include('mobile.includes.head')
 	
 <style>
@@ -55,6 +56,7 @@ function lengthValidation(input,max_number) {
   
 </head>
 <body class="">
+@include('includes.gtm-body')
 	<div id="loader-wrapper"><div class="loader"></div></div>
 	<?php /*
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5KWPMSFC"

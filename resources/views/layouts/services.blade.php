@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
 	@include('includes.services.head')
 	<script type="text/javascript">
 		const SITE_URL = "{{URL::to('/')}}";
@@ -10,6 +11,7 @@
 </head>
 
 <body>
+@include('includes.gtm-body')
 @yield('content')
 @include('includes.services.footer')
 

@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+@include('includes.gtm-head')
 
     <meta charset="UTF-8">
 
@@ -311,6 +312,7 @@ function showLoaderPageLoad(action) {
 
 
 <body>
+@include('includes.gtm-body')
 
 
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
 	@include('includes.dashboard.head')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -28,6 +29,7 @@
 </head>
 
 <body>
+@include('includes.gtm-body')
 
  
 	<div class="container-fluid page-body-wrapper med-con-v1 vj-sharing-v5">

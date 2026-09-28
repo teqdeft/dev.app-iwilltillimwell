@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+@include('includes.gtm-head')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -24,6 +25,7 @@
 
 </head>
 <body>
+@include('includes.gtm-body')
     
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">

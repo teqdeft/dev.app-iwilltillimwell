@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+@include('includes.gtm-head')
 
 
 
@@ -156,6 +157,7 @@ function nameValidationTextOnly(input) {
 </head>
 
 <body>
+@include('includes.gtm-body')
 
 	<div id="loader-wrapper">
 

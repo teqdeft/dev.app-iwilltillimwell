@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
 
 	@include('includes.dashboard.head')
 
@@ -64,6 +65,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
+@include('includes.gtm-body')
 
 <div id="loader-wrapper"><div class="loader"></div></div>
 

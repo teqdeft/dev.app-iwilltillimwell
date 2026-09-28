@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
 	<title>{{config('app.name')}}</title>
     <meta charset="UTF-8">
 	<link rel="shortcut icon" href="{{ asset(env('APP_FAV_ICO')) }}" />
@@ -69,6 +70,7 @@ function lengthValidation(input,max_number) {
 </script>
 </head>
 <body>
+@include('includes.gtm-body')
 @yield('content')
 
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+@include('includes.gtm-head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>{{config('app.name')}}</title>
@@ -151,6 +152,7 @@ function showLoaderPageLoad(action) {
 </head>
 
 <body>
+@include('includes.gtm-body')
 
   <div id="loader-wrapper">
     <div class="loader"></div>
