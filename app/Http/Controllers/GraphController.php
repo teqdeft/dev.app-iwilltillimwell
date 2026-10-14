@@ -563,5 +563,25 @@ class GraphController extends Controller
 
     }
 
-}
 
+    /**
+     * Group Dashboard: the Google Apps Script analytics page, shown inside the app
+     * instead of opening script.google.com in a new tab.
+     */
+    public function groupDashboard() {
+
+        // Not offered to organisation members (the dashboard tile is hidden for them too).
+        if (function_exists('org_current') && org_current()) {
+            return redirect('/dashboard');
+        }
+
+        $groupDashboardUrl = config('constants.group_dashboard_url');
+
+        if (isMobile()) {
+            return view('mobile.services.group-dashboard', compact('groupDashboardUrl'));
+        }
+
+        return view('services.group-dashboard', compact('groupDashboardUrl'));
+    }
+
+}

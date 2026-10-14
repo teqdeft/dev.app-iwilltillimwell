@@ -14,6 +14,12 @@ return [
     'landing_promo_filters' => [
                'NABV000' => ['Premium', 'Premium Family'],
     ],
+
+    /*
+     | Group Dashboard: the Google Apps Script web app shown embedded at
+     | /group-dashboard. Override with GROUP_DASHBOARD_URL if it is redeployed.
+     */
+    'group_dashboard_url' => env('GROUP_DASHBOARD_URL', 'https://script.google.com/macros/s/AKfycbw1lV3BByxySHBAWQSud4vSP4sTI0DNKmZrHZ5nBdlybbee8SBgytQ7v6adqLfS1hPL/exec'),
     'pro_data_status' => 'inactive',
     'billing-cycle-date' => '0',
     'add_extra_days' => '0',

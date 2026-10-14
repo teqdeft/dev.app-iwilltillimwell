@@ -1271,6 +1271,8 @@ Route::get('my-mood-feeling-history-graph',[GraphController::class, 'feelingHist
 
 Route::get('my-screening-history-graph',[GraphController::class, 'screeningHistoryGraph'])->middleware(['UserDashboardPaymentStatus'])->name('my-screening-history-graph');
 
+Route::get('group-dashboard',[GraphController::class, 'groupDashboard'])->middleware(['UserDashboardPaymentStatus'])->name('group-dashboard');
+
 
 
 Route::get('my-mood-feeling',[UserMoodController::class, 'index'])->middleware(['UserDashboardPaymentStatus'])->name('my-mood-feeling');

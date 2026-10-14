@@ -12,10 +12,10 @@
 				$data[] = ['id'=>'15','name'=>'Mental Health Screenings','ico'=>'mental-health-screenings.svg','slug'=>'mental-health-screening'];	
 				$data[] = ['id'=>'16','name'=>'My Screenings History','ico'=>'my-screening-history.svg','slug'=>'my-screening-history-graph'];	
 				$data[] = ['id'=>'17','name'=>'Personal Analysis','ico'=>'personal-analysis.svg','slug'=>'my-mood-feeling-history-graph'];	
-				// Group Dashboard is an external sheet that does not apply to
+				// Group Dashboard (embedded group analytics page) does not apply to
 				// organisation members, so it is hidden for them only.
 				if( !(function_exists('org_current') && org_current()) ){
-					$data[] = ['id'=>'18','name'=>'Group Dashboard','ico'=>'group-dashboard.svg','slug'=>'https://script.google.com/macros/s/AKfycbw1lV3BByxySHBAWQSud4vSP4sTI0DNKmZrHZ5nBdlybbee8SBgytQ7v6adqLfS1hPL/exec'];
+					$data[] = ['id'=>'18','name'=>'Group Dashboard','ico'=>'group-dashboard.svg','slug'=>'group-dashboard'];
 				}
 				
 			@endphp	

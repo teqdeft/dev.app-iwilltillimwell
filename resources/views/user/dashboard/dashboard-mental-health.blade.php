@@ -272,10 +272,7 @@
 @endphp						
     @if($group_exits)
                 
-					<a 
-					target="_blank"
-					href="https://script.google.com/macros/s/AKfycbw1lV3BByxySHBAWQSud4vSP4sTI0DNKmZrHZ5nBdlybbee8SBgytQ7v6adqLfS1hPL/exec"
-					>
+					<a href="{{ url('group-dashboard') }}">
                                 <div class="dash-menu-card @if(!$advance_bhealth) service-disabled @endif">
                                     <div class="icon">
                                         <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
