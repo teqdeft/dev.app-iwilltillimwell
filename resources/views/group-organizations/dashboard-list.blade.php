@@ -31,10 +31,10 @@
 
 			<a href="{{'group-organizations/order-history'}}" class="organizations">
 							<div class="organi-icon">
-								<img src="{{ asset('assets/group-organizations/TotalCommissioin.png') }}" alt="Total Commissioin">
+								<img src="{{ asset('assets/group-organizations/TotalCommissioin.png') }}" alt="Total Commission">
 							</div>
 							<div class="organi-title">
-								<p>Total Commissioin</p>
+								<p>Total Commission</p>
 							</div>
 							<div class="organi-number">
 								<p>${{$dashboard_info['total_commission']}}</p>

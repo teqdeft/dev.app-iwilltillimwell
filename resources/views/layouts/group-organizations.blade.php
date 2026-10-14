@@ -54,6 +54,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="stylesheet" href="{{ asset('assets/dashboard/htmlv/assets/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/assets/css/responsive.css') }}">
 
+<style>
+/* Affiliate layout. admin-style.css gives .main-panel a 16-17% left margin meant
+   for the member dashboard's fixed sidebar (menu.css). This sidebar stays in the
+   flex row, so drop that margin, and keep the sidebar clear of the fixed header. */
+.med-con-v1 > .main-panel {
+    margin-left: 0 !important;
+    width: auto !important;
+    flex: 1 1 0;
+    min-width: 0;
+}
+@media (min-width: 992px) {
+    .med-con-v1 > #sidebar {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        flex-shrink: 0;
+        height: 100vh;
+        min-height: 0;
+        padding-top: 70px;
+        overflow-y: auto;
+    }
+}
+/* Up to 3 cards per row (gap 20px), wrapping on narrower screens. */
+.group-organizations {
+    grid-template-columns: repeat(auto-fill, minmax(max(280px, calc((100% - 40px) / 3)), 1fr));
+}
+.group-organizations .organizations {
+    grid-template-columns: 60px 1fr auto;
+}
+</style>
+
 
 <!-- Hotjar Tracking Code for https://join.iwilltilimwell.com -->
 <script>
