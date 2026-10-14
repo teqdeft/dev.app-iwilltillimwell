@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
   
 use App\Http\Controllers\API\AuthenticateController;
+use App\Http\Controllers\API\RegisterController;
   
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ use App\Http\Controllers\API\AuthenticateController;
   
 
 Route::post('login', [AuthenticateController::class, 'login']);
+// Sign-up from the external partner landing pages (e.g. NNVA).
+Route::post('register', [RegisterController::class, 'register'])->middleware('throttle:10,1');
 Route::post('forgot-password', [AuthenticateController::class, 'forgotPassword']);
 Route::post('/send-otp', [AuthenticateController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthenticateController::class, 'verifyOtp']);

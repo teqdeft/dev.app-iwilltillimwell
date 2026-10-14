@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        // Public sign-up for partner landing pages. Sanctum treats localhost:3000
+        // and other stateful origins as SPA requests and would otherwise 419.
+        'api/register',
     ];
 }
