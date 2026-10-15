@@ -35,7 +35,7 @@
 									'id'=>'23',
 									'name'=>'Crisis Management',
 									'sub_name'=>'',
-									'tag'=>'Immidiate Care',
+									'tag'=>'Immediate Care',
 									'ico'=>'crisis-management.svg',
 									'slug'=>'in-the-moment-care?care=crisis'
 								];
@@ -45,7 +45,7 @@
 								'id'=>'19',
 								'name'=>'In-The-Moment Care',
 								'sub_name'=>'',
-								'tag'=>'Immidiate Care',
+								'tag'=>'Immediate Care',
 								'ico'=>'crises.svg',
 								'slug'=> $imwellOrgMember ? 'in-the-moment-care?care=itmc' : 'in-the-moment-care'
 							];

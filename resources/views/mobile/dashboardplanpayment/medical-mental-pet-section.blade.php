@@ -167,7 +167,7 @@ $data_medical[] = [
 			'ico'=>'crisis-management.svg',
 			'slug'=>'in-the-moment-care?care=crisis',
 			'service_status'=>'active',
-			'tag'=>'Immidiate Care'
+			'tag'=>'Immediate Care'
 		];
 		$data_mental[] = [
 			'id'=>'1',
@@ -176,7 +176,7 @@ $data_medical[] = [
 			'ico'=>'in-the-moment-care.svg',
 			'slug'=>'in-the-moment-care?care=itmc',
 			'service_status'=>'active',
-			'tag'=>'Immidiate Care'
+			'tag'=>'Immediate Care'
 		];
 	} else {
 		$data_mental[] = [
@@ -186,7 +186,7 @@ $data_medical[] = [
 			'ico'=>'in-the-moment-care.svg',
 			'slug'=>'in-the-moment-care',
 			'service_status'=>'active',
-			'tag'=>'Immidiate Care'
+			'tag'=>'Immediate Care'
 		];
 	}
 

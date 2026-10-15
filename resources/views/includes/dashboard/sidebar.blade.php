@@ -160,7 +160,7 @@
             <ul>
 
               <li class="{{ request()->is('in-the-moment-care') ? 'active' : '' }}">
-                <a href="{{url('in-the-moment-care')}}">In-The-Moment Care <span class="active_priscription_plan immidiate">Immidiate
+                <a href="{{url('in-the-moment-care')}}">In-The-Moment Care <span class="active_priscription_plan immidiate">Immediate
                     Care</span></a>
               </li>
 
